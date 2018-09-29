@@ -1,0 +1,42 @@
+# 类似二叉树的BFS，利用Queue FIFO的特性进行逐层遍历，就可以得到结果。
+
+# 代码如下：
+
+/*
+// Definition for a Node.
+class Node {
+    public int val;
+    public List<Node> children;
+
+    public Node() {}
+
+    public Node(int _val,List<Node> _children) {
+        val = _val;
+        children = _children;
+    }
+};
+*/
+class Solution {
+    public List<List<Integer>> levelOrder(Node root) {
+        List<List<Integer>> ans = new ArrayList<>();
+
+        if (root == null)
+            return ans;
+
+        Queue<Node> queue = new LinkedList<>();             //"queue" saves the nodes for every level.
+        queue.add(root);
+        
+        while (!queue.isEmpty()){
+            List<Integer> tmp = new ArrayList<>();          //"tmp" saves the nodes'val for every level.
+            int size = queue.size();
+            for (int i = 0; i < size; i++){
+                Node n = queue.remove();                    //Pop one node from "queue";
+                tmp.add(n.val);                             //Save this node's val into "tmp";
+                for(Node t : n.children)                    //Send this node's children into "queue".
+                    queue.add(t);
+            }
+            ans.add(tmp);                                   //Now "tmp" saves this level's val, let "ans" save it.
+        }
+        return ans;
+    }
+}
