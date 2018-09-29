@@ -1,5 +1,7 @@
+# 先计算每个格子上cubes的表面数，然后减去格子之间cubes重复的面。
 
 # 代码如下：
+
 class Solution {
     public int surfaceArea(int[][] grid) {
         int sum = 0;
