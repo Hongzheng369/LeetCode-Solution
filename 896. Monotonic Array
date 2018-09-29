@@ -1,0 +1,21 @@
+# 逐位比较，如果有递增，则后续一定不能有递减；反之亦然。
+
+# 代码如下：
+
+class Solution {
+    public boolean isMonotonic(int[] A) {
+        if(A.length < 2)
+            return true;
+        boolean isIncrease = false;
+        boolean isDecrease = false;
+        for(int i = 0; i < A.length - 1; i++){
+            if (A[i] < A[i + 1])                    //Compare per bit, to determine whether it's decreasing or increasing.
+                isIncrease = true;
+            else if (A[i] > A[i + 1])
+                isDecrease = true;
+            if (isIncrease && isDecrease)           //If this array goes up and down, then it's not a monotonic array.
+                return false;
+        }
+        return true;
+    }
+}
