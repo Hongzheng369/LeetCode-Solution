@@ -1,3 +1,3 @@
 # Leetcode-Code
 
-### Sharing my own code :)
+### Sharing my code :)
