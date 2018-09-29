@@ -1,5 +1,7 @@
-# 思路：Divide and conquer分治法。preOrder序列是“父-左-右”，postOrder序列是“左-右-父”。
+# Divide and conquer分治法。preOrder序列是“父-左-右”，postOrder序列是“左-右-父”。
 # 按此规律分割序列，先得到祖先节点；然后在分开的两个序列里执行相同操作，分别找到左子树、右子树的祖先节点，再得到它们各自的左子树、右子树。
+
+# 代码如下：
 
 /**
  * Definition for a binary tree node.
