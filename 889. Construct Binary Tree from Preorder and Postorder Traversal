@@ -8,7 +8,7 @@
  * }
  */
 class Solution {
-    int preIndex = 0;
+    int preIndex = 0;           //preIndex is saved as a "static" variable.
     
     public TreeNode constructFromPrePost(int[] pre, int[] post){
         return buildTree(pre, post, 0, post.length - 1);
@@ -16,14 +16,14 @@ class Solution {
 
     public TreeNode buildTree(int[] pre, int[] post, int head, int tail){
         if(head > tail) 
-            return null;
+            return null;        //If head > tail, then that means no element in here.
         
-        preIndex++;
         TreeNode root = new TreeNode(post[tail]);
-        if(preIndex == pre.length || head == tail) 
-            return root;
-    
-        int i = head;
+        preIndex += 1;          //Send out a node, preIndex += 1.
+        
+        if(head == tail) 
+            return root;        //"head = tail" means there is only one element, we can return it.
+        int i = head;           //Otherwise, do these procedures to seperate left subtree and right subtree.
         while(i <= tail && post[i] != pre[preIndex])
             i++;
     
