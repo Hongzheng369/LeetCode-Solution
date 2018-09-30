@@ -1,0 +1,25 @@
+# 使用一个ArrayList保存数组里的奇数。偶数直接往前移，重写即可。
+
+# 代码如下：
+
+class Solution {
+    public int[] sortArrayByParity(int[] A) {
+        ArrayList<Integer> odd = new ArrayList<>();
+        if(A.length <= 1)
+            return A;
+        int idx = 0;
+        for(int i : A){
+            if(i % 2 == 0){                     //If i is an even number, just put it upfront.
+                A[idx] = i;
+                idx++;
+            }
+            else                                //But if i is an odd number, save it first.
+                odd.add(i);
+        }
+        for(int i = 0; i < odd.size(); i++){    //Write these odd number into array, starting from the next bit of the last even number.
+            A[idx] = odd.get(i);
+            idx++;
+        }
+        return A;
+    }
+}
