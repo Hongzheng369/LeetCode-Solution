@@ -1,0 +1,39 @@
+# 与“889. Construct Binary Tree from Preorder and Postorder Traversal”这题很相像！需要新建一个递归函数，去帮助我们得到各个TreeNode，并将它们相连。
+
+# 代码如下：
+
+/**
+ * Definition for a binary tree node.
+ * public class TreeNode {
+ *     int val;
+ *     TreeNode left;
+ *     TreeNode right;
+ *     TreeNode(int x) { val = x; }
+ * }
+ */
+class Solution {
+    public TreeNode constructMaximumBinaryTree(int[] nums) {
+        ArrayList<Integer> num = new ArrayList<>();
+        for (int i : nums)                                              //Array -> ArrayList;
+            num.add(i);
+        return helperMaxiBT(num);
+    }
+    public TreeNode helperMaxiBT(List<Integer> num){
+        if(num.size() == 0)                                             //Base case 1: no element in ArrayList;
+            return null;
+        else if(num.size() == 1)                                        //Base case 2: onlt one element in ArrayList.
+            return new TreeNode(num.get(0));
+        int max = Integer.MIN_VALUE;                                    //Now we need to find out the largest element.
+        int index = 0;
+        for (int i = 0; i < num.size(); i++){
+            if (max < num.get(i)){
+                max = num.get(i);
+                index = i;
+            }
+        }                                                               //Now we have the largest element in ArrayList.
+        TreeNode root = new TreeNode(max);                              //Set root node.
+        root.left = helperMaxiBT(num.subList(0, index));                //Set root.left using recursion.
+        root.right = helperMaxiBT(num.subList(index + 1, num.size()));  //Set root.right using recursion.
+        return root;
+    }
+}
