@@ -1,0 +1,21 @@
+# 将“石头堆”和“宝石”进行逐位对比，然后count++即可。
+
+# 代码如下：
+
+class Solution {
+    public int numJewelsInStones(String J, String S) {
+        int count = 0;
+        int len1 = J.length();
+        int len2 = S.length();
+        char[] a = J.toCharArray();
+        char[] b = S.toCharArray();
+        for(int i = 0; i < len2; i++){
+            for(int j = 0; j < len1; j++){
+                if(a[j] == b[i]){
+                    count++;
+                }
+            }
+        }
+        return count;
+    }
+}
