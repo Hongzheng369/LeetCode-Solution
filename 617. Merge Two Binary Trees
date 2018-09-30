@@ -1,0 +1,29 @@
+# 首先肯定想到递归。
+# 确定base case：当其中一个为null，直接返回另一个即可，因为另一个是连着的，直接接过去；
+# 然后后续操作就是常规操作了。
+
+# 代码如下：
+
+/**
+ * Definition for a binary tree node.
+ * public class TreeNode {
+ *     int val;
+ *     TreeNode left;
+ *     TreeNode right;
+ *     TreeNode(int x) { val = x; }
+ * }
+ */
+class Solution {
+    public TreeNode mergeTrees(TreeNode t1, TreeNode t2) {
+        //Base case: if one of them is null, just return the other one.
+        if (t1 == null)
+            return t2;
+        if (t2 == null)
+            return t1;
+
+        TreeNode node = new TreeNode(t1.val + t2.val);
+        node.left = mergeTrees(t1.left, t2.left);
+        node.right = mergeTrees(t1.right, t2.right);
+        return node;
+    }
+}
