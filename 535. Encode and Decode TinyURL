@@ -1,0 +1,25 @@
+# 有点儿投机取巧。。。用的是String中的hashCode()函数生成哈希值，存入HashMap中，解码时找出对应mapping即可。
+
+# 代码如下：
+
+public class Codec {
+    Map<Integer, String> map = new HashMap();
+    String host = "http://tinyurl.com/";
+    
+    // Encodes a URL to a shortened URL.
+    public String encode(String longUrl) {
+        int key = longUrl.hashCode();                               //String.hashCode() to generate hash sequence.
+        map.put(key, longUrl);                                      //Saving ciphertext-plaintext into hashmap.
+        return host + key;
+    }
+
+    // Decodes a shortened URL to its original URL.
+    public String decode(String shortUrl) {
+        int key = Integer.parseInt(shortUrl.substring(19));         //Get the key, and using Integer.parseInt() to change String to int;
+        return map.get(key);                                        //Find the plaintext.
+    }
+}
+
+// Your Codec object will be instantiated and called as such:
+// Codec codec = new Codec();
+// codec.decode(codec.encode(url));
