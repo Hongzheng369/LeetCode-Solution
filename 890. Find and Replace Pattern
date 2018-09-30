@@ -1,0 +1,61 @@
+# 先将pattern列成数字序列，例如aab即为001，abcba则为01210。
+# 然后对words中的String做相同转换。
+# 最后将二者的转换结果进行对比，如果相同（即符合pattern），则加入到res中。
+
+# 代码如下：
+
+class Solution {
+    public List<String> findAndReplacePattern(String[] words, String pattern) {
+        ArrayList<String> res = new ArrayList<>();
+
+        //When no pattern or words, return the whole "words".
+        if (pattern.length() == 0){
+            for (String i : words)
+                res.add(i);
+            return res;
+        }
+        if (words.length == 0)
+            return res;
+
+        //To do: "abcba" -> "0 1 2 1 0", "ABCBAabccba" -> "0 1 2 1 0 5 6 7 7 6 5".
+        HashMap<Character, Integer> map1 = new HashMap<>();
+        char[] charPat = pattern.toCharArray();
+        int[] pat = new int[pattern.length()];
+        for (int i = 0; i < pattern.length(); i++){
+            if (!map1.containsKey(charPat[i]))
+                map1.put(charPat[i],i);
+            pat[i] = map1.get(charPat[i]);
+        }
+        //Done, and "0 1 2 1 0" is saved in "pat".
+
+        //Check Strings in "words".
+        for (String s : words){
+
+            //Only compare with the same length String.
+            if (s.length() == pat.length){
+
+                //Do the same thing: "ccc" -> "000".
+                HashMap<Character, Integer> map2 = new HashMap<>();
+                char[] tmp = s.toCharArray();
+                int[] tmpPat = new int[s.length()];
+                for (int i = 0; i < s.length(); i++){
+                    if (!map2.containsKey(tmp[i]))
+                        map2.put(tmp[i], i);
+                    tmpPat[i] = map2.get(tmp[i]);
+                }
+
+                //Compare words with pattern.
+                boolean isMatch = true;
+                for (int i = 0; i < s.length(); i++){
+                    if (tmpPat[i] != pat[i]){
+                        isMatch = false;
+                        break;
+                    }
+                }
+                if (isMatch == true)
+                    res.add(s);
+            }
+        }
+        return res;
+    }
+}
