@@ -1,0 +1,31 @@
+class Solution {
+    public int countSubstrings(String s) {
+        char[] tmp = s.toCharArray();
+        int sum = 0;
+        
+        //Check one by one.
+        for(int i = 0; i < s.length(); i++) {
+            
+            //First, check the palindromic string that has odd number length.
+        	for(int j = 0; i - j >= 0 && i + j <s.length(); j++) {
+        		if(tmp[i - j] == tmp[i + j])
+        			sum++;
+                else
+                    break;
+        	}
+        	
+            //Then, check the palindromic string that has even number length.
+        	if(i + 1 < s.length() && tmp[i] == tmp[i + 1]) {
+                sum++;
+        		for(int j = 1; i - j >= 0 && i + 1 + j < s.length(); j++) {
+        			if(tmp[i - j] == tmp[i + 1 +j])
+        				sum++;
+                    else 
+                        break;
+        		}
+        	}
+        }
+        
+        return sum;
+    }
+}
