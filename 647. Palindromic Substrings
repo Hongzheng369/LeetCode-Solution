@@ -1,3 +1,7 @@
+# 分情况讨论，检查奇数长度的String和偶数长度的String，如果对称sum就加1。
+
+# 代码如下：
+
 class Solution {
     public int countSubstrings(String s) {
         char[] tmp = s.toCharArray();
