@@ -1,3 +1,7 @@
+# 用一个ArrayList来保存读过的数字，如果有读到重复的就不加进去了，然后把里面重复的数字删掉。
+
+# 代码如下：
+
 class Solution {
     public int[] singleNumber(int[] nums) {
     	//Once I read a number, I put it in "save".
