@@ -1,0 +1,44 @@
+# 先将两个数组各自从小到大排序，然后用常规做法：
+# 一方元素较小，则这一方下标往后移；
+# 如果找到相同元素，则放入res，同时双方下标后移，并同时过掉相同的元素。
+
+# 代码如下：
+
+class Solution {
+    public int[] intersection(int[] nums1, int[] nums2) {
+        List<Integer> res = new ArrayList<>();
+        Arrays.sort(nums1);
+        Arrays.sort(nums2);
+        int idx1 = 0;
+        int idx2 = 0;
+        
+        while(idx1 < nums1.length && idx2< nums2.length){
+            if(nums1[idx1] == nums2[idx2]){
+                res.add(nums1[idx1]);
+                int tmp1 = idx1;
+                int tmp2 = idx2;
+                while(idx1 < nums1.length && nums1[idx1] == nums1[tmp1])
+                    idx1++;
+                while(idx2 < nums2.length && nums2[idx2] == nums2[tmp2])
+                    idx2++;
+            }
+            
+            else if(nums1[idx1] > nums2[idx2]){
+                int tmp2 = idx2;
+                while(idx2 < nums2.length && nums2[idx2] == nums2[tmp2])
+                    idx2++;
+            }
+            
+            else if(nums1[idx1] < nums2[idx2]){
+                int tmp1 = idx1;
+                while(idx1 < nums1.length && nums1[idx1] == nums1[tmp1])
+                    idx1++;
+            }
+        }
+        
+        int[] ans = new int[res.size()];
+        for(int i = 0; i < ans.length; i++)
+            ans[i] = res.get(i);
+        return ans;
+    }
+}
