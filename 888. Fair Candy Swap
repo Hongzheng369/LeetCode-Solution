@@ -1,0 +1,55 @@
+# 先算出需要转移的糖果数，然后对A、B进行逐位遍历，符合条件的就输出。
+# 其中可以先将两个数组排序，然后再根据题目要求逐位遍历。
+
+# 代码如下：
+
+class Solution {
+    public static int[] fairCandySwap(int[] A, int[] B) {
+        Arrays.sort(A);
+        Arrays.sort(B);
+        int sum1 = 0;
+        int sum2 = 0;
+        for (int i : A)
+            sum1 += i;
+        for (int i : B)
+            sum2 += i;
+        int num = Math.abs((sum1 + sum2) / 2 - sum1);
+        //"num" is the number that A (or B) need to increase (or decrease).
+
+        //Case 1: A should give more sugar to B.
+        if (sum1 > sum2){
+            int idx1 = 0;
+            int idx2 = 0;
+            while (A[idx1] < B[idx2])
+                idx1++;
+            //For now A[idx1] must be larger than B[idx2].
+            while (idx1 < A.length && idx2 < B.length){
+                if (A[idx1] - B[idx2] < num)
+                    idx1++;
+                else if (A[idx1] - B[idx2] > num)
+                    idx2++;
+                else
+                    return new int[] {A[idx1], B[idx2]};
+            }
+        }
+
+        //Case 2: B should give more sugar to A.
+        else if (sum1 < sum2){
+            int idx1 = 0;
+            int idx2 = 0;
+            while (A[idx1] > B[idx2])
+                idx2++;
+            //For now B[idx2] must be larger than A[idx1].
+            while (idx1 < A.length && idx2 < B.length){
+                if (B[idx2] - A[idx1] < num)
+                    idx2++;
+                else if (B[idx2] - A[idx1] > num)
+                    idx1++;
+                else 
+                    return new int[] {A[idx1], B[idx2]};
+            }
+        }
+
+        return null;
+    }
+}
