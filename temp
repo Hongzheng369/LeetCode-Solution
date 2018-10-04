@@ -1,0 +1,40 @@
+class Solution {
+    public List<String> letterCasePermutation(String S) {
+        int count = 0;
+        ArrayList<Integer> index = new ArrayList<>();
+        for(int i = 0; i < S.length(); i++){
+            if((S.charAt(i) >= 'a' && S.charAt(i) <= 'z') || (S.charAt(i) >= 'A' && S.charAt(i) <= 'Z')){
+                index.add(i);
+                count++;
+            }
+        }
+        
+        if(count == 0){
+            List<String> res = new ArrayList<>();
+            res.add(S);
+            return res;
+        }
+        
+        HashSet<String> set = new HashSet<>();
+        buildTree(S, index, 0, true, count, set);
+    }
+    
+    public static void buildTree(String S, ArrayList<Integer> index, int level, boolean low, int count, HashSet<String> set){
+        if(level > count)
+            return;
+        if(level == count && low == true){
+            char tmp_char = S.charAt(index.get(level - 1));
+            String tmp = S.substring(0, index.get(level - 1)) + Character.toLowerCase(tmp_char) + S.substring(index.get(level - 1) + 1);
+            set.add(tmp);
+        }
+        else if(level == count && low == false){
+            char tmp_char = S.charAt(index.get(level - 1));
+            String tmp = S.substring(0, index.get(level - 1)) + Character.toUpperCase(tmp_char) + S.substring(index.get(level - 1) + 1);
+            set.add(tmp);
+        }
+        
+        set.add(S);
+        buildTree(S, index, level + 1, true, count, set);
+        buildTree(S, index, level + 1, false, count, set);
+    }
+}
