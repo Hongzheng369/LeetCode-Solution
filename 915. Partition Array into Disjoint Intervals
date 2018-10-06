@@ -1,0 +1,39 @@
+# 逐位遍历，将原数组划分为左右两部分；不需要记录下标，只需要记录len_left和len_right即可。
+
+# 代码如下：
+
+class Solution {
+    public int partitionDisjoint(int[] A) {
+        int max_left = A[0];
+        int max_right = Integer.MIN_VALUE;
+        int len_left = 1;
+        int len_right = 0;
+        boolean hasRight = false;
+        for(int i = 1; i < A.length; i++){
+            if (!hasRight){
+                if (A[i] < max_left)
+                    len_left++;
+                else {
+                    max_right = A[i];
+                    hasRight = true;
+                    len_right = 1;
+                }
+            }
+            else {
+                if (A[i] >= max_left){
+                    len_right++;
+                    if (A[i] > max_right)
+                        max_right = A[i];
+                }
+                else {
+                    hasRight = false;
+                    len_left += len_right + 1;
+                    len_right = 0;
+                    max_left = max_right;
+                    max_right = Integer.MIN_VALUE;
+                }
+            }
+        }
+        return len_left;
+    }
+}
