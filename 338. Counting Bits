@@ -1,0 +1,39 @@
+# 找到一个规律：想知道数字n的二进制表示中有多少个1，就先找到一个比它大的第一个“2的n次方-1”的数字。
+# 接下来就像求斐波那契那样，计算即可。
+# 计算方法如下：
+# res[14] = res[15] - res[1];
+# res[5] = res[7] - res[2];
+
+# 代码如下：
+
+class Solution {
+    public static int[] countBits(int num) {
+        int[] res = new int[num + 1];
+        if (num == 0)
+            return res;
+        else if (num == 1){
+            res[1] = 1;
+            return res;
+        }
+        else {
+            res[1] = 1;
+            int head = 2;
+            int tail = 2 * head - 1;
+            int bit_tail = 2;
+            for (int i = 2; i <= num; i++){
+                if (i == head)
+                    res[i] = 1;
+                else if (i > head && i <= tail){
+                    res[i] = bit_tail - res[tail - i];
+                }
+                else if (i > tail){
+                    res[i] = 1;
+                    head *= 2;
+                    tail = 2 * head - 1;
+                    bit_tail += 1;
+                }
+            }
+        }
+        return res;
+    }
+}
