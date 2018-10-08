@@ -1,0 +1,27 @@
+# 首先将数组按从高到低的顺序排列，同时有阻挡的排在无阻挡的后面。
+# 在入队列的时候，一定是先是高的人入队，所以再排序时只需按照people[][1]的顺序来排即可。
+
+# 代码如下：
+
+class Solution {
+    public int[][] reconstructQueue(int[][] people) {
+        for (int i = 0; i < people.length; i++){
+            int exchange = i;
+            for (int j = i + 1; j < people.length; j++){
+                if ((people[j][0] > people[exchange][0]) || (people[j][0] == people[exchange][0] && people[j][1] < people[exchange][1]))
+                    exchange = j;
+            }
+            if (exchange != i){
+                int[] tmp = people[i];
+                people[i] = people[exchange];
+                people[exchange] = tmp;
+            }
+        }
+
+        List<int[]> res = new ArrayList();
+        for(int[] person : people) {
+            res.add(person[1], person);
+        }
+        return res.toArray(new int[res.size()][2]);
+    }
+}
