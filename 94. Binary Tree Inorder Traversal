@@ -1,0 +1,33 @@
+# 利用栈的原理，逐层遍历树的节点。
+
+# 代码如下：
+
+/**
+ * Definition for a binary tree node.
+ * public class TreeNode {
+ *     int val;
+ *     TreeNode left;
+ *     TreeNode right;
+ *     TreeNode(int x) { val = x; }
+ * }
+ */
+class Solution {
+    public List<Integer> inorderTraversal(TreeNode root) {
+        List<Integer> res = new ArrayList<Integer>();
+        Stack<TreeNode> sta = new Stack<TreeNode>();
+        TreeNode tra = root;
+        if(tra == null)
+            return res;
+        
+        while(tra != null || sta.isEmpty() == false){
+            while(tra != null){  
+                sta.push(tra);
+                tra = tra.left;
+            }
+            tra = sta.pop();
+            res.add(tra.val);
+            tra = tra.right;
+        }
+        return res;
+    }
+}
