@@ -1,0 +1,28 @@
+# 从上往下换，换到最后一排换完之后就是调换之后的二叉树了。
+
+# 代码如下：
+
+/**
+ * Definition for a binary tree node.
+ * public class TreeNode {
+ *     int val;
+ *     TreeNode left;
+ *     TreeNode right;
+ *     TreeNode(int x) { val = x; }
+ * }
+ */
+class Solution {
+    public TreeNode invertTree(TreeNode root) {
+        if (root == null)
+            return null;
+        else {
+            TreeNode left = root.right;
+            TreeNode right = root.left;
+            root.left = left;
+            root.right = right;
+        }
+        root.left = invertTree(root.left);
+        root.right = invertTree(root.right);
+        return root;
+    }
+}
