@@ -1,0 +1,31 @@
+# Preorder的特点是“父-左孩子-右孩子”，根据这个顺序，还有利用stack的FILO的特性，就能得到先序序列。
+
+# 代码如下：
+
+/**
+ * Definition for a binary tree node.
+ * public class TreeNode {
+ *     int val;
+ *     TreeNode left;
+ *     TreeNode right;
+ *     TreeNode(int x) { val = x; }
+ * }
+ */
+class Solution {
+    public List<Integer> preorderTraversal(TreeNode root) {
+        List<Integer> save = new ArrayList<>();
+        Stack<TreeNode> stack = new Stack<>();
+        TreeNode tra = root;
+        if(tra != null)
+            stack.push(tra);
+        while (!stack.isEmpty()){
+            TreeNode tmp = stack.pop();
+            if (tmp.right != null)
+                stack.push(tmp.right);
+            if (tmp.left != null)
+                stack.push(tmp.left);
+            save.add(tmp.val);
+        }
+        return save;
+    }
+}
