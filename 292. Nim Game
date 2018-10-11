@@ -1,0 +1,9 @@
+# 规律就在于，只要总数是4的倍数，我肯定输，所以能整除4的num都要输出false。
+
+# 代码如下：
+
+class Solution {
+    public boolean canWinNim(int n) {
+        return n % 4 == 0 ? false : true;
+    }
+}
