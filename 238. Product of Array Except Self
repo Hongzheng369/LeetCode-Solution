@@ -1,0 +1,23 @@
+# 思路是这样的，res[i]的值等于：它左边所有元素的乘积*它右边所有元素的乘积。
+# 所以，第一次遍历是得到该位置上，左边的所有元素的乘积，所以从头开始遍历；
+# 第二次遍历是得到该位置上，右边的所有元素的乘积，所以从末尾开始遍历；
+# 两次遍历之后，就能得到结果，可以输出了。
+
+# 代码如下：
+
+class Solution {
+    public int[] productExceptSelf(int[] nums) {
+        int[] res = new int[nums.length];
+        int tmp = 1;
+        for (int i = 0; i < nums.length; i++){
+            res[i] = tmp;
+            tmp *= nums[i];
+        }
+        tmp = 1;
+        for (int i = nums.length - 1; i >= 0; i--){
+            res[i] *= tmp;
+            tmp *= nums[i];
+        }
+        return res;
+    }
+}
