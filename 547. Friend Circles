@@ -1,0 +1,53 @@
+class Solution {
+    public int findCircleNum(int[][] M) {
+        int[] save = new int[M.length];
+        int group = 1;
+        
+        //Only check upper triangle. "i" means i-th row, student "i". "j" means j-th coloum, student "j".
+        for (int i = 0; i < M.length - 1; i++)
+        {
+            for (int j = i + 1; j < M.length; j++)
+            {
+                //If student "i" and student "j" have a relationship:
+                if (M[i][j] == 1)
+                {
+                    //Case 1. None of them belongs to any group: sign them to a new group.
+                    if (save[i] == 0 && save[j] == 0)
+                    {
+                        save[i] = group;
+                        save[j] = group;
+                        group++;
+                    }
+                    
+                    //Case 2. One of them already belongs to one certain group: recruit the new guy.
+                    else if (save[i] != 0 && save[j] == 0)
+                        save[j] = save[i];
+                    else if (save[i] == 0 && save[j] != 0)
+                        save[i] = save[j];
+                    
+                    //Case 3. Both of them already belong to two different groups, but these two have a connection: unite two groups.
+                    else if (save[i] != 0 && save[j] != 0)
+                    {
+                        int tmp = save[j];
+                        for (int k = 0; k < save.length; k++)
+                        {
+                            if (save[k] == tmp)
+                                save[k] = save[i];
+                        }
+                    }
+                }
+            }
+        }
+        
+        //Now save[i] means student "i" belongs to group "save[i]". If save[i] = 0, then student "i" is alone.
+        HashSet<Integer> set = new HashSet<>();
+        int count_0 = 0;
+        for (int i : save){
+            if (i == 0)
+                count_0++;
+            else
+                set.add(i);
+        }
+        return set.size() + count_0;
+    }
+}
