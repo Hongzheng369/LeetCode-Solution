@@ -1,0 +1,56 @@
+class Solution {
+    public List<List<Integer>> permute(int[] nums) {
+        List<List<Integer>> res = new ArrayList<>();
+        
+        //Handling two special cases: "no element", and "only one element".
+        if (nums.length == 0)
+            return res;
+        else if (nums.length == 1)
+        {
+            List<Integer> tmp = new ArrayList<>();
+            tmp.add(nums[0]);
+            res.add(tmp);
+        }
+        
+        //Now we start here.
+        else
+        {
+            Queue<List<Integer>> queue = new LinkedList<>();
+            
+            //1. Add the list which has only one element into the queue;
+            for (int i : nums)
+            {
+                List<Integer> tmp = new ArrayList<>();
+                tmp.add(i);
+                queue.add(tmp);
+            }      
+            
+            //2. Pop one list, add elements for several times.
+            //How many times should I run? nums.length - 1 times. (Because I've already did one step ahead)
+            for (int i = 0; i < nums.length - 1; i++)
+            {                        
+                //Run "size" times so that I can add element to every list in queue.
+                int size = queue.size();
+                for (int j = 0; j < size; j++)
+                {                           
+                    List<Integer> tra = queue.remove();
+                    for (int k : nums)
+                    {
+                        //If the list doesn't has element "k", then add it to the list.
+                        if (!tra.contains(k))
+                        {
+                            List<Integer> tmp = new ArrayList<>(tra);
+                            tmp.add(k);
+                            queue.add(tmp);
+                        }
+                    }
+                }
+            }
+            
+            //3. Since the result is already saved in queue, now we just need to "get them out".
+            while (!queue.isEmpty())
+                res.add(queue.remove());
+        }
+        return res;
+    }
+}
