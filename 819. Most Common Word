@@ -1,0 +1,39 @@
+class Solution {
+    public static String mostCommonWord(String paragraph, String[] banned) {
+        //First, set "paragraph" into lowercase.
+        //Second, turn "String[] banned" into ArrayList, so that I can use contains() function......
+        //Third, use HashMap to save how many times these words appear.
+        String p = paragraph.toLowerCase();
+        List<String> b = new ArrayList<>(Arrays.asList(banned));
+        HashMap<String, Integer> map = new HashMap<>();
+
+        //Divide "paragraph" into a collection of words, and put them into HashMap.
+        for (int i = 0; i < p.length(); i++){
+            
+            //If we see a character, we should start counting how long this word would be.
+            if (p.charAt(i) >= 'a' && p.charAt(i) <= 'z'){
+                int j = i;
+                while (j <= p.length() - 1 && p.charAt(j) >= 'a' && p.charAt(j) <= 'z')
+                    j++;
+                String tmp = p.substring(i, j);
+                //Now, from index "i" to index "j" is an English word.
+                
+                //So next step is to put it into HashMap, except when it appears in banned list.
+                if (b.size() == 0 || (b.size() != 0 && !b.contains(tmp)))
+                    map.put(tmp, map.getOrDefault(tmp, 0) + 1);
+                i = j;
+            }
+        }
+        
+        //Now find the word that appears most times.
+        String res = "";
+        int max = 0;
+        for (Map.Entry<String, Integer> en : map.entrySet()){
+            if ((int)en.getValue() > max){
+                max = (int)en.getValue();
+                res = en.getKey();
+            }
+        }
+        return res;
+    }
+}
