@@ -1,0 +1,28 @@
+class Solution {
+    public static List<List<String>> groupAnagrams(String[] strs) {
+        //"res" is the result here.
+        //"map" is for saving the words that have the same pattern.
+        List<List<String>> res = new ArrayList<>();
+        HashMap<String, List<String>> map = new HashMap<>();
+
+        for (String s : strs){
+            char[] tmp = s.toCharArray();
+            Arrays.sort(tmp);
+            String sorted_s = String.valueOf(tmp);
+            //For now, "eat" and "tea" can be saved as "aet", which is "sorted_s".
+
+            //Of course I should save the <Key, Value> in map, 
+            //but if "sorted_s" is not in there, we should build one list first.
+            if (!map.containsKey(sorted_s))
+                map.put(sorted_s, new ArrayList<>());
+            
+            //And now I can save the words into the map, since it has a list for pattern "aet"(just an example).
+            map.get(sorted_s).add(s);
+        }
+        
+        //Now get the result from HashMap.
+        for (HashMap.Entry<String, List<String>> en : map.entrySet())
+            res.add(en.getValue());
+        return res;
+    }
+}
