@@ -1,0 +1,80 @@
+class Solution {
+    public static String nextClosestTime(String time) {
+        //Have the number for hour and minute.
+        int idx = 0;
+        for (int i = 0; i < time.length(); i++){
+            if (time.charAt(i) == ':'){
+                idx = i;
+                break;
+            }
+        }
+        int hour = Integer.valueOf(time.substring(0, idx));
+        int minute = Integer.valueOf(time.substring(idx + 1));
+
+        //Have the number that appears.
+        int[] num = new int[time.length() - 1];
+        idx = 0;
+        for (int i = 0; i < time.length(); i++){
+            if (time.charAt(i) != ':'){
+                num[idx] = time.charAt(i) - '0';
+                idx++;
+            }
+        }
+
+        //Compute the possible number.
+        Arrays.sort(num);
+        List<Integer> possi_num = new ArrayList<>();
+        if (num[0] == 0){
+            for (int i : num){
+                if (!possi_num.contains(i))
+                    possi_num.add(i);
+            }
+        }
+        for (int i = 0; i < num.length; i++){
+            for (int j = 0; j < num.length; j++){
+                int tmp = 10 * num[i] + num[j];
+                if (!possi_num.contains(tmp) && tmp < 60)
+                    possi_num.add(tmp);
+            }
+        }
+        System.out.println(possi_num);
+
+        //Everything done. Now deal with base case.
+        if (possi_num.size() == 1){
+            String res = Integer.toString(possi_num.get(0));
+            if (possi_num.get(0) < 10)
+                res = "0" + res;
+            return res + ":" + res;
+        }
+
+        //Find smallest minute.
+        int newMin = possi_num.get(0);
+        boolean biggerHour = true;
+        if (possi_num.get(possi_num.size() - 1) != minute){
+            newMin = possi_num.get(possi_num.indexOf(minute) + 1);
+            biggerHour = false;
+        }
+
+        //Find smallest hour.
+        int newHour = possi_num.get(0);
+        if (!biggerHour)
+            newHour = hour;
+        else {
+            idx = 0;
+            for (int i : possi_num){
+                if (i < 24)
+                    idx++;
+            }
+            if (possi_num.get(idx - 1) != hour)
+                newHour = possi_num.get(possi_num.indexOf(hour) + 1);
+        }
+
+        //Decide what to return.
+        String resMin = Integer.toString(newMin), resHou = Integer.toString(newHour);
+        if (newMin < 10)
+            resMin = "0" + resMin;
+        if (newHour < 10)
+            resHou = "0" + resHou;
+        return resHou + ":" + resMin;
+    }
+}
