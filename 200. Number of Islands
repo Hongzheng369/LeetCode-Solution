@@ -1,0 +1,40 @@
+class Solution {
+    public static int numIslands(char[][] grid) {
+        //1. Handle the special case: there is nothing in the grid.
+        if (grid.length == 0)
+            return 0;
+        
+        //2. Set the variables that I need to use.
+        int res = 0;
+        int rowEdge = grid.length;
+        int colEdge = grid[0].length;
+        for (int i = 0; i < rowEdge; i++){
+            for (int j = 0; j < colEdge; j++){
+                //Once I find a possible island, I start searching its surrounding place.
+                if (grid[i][j] == '1'){
+                    //Since I find an island, "res" should plus one.
+                    res += 1;
+                    //Here we search its surrounding place.
+                    searchSurroundingPlace(grid, i, j ,rowEdge, colEdge);
+                }
+            }
+        }
+        
+        //3. Return the result.
+        return res;
+    }
+    public static void searchSurroundingPlace(char[][] grid, int row, int col, int rowEdge, int colEdge){
+        //1. Base case: reach the edge, or "I've searched this place".
+        if (row < 0 || row >= rowEdge || col < 0 || col >= colEdge || grid[row][col] == '0')
+            return;
+        
+        //2. Do the counting.
+        //Since I've searched this place, set grid[row][col] to 0.
+        grid[row][col] = '0';
+        //Recursive call to search grid[row][col] surrounding place.
+        searchSurroundingPlace(grid, row - 1, col, rowEdge, colEdge);
+        searchSurroundingPlace(grid, row + 1, col, rowEdge, colEdge);
+        searchSurroundingPlace(grid, row, col - 1, rowEdge, colEdge);
+        searchSurroundingPlace(grid, row, col + 1, rowEdge, colEdge);
+    }
+}
