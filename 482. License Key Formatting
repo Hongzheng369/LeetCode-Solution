@@ -1,0 +1,27 @@
+class Solution {
+    public static String licenseKeyFormatting(String S, int K) {
+        //1. Put the characters into the stack.
+        Stack<Character> stack = new Stack<>();
+        for (int i = 0; i < S.length(); i++){
+            if (S.charAt(i) != '-')
+                stack.push(S.charAt(i));
+        }
+        
+        //2. Set a StringBuffer to catch what pops out from the stack.
+        StringBuffer res = new StringBuffer();
+        while (!stack.isEmpty()){
+            for (int i = 0; i < K; i++){
+                if (stack.isEmpty())
+                    break;
+                else
+                    res.append(stack.pop());
+            }
+            //2.1 Whenever it pops out character for K times, add a "-" to it.
+            if (!stack.isEmpty())
+                res.append('-');
+        }
+        
+        //3. Return the result. Don't forget to change it to uppercase.
+        return res.reverse().toString().toUpperCase();
+    }
+}
