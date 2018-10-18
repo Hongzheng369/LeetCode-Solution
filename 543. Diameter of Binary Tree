@@ -1,0 +1,36 @@
+/**
+ * Definition for a binary tree node.
+ * public class TreeNode {
+ *     int val;
+ *     TreeNode left;
+ *     TreeNode right;
+ *     TreeNode(int x) { val = x; }
+ * }
+ */
+class Solution {
+    //This function is for counting the height of node's left subtree and right subtree.
+    public static int countHeight(TreeNode node){
+        if (node == null)
+            return 0;
+        return Math.max(1 + countHeight(node.left), 1 + countHeight(node.right));
+    }
+    
+    public static int diameterOfBinaryTree(TreeNode root) {
+        //1. Set the base case.
+        if(root == null)
+            return 0;
+        
+        //2. Compute the route length and compare them with each other. 
+        //2.1 "rootRoute" is the longest route that comes across the root node.
+        int rootRoute = countHeight(root.left) + countHeight(root.right);
+        
+        //2.2 "leftRoute" is the longest route that comes across root's left node.
+        int leftRoute = diameterOfBinaryTree(root.left);
+        
+        //2.3 "rightRoute" is the longest route that comes across root's right node.
+        int rightRoute = diameterOfBinaryTree(root.right);
+        
+        //3. Return the result.
+        return Math.max(rootRoute, Math.max(leftRoute, rightRoute));
+    }
+}
