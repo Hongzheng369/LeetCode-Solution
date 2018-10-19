@@ -1,0 +1,49 @@
+class RandomizedSet {
+    private List<Integer> save;
+    private HashMap<Integer, Integer> index;
+    /** Initialize your data structure here. */
+    public RandomizedSet() {
+        save = new ArrayList<>();
+        index = new HashMap<>();
+    }
+    
+    /** Inserts a value to the set. Returns true if the set did not already contain the specified element. */
+    public boolean insert(int val) {
+        if (index.get(val) == null){
+            index.put(val, save.size());
+            save.add(val);
+            return true;
+        }
+        else
+            return false;
+    }
+    
+    /** Removes a value from the set. Returns true if the set contained the specified element. */
+    public boolean remove(int val) {
+        if (index.get(val) == null)
+            return false;
+        else {
+            if (index.get(val) < save.size() - 1){
+                int idx = index.get(val);
+                save.set(idx, save.get(save.size() - 1));
+                index.put(save.get(save.size() - 1), idx);
+            }
+            save.remove(save.size() - 1);
+            index.remove(val);
+            return true;
+        }
+    }
+    
+    /** Get a random element from the set. */
+    public int getRandom() {
+        return save.get((int)(Math.random() * (save.size())));
+    }
+}
+
+/**
+ * Your RandomizedSet object will be instantiated and called as such:
+ * RandomizedSet obj = new RandomizedSet();
+ * boolean param_1 = obj.insert(val);
+ * boolean param_2 = obj.remove(val);
+ * int param_3 = obj.getRandom();
+ */
