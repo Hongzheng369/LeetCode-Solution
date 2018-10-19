@@ -1,0 +1,40 @@
+class Solution {
+    public static int maxAreaOfIsland(int[][] grid) {
+        //1 Handle the base case: there is nothing in the grid.
+        if (grid.length == 0)
+            return 0;
+        
+        //2 Start counting the island area.
+        int res = 0;
+        int rowEdge = grid.length;
+        int colEdge = grid[0].length;
+        for (int i = 0; i < rowEdge; i++) {
+            for (int j = 0; j < colEdge; j++) {
+                //2.1 If there is an element that implies itself is an island:
+                if (grid[i][j] == 1){
+                    //2.2 Then I call the recursive function, to count the area of this island.
+                    int max = computeArea(grid, i, j, rowEdge, colEdge);
+                    //2.3 "res" saves the area of the previous island. If this island has bigger area, then send this value to "res".
+                    if (max > res)
+                        res = max;
+                }
+            }
+        }
+        
+        //3 Return the result.
+        return res;
+    }
+    
+    //This is the function for counting the area.
+    public static int computeArea(int[][] grid, int row, int col, int rowEdge, int colEdge){
+        //1 Handle the base case: reach the edge or reach the water.
+        if (row < 0 || row >= rowEdge || col < 0 || col >= colEdge || grid[row][col] == 0)
+            return 0;
+        
+        //2 Start counting.
+        //2.1 First, set the element to 0 to imply "I've checked this place".
+        grid[row][col] = 0;
+        //2.2 Then, check its four direction to see if there is other island that connects to it.
+        return 1 + computeArea(grid, row - 1, col, rowEdge, colEdge) + computeArea(grid, row + 1, col, rowEdge, colEdge)  + computeArea(grid, row, col - 1, rowEdge, colEdge) + computeArea(grid, row, col + 1, rowEdge, colEdge);
+    }
+}
