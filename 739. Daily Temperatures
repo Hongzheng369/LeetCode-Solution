@@ -1,0 +1,49 @@
+# Make sure the number in stack is in descending order.
+
+class Solution {
+    public int[] dailyTemperatures(int[] T) {
+        int[] res = new int[T.length];
+        Stack<Integer> stack = new Stack<>();
+        
+        //Check every element in T once.
+        for (int i = 0; i < T.length; i++){
+            //First make sure there is something in stack, then make sure the element in stack is in descending order.
+            //Otherwise, we can start popping.
+            while (stack.isEmpty() == false && T[stack.peek()] < T[i]){
+                int idx = stack.pop();
+                res[idx] = i - idx;
+            }
+            
+            //No matter we pop or not, we still need to add element in stack.
+            stack.push(i);
+        }
+        return res;
+    }
+}
+
+--------------------------------------------------------------------------------------------------------------------------------------
+
+# Brute force can solve everything.
+
+class Solution {
+    public int[] dailyTemperatures(int[] T) {
+        for (int i = 0; i < T.length; i++){
+            //1 Handle the base case.
+            if (i == T.length - 1){
+                T[i] = 0;
+                continue;
+            }
+            
+            //2 Start counting.
+            int larger_idx = i;
+            for (int j = i + 1; j < T.length; j++){
+                if (T[j] > T[i]){
+                    larger_idx = j;
+                    break;
+                }
+            }
+            T[i] = larger_idx - i;
+        }
+        return T;
+    }
+}
