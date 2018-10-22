@@ -1,0 +1,60 @@
+# Can't figure out a better way for that... Only think of brute force solution.
+
+class TicTacToe {
+    int[][] map;
+    
+    public TicTacToe(int n) {
+        map = new int[n][n];
+    }
+    
+    public int move(int row, int col, int player) {
+        map[row][col] = player;
+        
+        //1: Search the row.
+        for (int i = 0; i < map.length; i++){
+            boolean win = true;
+            for (int j = 0; j < map.length; j++){
+                if (map[i][j] != player){
+                    win = false;
+                    break;
+                }
+            }
+            if (win)
+                return player;
+        }
+        //2: Search the column.
+        for (int i = 0; i < map.length; i++){
+            boolean win = true;
+            for (int j = 0; j < map.length; j++){
+                if (map[j][i] != player){
+                    win = false;
+                    break;
+                }
+            }
+            if (win)
+                return player;
+        }
+        //3: Search first diagonal.
+        boolean tmp = true;
+        for (int i = 0; i < map.length; i++){
+            if (map[i][i] != player){
+                tmp = false;
+                break;
+            }
+        }
+        if (tmp)
+            return player;
+        //4: Search second diagonal.
+        tmp = true;
+        for (int i = 0; i < map.length; i++){
+            if (map[map.length - 1 - i][i] != player){
+                tmp = false;
+                break;
+            }
+        }
+        if (tmp)
+            return player;
+
+        return 0;
+    }
+}
