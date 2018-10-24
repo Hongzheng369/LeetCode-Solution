@@ -1,0 +1,36 @@
+class Solution {
+    public int lengthOfLongestSubstringTwoDistinct(String s) {
+        //Handle the special case
+        if(s.length() < 3)
+            return s.length();
+
+        //So we start from here. Set the variables.
+        HashMap<Character,Integer> map = new HashMap<Character,Integer>();      //This is for saving the element and its index.
+        int head = 0, tail = 0, res = 0;                                        //Respectively they stand for head of the string, tail of the string, and maximum length that have appeared so far.
+
+        while(tail < s.length()) {
+            //"ababab" -> {<a, 4>, <b, 5>}
+            //"aaabbb" -> {<a, 2}, <b, 5>}
+            //When there is the third character, add it to the map first.
+            if(map.size() <= 2) {
+                map.put(s.charAt(tail), tail);
+                tail++;
+            }
+
+            //But now we need to find the element that should be pick out.
+            if(map.size() > 2) {
+                int tmp = Integer.MAX_VALUE;
+                for(int i : map.values())
+                    tmp = Math.min(tmp,i);
+                //By now s.charAt(tmp) would be the character that is needed to be deleted.
+                map.remove(s.charAt(tmp));
+                //By doing this we can make sure the remaining part of this string doesn't contain s.charAt(tmp).
+                head = tmp + 1;
+            }
+
+            //Renew the value of "res".
+            res = Math.max(res, tail - head);
+        }
+        return res;
+    }
+}
