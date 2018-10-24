@@ -1,0 +1,33 @@
+class Solution {
+    public static String reverseWords(String s) {
+        StringBuilder res = new StringBuilder();
+        int head = 0, tail = 0;
+        while (head <= s.length() - 1){
+            //When I meet blank space:
+            if (s.charAt(tail) == ' '){
+                while (tail <= s.length() - 1 && s.charAt(tail) == ' ')
+                    tail++;
+            }
+            
+            //When I meet character:
+            else {
+                while (tail <= s.length() - 1 && s.charAt(tail) != ' ')
+                    tail++;
+            }
+
+            //Now do the reverse.
+            if (tail <= s.length() - 1){
+                StringBuilder tmp = new StringBuilder(s.substring(head, tail));
+                res.append(tmp.reverse());
+            }
+            else {
+                StringBuilder tmp = new StringBuilder(s.substring(head));
+                res.append(tmp.reverse());
+            }
+
+            //Update the markers:
+            head = tail;
+        }
+        return res.toString();
+    }
+}
