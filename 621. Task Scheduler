@@ -1,0 +1,25 @@
+class Solution {
+    public static int leastInterval(char[] tasks, int n) {
+        if (n == 0)
+            return tasks.length;
+
+        //First, send the character into HashMap.
+        HashMap<Character, Integer> map = new HashMap<>();
+        for (char i : tasks)
+            map.put(i, map.getOrDefault(i, 0) + 1);
+
+        //Then find that task that appears for the most time.
+        int res = Integer.MIN_VALUE;
+        for (int i : map.values())
+            res = Math.max(res, i);
+
+        //But we still need to pick out how many tasks appear for the same time.
+        int same = 0;
+        for (int i : map.values()){
+            if (i == res)
+                same++;
+        }
+
+        return Math.max((res - 1) * (n + 1) + same, tasks.length);
+    }
+}
