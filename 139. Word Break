@@ -1,0 +1,38 @@
+# 算法是这样的：
+
+# 1. 首先我们应该从后往前分割字符串。如果从前往后分割，那就没办法确认最后一个字母到底是要跟左边还是跟右边。
+# 就是，万一这个字母，后面的字符要“用”呢？就是，加上以后这个字符串就能由dictionary构成呢？
+
+# 2. 用一个boolean类型的数组存放分割结果。如果check[j + 1]是true，那就说明从下标j到字符最后，都能被分割成单词。
+
+class Solution {
+    public static boolean wordBreak(String s, List<String> wordDict) {
+        //Save the dictionary as HashSet to save checking time.
+        HashSet<String> dic = new HashSet<>();
+        for (String i : wordDict)
+            dic.add(i);
+
+        //Set the boolean array to save checking result. We'll use it later.
+        boolean[] check = new boolean[s.length() + 1];
+        for (int i = 0; i < check.length; i++){
+            if (i == check.length - 1)
+                check[i] = true;
+            else
+                check[i] = false;
+        }
+
+        //Now we cut the string into parts.
+        for (int i = s.length() - 1; i >=0; i--){
+            for (int j = i; j < s.length(); j++){
+                String tmp = s.substring(i, j + 1);
+                if (dic.contains(tmp) && check[j + 1]){
+                    check[i] = true;
+                    break;
+                }
+            }
+        }
+
+        //Return the result.
+        return check[0];
+    }
+}
