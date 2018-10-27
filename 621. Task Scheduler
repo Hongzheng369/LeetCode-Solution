@@ -1,0 +1,16 @@
+class Solution {
+    public int leastInterval(char[] tasks, int n) {
+        int[] map = new int[26];
+        int max = 0, count = 0;
+        for (char c : tasks) {
+            int index = c - 'A';
+            map[index]++;
+            if (map[index] == max) count++;
+            else if (map[index] > max) {
+                max = map[index];
+                count = 1;
+            }
+        }
+        return Math.max((max - 1)*(1+n) + count, tasks.length);        
+    }
+}
