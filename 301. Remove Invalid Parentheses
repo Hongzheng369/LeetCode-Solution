@@ -1,0 +1,47 @@
+class Solution {
+    public static boolean isValid(String s){
+        Stack<Character> stack = new Stack<>();
+        for (int i = 0; i < s.length(); i++){
+            char tmp = s.charAt(i);
+            if (tmp == ')' && !stack.isEmpty() && stack.peek() == '(')
+                stack.pop();
+            else if (tmp == ')' || tmp == '(')
+                stack.push(tmp);
+        }
+        return stack.isEmpty();
+    }
+    public static List<String> removeInvalidParentheses(String s){
+        List<String> res = new ArrayList<>();
+        if (isValid(s)){
+            res.add(s);
+            return res;
+        }
+        Queue<String> level = new LinkedList<>();
+        HashSet<String> set = new HashSet<>();
+        level.add(s);
+        while (!level.isEmpty()){
+            int size = level.size();
+            for (int i = 0; i < size; i++){
+                String pop = level.remove();
+                if (isValid(pop))
+                    res.add(pop);
+                else {
+                    for (int j = 0; j < pop.length(); j++){
+                        if (pop.charAt(j) == '(' || pop.charAt(j) == ')'){
+                            String tmp = pop.substring(0, j) + pop.substring(j + 1);
+                            if (!set.contains(tmp)){
+                                level.add(tmp);
+                                set.add(tmp);
+                            }
+                        }
+                    }
+                }
+            }
+            if (res.size() != 0)
+                break;
+        }
+        for (String i : res)
+            System.out.println(i);
+        return res;
+    }
+}
