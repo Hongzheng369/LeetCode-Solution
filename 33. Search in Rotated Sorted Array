@@ -1,0 +1,33 @@
+class Solution {
+    public static int search(int[] nums, int target) {
+        return helperFind(nums, 0, nums.length - 1, target);
+    }
+    public static int helperFind(int[] nums, int head, int tail, int target){
+        //When to stop?
+        if (head > tail)
+            return -1;
+
+        //What if the middle is the target?
+        int mid = head + (tail - head) / 2;
+        if (nums[mid] == target)
+            return mid;
+
+        //If not, where to search?
+        //First, find out which part is sorted.
+
+        //If right part is sorted:
+        if (nums[mid] < nums[tail]){
+            if (target > nums[mid] && target <= nums[tail])
+                return helperFind(nums, mid + 1, tail, target);
+            else
+                return helperFind(nums, head, mid - 1, target);
+        }
+        //If left part is sorted:
+        else {
+            if (target < nums[mid] && target >= nums[head])
+                return helperFind(nums, head, mid - 1, target);
+            else
+                return helperFind(nums, mid + 1, tail, target);
+        }
+    }
+}
