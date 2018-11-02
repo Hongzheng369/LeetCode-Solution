@@ -1,0 +1,35 @@
+class Solution {
+    public static List<List<Integer>> combinationSum(int[] candidates, int target) {
+        List<List<Integer>> res = new ArrayList<>();
+        //1. Handle edge case: no candidates.
+        if (candidates.length == 0)
+            return res;
+
+        //2. Start checking by recursion.
+        Arrays.sort(candidates);
+        List<Integer> oneAns = new ArrayList<>();
+        helperMethod(res, oneAns, 0, candidates, target);
+
+        //3. Return answer.
+        return res;
+    }
+    public static void helperMethod(List<List<Integer>> res, List<Integer> oneAns, int startIdx, int[] candidates, int target){
+        //1. Once I get one answer, I add it to the result. So this is the base case for recursion.
+        if (target == 0){
+            List<Integer> save = new ArrayList<>(oneAns);
+            res.add(save);
+            return;
+        }
+
+        //2. Check per element.
+        for (int i = startIdx; i < candidates.length; i++){
+            //2.1 If "target" is smaller than candidates[i], then there is no need to update the answer anymore.
+            if (target < candidates[i])
+                return;
+
+            oneAns.add(candidates[i]);
+            helperMethod(res, oneAns, i, candidates, target - candidates[i]);
+            oneAns.remove(oneAns.size() - 1);
+        }
+    }
+}
