@@ -1,0 +1,40 @@
+class Solution {
+    public static void nextPermutation(int[] nums) {
+        int idx = nums.length - 2;
+        for (; idx >= 0; idx--){
+            if (nums[idx] < nums[idx + 1])
+                break;
+        }
+        //If it's ascending from left to right, then just reverse it.
+        if (idx == -1){
+            int head = 0, tail = nums.length - 1;
+            while (head <= tail){
+                int tmp = nums[head];
+                nums[head] = nums[tail];
+                nums[tail] = tmp;
+                head++;
+                tail--;
+            }
+            return;
+        }
+        //Otherwise, find the first element that is larger.
+        int larger_idx = nums.length - 1;
+        for (; larger_idx >= 0; larger_idx--){
+            if (nums[larger_idx] > nums[idx])
+                break;
+        }
+        //Then swap.
+        int tmp = nums[larger_idx];
+        nums[larger_idx] = nums[idx];
+        nums[idx] = tmp;
+        int head = idx + 1, tail = nums.length - 1;
+        while (head <= tail){
+            tmp = nums[head];
+            nums[head] = nums[tail];
+            nums[tail] = tmp;
+            head++;
+            tail--;
+        }
+        return;
+    }
+}
