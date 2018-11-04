@@ -1,0 +1,31 @@
+class Solution {
+    public static int maximalSquare(char[][] matrix) {
+        int res = 0;
+        for (int i = 0 ; i < matrix.length; i++){
+            for (int j = 0; j < matrix[i].length; j++){
+                if (matrix[i][j] == '1'){
+                    int len = helperFindSquare(i, j, matrix, 1);
+                    res = Math.max(res, len * len);
+                }
+            }
+        }
+        return res;
+    }
+    public static int helperFindSquare(int i, int j, char[][] matrix, int len){
+        if (i + len >= matrix.length || j + len >= matrix[i].length)
+            return len;
+
+        //Search the new row;
+        for (int col = j; col <= j + len; col++){
+            if (matrix[i + len][col] == '0')
+                return len;
+        }
+        //Search the new col;
+        for (int row = i; row <= i + len; row++){
+            if (matrix[row][j + len] == '0')
+                return len;
+        }
+        int res = helperFindSquare(i, j, matrix, len + 1);
+        return res;
+    }
+}
