@@ -1,0 +1,28 @@
+class Solution {
+    public static boolean isMatch(String s, String p){
+        //Base case 1: p and s are both empty.
+        if (p.length() == 0)
+            return s.length() == 0;
+        //Base case 2: p and s are in the length of 1;
+        if (p.length() == 1)
+            return s.length() == 1 && (p.charAt(0) == s.charAt(0) || p.charAt(0) == '.');
+
+        //Start to cut parts. Because it may have *, so I cut it one by one.
+        //1. When p is not start with ("character" + *). Cut it till it reach (2) from the recursive call.
+        if (p.charAt(1) != '*'){
+            if (s.length() == 0)
+                return false;
+            return (p.charAt(0) == s.charAt(0) || p.charAt(0) == '.') && isMatch(s.substring(1), p.substring(1));
+        }
+        //2. When p is start with ("character" + *).
+        while (s.length() != 0 && (p.charAt(0) == s.charAt(0) || p.charAt(0) == '.')){
+            //If s matches the rest of the p, then straightly return true.
+            if (isMatch(s, p.substring(2)))
+                return true;
+            //Else, remove s one by one. Say s = "abb", p = "a*bc". 
+            s = s.substring(1);
+        }
+        //Since we remove the the character that matches the part before "*" in p, we should check the rest.
+        return isMatch(s, p.substring(2));
+    }
+}
