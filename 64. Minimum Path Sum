@@ -1,0 +1,18 @@
+class Solution {
+    public static int minPathSum(int[][] ans) {
+        for (int i = 0; i <= ans.length - 1; i++){
+            for (int j = 0; j <= ans[0].length - 1; j++){
+                //For the first row;
+                if (i == 0 && j > 0)
+                    ans[i][j] += ans[i][j - 1];
+                //For the left-most row;
+                else if (j == 0 && i > 0)
+                    ans[i][j] += ans[i - 1][j];
+                else if (i > 0 && j > 0)
+                    ans[i][j] += Math.min(ans[i][j - 1], ans[i - 1][j]);
+            }
+        }
+
+        return ans[ans.length - 1][ans[0].length - 1];
+    }
+}
