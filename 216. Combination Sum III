@@ -1,0 +1,32 @@
+class Solution {
+    public static List<List<Integer>> combinationSum3(int k, int n) {
+        List<List<Integer>> res = new ArrayList<>();
+        List<Integer> oneAns = new ArrayList<>();
+        getAnswer(res, oneAns, k, 1, n);
+        return res;
+    }
+
+    public static void getAnswer(List<List<Integer>> result, List<Integer> oneAns, int k, int start, int sum){
+        //Stop when the result to have is smaller than 0.
+        if(sum < 0){
+            return;
+        }
+        //Now I have the answer, I can add it to "res".
+        if(sum == 0 && oneAns.size() == k){
+            result.add(new ArrayList<Integer>(oneAns));
+            return;
+        }
+        //Do it in a for loop/
+        for(int i = start; i <= 9; i++){
+            oneAns.add(i);
+            getAnswer(result, oneAns, k, i + 1, sum - i);
+            
+            /*
+            * If I get to this place, that means:
+            * 1. If I add this "last element", then it's too large for n. I should remove this element.
+            * 2. I've done adding possible answer with the same prefix. Then I can remove this element.
+            */
+            oneAns.remove(oneAns.size() - 1);
+        }
+    }
+}
