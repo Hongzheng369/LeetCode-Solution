@@ -1,0 +1,33 @@
+class Solution {
+    public static List<List<Integer>> combinationSum2(int[] candidates, int target) {
+        List<List<Integer>> res = new ArrayList<>();
+        if (candidates == null || candidates.length == 0){
+            return res;
+        }
+        int[] candi = candidates;
+        Arrays.sort(candi);
+        List<Integer> ans = new ArrayList<>();
+        helperSum2(res, ans, 0, candi, target);
+        return res;
+    }
+    public static void helperSum2(List<List<Integer>> res, List<Integer> ans, int startInd, int[] candidates, int target){
+        if (target == 0){
+            List<Integer> save = new ArrayList<>(ans);
+            res.add(save);
+            return;
+        }
+        else if (target < 0){
+            return;
+        }
+        else {
+            for (int i = startInd; i < candidates.length; i++){
+                if (i > startInd && candidates[i] == candidates[i - 1]){
+                    continue;
+                }
+                ans.add(candidates[i]);
+                helperSum2(res, ans, i + 1, candidates, target - candidates[i]);
+                ans.remove(ans.size() - 1);
+            }
+        }
+    }
+}
