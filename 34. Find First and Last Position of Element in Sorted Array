@@ -1,0 +1,36 @@
+class Solution {
+    public static int[] searchRange(int[] nums, int target) {
+        int[] res = {firstOccurence(nums, 0, nums.length - 1, target), lastOccurence(nums,0, nums.length - 1, target)};
+        return res;
+    }
+    public static int firstOccurence(int[] nums, int start, int end, int target){
+        if (start <= end){
+            int mid = start + (end - start) / 2;
+            if ((mid == 0 || target > nums[mid - 1]) && target == nums[mid]){
+                return mid;
+            }
+            else if (target <= nums[mid]){
+                return firstOccurence(nums, start, mid - 1, target);
+            }
+            else {
+                return firstOccurence(nums, mid + 1, end, target);
+            }
+        }
+        return -1;
+    }
+    public static int lastOccurence(int[] nums, int start, int end, int target){
+        if (start <= end){
+            int mid = start + (end - start) / 2;
+            if ((mid == nums.length - 1 || target < nums[mid + 1]) && target == nums[mid]){
+                return mid;
+            }
+            else if (target < nums[mid]){
+                return lastOccurence(nums, start, mid - 1, target);
+            }
+            else {
+                return lastOccurence(nums, mid + 1, end, target);
+            }
+        }
+        return -1;
+    }
+}
