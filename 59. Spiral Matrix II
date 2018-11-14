@@ -1,0 +1,34 @@
+class Solution {
+    public static int[][] generateMatrix(int n) {
+        int up = 0, down = n - 1, left = 0, right = n - 1;
+        int count = 1;
+        int[][] res = new int[n][n];
+        while (up <= down && left <= right){
+            // Go right.
+            for (int i = left; i <= right; i++){
+                res[up][i] = count;
+                count++;
+            }
+            up++;
+            // Go down.
+            for (int i = up; i <= down; i++){
+                res[i][right] = count;
+                count++;
+            }
+            right--;
+            // Go left.
+            for (int i = right; i >= left; i--){
+                res[down][i] = count;
+                count++;
+            }
+            down--;
+            // Go up.
+            for (int i = down; i >= up; i--){
+                res[i][left] = count;
+                count++;
+            }
+            left++;
+        }
+        return res;
+    }
+}
