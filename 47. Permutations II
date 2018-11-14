@@ -1,0 +1,24 @@
+class Solution {
+    public static List<List<Integer>> permuteUnique(int[] nums) {
+        List<List<Integer>> res = new ArrayList<>();
+        // Handling special case.
+        if (nums == null || nums.length == 0)
+            return res;
+        // Set initial list in "res".
+        res.add(new ArrayList<>());
+        for (int i = 0; i < nums.length; i++){
+            HashSet<List<Integer>> set = new HashSet<>();
+            // To every list in "res", I insert nums[i] in several places, and use hashset to remove duplicates.
+            for (List<Integer> list : res){
+                for (int j = 0; j <= list.size(); j++){
+                    list.add(j, nums[i]);
+                    set.add(new ArrayList<>(list));
+                    list.remove(j);
+                }
+            }
+            // Put every element in hashset into "res".
+            res = new ArrayList<>(set);
+        }
+        return res;
+    }
+}
