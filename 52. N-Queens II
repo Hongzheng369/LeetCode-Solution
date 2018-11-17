@@ -1,0 +1,35 @@
+class Solution {
+    public static int totalNQueens(int n) {
+        List<int[]> res = new ArrayList<>();
+        if (n <= 0){
+            return 0;
+        }
+        int[] place = new int[n];
+        helperQueen(res, 0, place);
+        return res.size();
+    }
+    public static void helperQueen(List<int[]> res, int row, int[] place){
+        // Adding queen in row-th row.
+        if (row < place.length){
+            for (int i = 0; i < place.length; i++){
+                place[row] = i;
+                if (isValid(row, place)){
+                    helperQueen(res, row + 1, place);
+                }
+            }
+        }
+        // Adding finished.
+        else {
+            res.add(place);
+        }
+    }
+    // Compare row-th row to previous rows to see if it's valid.
+    public static boolean isValid(int row, int[] place){
+        for (int i = 0; i < row; i++){
+            if (place[i] == place[row] || Math.abs(place[row] - place[i]) == row - i){
+                return false;
+            }
+        }
+        return true;
+    }
+}
