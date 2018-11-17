@@ -1,0 +1,22 @@
+# 动态规划不是最快的，因为我只需要知道我最远能到达哪个位置，而不需要得到一个可能可以达到终点的路径。
+
+class Solution {
+    public static boolean canJump(int[] nums) {
+        if (nums == null || nums.length <= 1){
+            return true;
+        }
+        int maxReach = nums[0];
+        for (int i = 0; i < nums.length; i++){
+            if (maxReach <= i && nums[i] == 0){
+                return false;
+            }
+            if (i + nums[i] > maxReach){
+                maxReach = i + nums[i];
+            }
+            if (maxReach >= nums.length - 1){
+                return true;
+            }
+        }
+        return false;
+    }
+}
