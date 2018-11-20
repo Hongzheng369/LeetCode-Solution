@@ -1,0 +1,55 @@
+# My solution. It's not a very good idea because both of the function can't run in O(1) time complexity.
+# To find the number I want to update is a pretty tricky thing to do.
+
+class LRUCache {
+    static Map<Integer, Integer> map;
+    static List<Integer> list;
+    static int size;
+
+    public LRUCache(int capacity) {
+        map = new HashMap<>();
+        list = new ArrayList<>();
+        size = capacity;
+    }
+
+    public static int get(int key) {
+        if (!map.containsKey(key)){
+            return -1;
+        }
+        // Since it has been checked, then it should not be the least used anymore.
+        list.remove(new Integer(key));
+        list.add(key);
+        return map.get(key);
+    }
+
+    public static void put(int key, int value) {
+        // If I already have this key:
+        if (map.containsKey(key)){
+            map.put(key, value);
+            list.remove(new Integer(key));
+            list.add(key);
+        }
+        // If I don't have this key:
+        else {
+            // If I still don't reach the capacity:
+            if (map.size() < size){
+                map.put(key, value);
+                list.add(key);
+            }
+            else {
+                map.remove(list.remove(0));
+                map.put(key, value);
+                list.add(key);
+            }
+        }
+    }
+}
+
+/**
+ * Your LRUCache object will be instantiated and called as such:
+ * LRUCache obj = new LRUCache(capacity);
+ * int param_1 = obj.get(key);
+ * obj.put(key,value);
+ */
+ 
+ ---------------------------------------------------------------------------------
