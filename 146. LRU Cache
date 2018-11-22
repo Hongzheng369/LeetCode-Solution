@@ -1,5 +1,6 @@
 # My solution. It's not a very good idea because both of the function can't run in O(1) time complexity.
 # To find the number I want to update is a pretty tricky thing to do.
+# 往下翻!!! 双向链表get!!!!
 
 class LRUCache {
     static Map<Integer, Integer> map;
@@ -53,3 +54,91 @@ class LRUCache {
  */
  
  ---------------------------------------------------------------------------------
+
+# 前方高能
+# 仔细品味, 看完之后你的大脑会刷新三观.
+
+import java.util.*;
+public class LRUCache {
+    Map<Integer, DoubleNode> mapping;
+    DoubleNode head;
+    DoubleNode tail;
+    int maxSize;
+    int nowSize;
+
+    public LRUCache(int capacity) {
+        maxSize = capacity;
+        nowSize = 0;
+        mapping = new HashMap<>();
+        head = new DoubleNode();
+        tail = new DoubleNode();
+        head.next = tail;
+        head.pre = null;
+        tail.pre = head;
+        tail.next = null;
+    }
+
+    public int get(int key) {
+        DoubleNode check = mapping.get(key);
+        if (check == null){
+            return -1;
+        }
+        else {
+            this.moveToHead(check);
+            return check.value;
+        }
+    }
+
+    public void put(int key, int value) {
+        DoubleNode check = mapping.get(key);
+        // It's not in the mapping.
+        if (check == null){
+            DoubleNode forNew = new DoubleNode();
+            forNew.key = key;
+            forNew.value = value;
+            this.mapping.put(key, forNew);
+            this.addNode(forNew);
+            nowSize++;
+            // If I add this node, it turns larger than the maxSize?
+            if (nowSize > maxSize){
+                DoubleNode delete = this.popTail();
+                this.mapping.remove(delete.key);
+                nowSize--;
+            }
+        }
+        // It's in the mapping
+        else {
+            check.value = value;
+            this.moveToHead(check);
+        }
+    }
+
+
+    class DoubleNode{
+        int key;
+        int value;
+        DoubleNode pre;
+        DoubleNode next;
+    }
+    private void addNode(DoubleNode n){
+        n.pre = head;
+        n.next = head.next;
+        head.next.pre = n;
+        head.next = n;
+    }
+    private void deleteNode(DoubleNode n){
+        DoubleNode tmpPre = n.pre;
+        DoubleNode tmpNext = n.next;
+        tmpPre.next = tmpNext;
+        tmpNext.pre = tmpPre;
+    }
+    private void moveToHead(DoubleNode n){
+        this.deleteNode(n);
+        this.addNode(n);
+    }
+    private DoubleNode popTail(){
+        DoubleNode n = tail.pre;
+        this.deleteNode(n);
+        return n;
+    }
+}
