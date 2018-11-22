@@ -1,6 +1,7 @@
 # My solution. It's not a very good idea because both of the function can't run in O(1) time complexity.
 # To find the number I want to update is a pretty tricky thing to do.
 # 往下翻!!! 双向链表get!!!!
+# 还有一个神奇的数据结构叫做LinkedHashMap!!! *mind blown*
 
 class LRUCache {
     static Map<Integer, Integer> map;
