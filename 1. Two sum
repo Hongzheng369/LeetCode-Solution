@@ -1,30 +1,30 @@
 我的代码，时间复杂度为O(n2)。第i个元素与数组里所有元素相加，只要满足“相加等于target”就立刻输出。：
 public int[] twoSum(int[] nums, int target) {
-int[] result = new int [2];
+    int[] result = new int [2];
     int amount = nums.length;
     for(int i = 0; i < amount; i++){
     	for(int j = 0; j < amount; j++){
-			if(j != i && nums[i] + nums[j] == target){
-				result[0] = i;
-				result[1] = j;
-				break;
-			}
+	    if(j != i && nums[i] + nums[j] == target){
+		result[0] = i;
+		result[1] = j;
+		break;
+	    }
         }
     }
     return result;
 }
+
 改进，时间复杂度为O(n)。建立HashMap，比到第i个元素时，直接调用HashMap的函数来查找Map里是否有所需的第二个元素，有的话立刻输出二者的index：
 public int[] twoSum(int[] numbers, int target) {
     int[] result = new int[2];
     Map<Integer, Integer> map = new HashMap<Integer, Integer>();
     for (int i = 0; i < numbers.length; i++) {
-        if (map.containsKey(target - numbers[i])) {		//Map.containsKey是bool函数。
+        if (map.containsKey(target - numbers[i])) {
             result[1] = i;
             result[0] = map.get(target - numbers[i]);
             return result;
         }
-        map.put(numbers[i], i);		     
-//Map里的映射：<Element, Index>（仅此题）。
+        map.put(numbers[i], i);	
     }
     return result;
 }
