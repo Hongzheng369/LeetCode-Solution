@@ -1,0 +1,30 @@
+我的代码，时间复杂度为O(n)，转换成String类型之后，进行前后各位比较，但转换成String类型时会花费大量时间：
+public static boolean isPalindrome(int x) {
+	  String s = x + "";
+    int length = s.length();
+    int head = 0;
+    int tail = length - 1;
+    while(s.charAt(head) == s.charAt(tail)){
+        head++;
+        tail--;
+        if(head >= tail){
+            return true;
+        }
+    }
+    return false;
+}
+
+
+改进，时间复杂度为O(n)，同时也可以防止溢出。例如65535，计算到最后q=65530，p=5。
+public boolean isPalindrome(int x) {
+    	if (x < 0) 
+          return false;
+      int p = x; 
+    	int q = 0; 
+      while (p >= 10){
+    	    q *= 10; 
+        	q += p % 10; 
+          p /=10; 
+    	}
+    	return q == x / 10 && p == x % 10;
+}
