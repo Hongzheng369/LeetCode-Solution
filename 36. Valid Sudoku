@@ -1,0 +1,33 @@
+我的代码，时间复杂度为O(n2)。先比较行和列，再比较九宫格，其中九宫格中i、j有映射：
+public static boolean RowCol(char[][] board){
+    for(int i = 0; i < 9; i++){
+        HashSet<Character> row = new HashSet<Character>();
+        HashSet<Character> col = new HashSet<Character>();
+        for(int j = 0; j < 9; j++){
+            if(board[i][j] != '.' && !row.add(board[i][j])){
+                return false;
+            }
+            if(board[j][i] != '.' && !col.add(board[j][i])){
+                return false;
+            }
+        }                
+    }
+    return true;
+}
+public static boolean Box(char[][] board){
+    for(int i = 0; i < 9; i++){
+        HashSet<Character> box = new HashSet<Character>();
+        for(int j = 0; j < 9; j++){
+            int row = 3 * (i / 3);
+            int col = 3 * (i % 3);
+            char tmp = board[row + j / 3][col + j % 3];
+            if( tmp != '.' && !box.add(tmp)){
+                return false;
+            }
+        }
+    }
+    return true;
+}
+public static boolean isValidSudoku(char[][] board){
+    return (RowCol(board) & Box(board));
+}
