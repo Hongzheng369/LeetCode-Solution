@@ -1,0 +1,14 @@
+我的代码，时间复杂度为O(n)。逐位遍历，不需要进位则直接+1；若需要加一位，就多开一个数组来保存：
+public int[] plusOne(int[] digits) {   
+    int length = digits.length;
+    for(int i = length - 1; i >= 0; i--) {
+        if(digits[i] < 9) {
+            digits[i]++;
+            return digits;
+        }
+        digits[i] = 0;
+    }
+    int[] res = new int [length + 1];
+    res[0] = 1;
+    return res;
+}
