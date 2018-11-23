@@ -1,0 +1,48 @@
+我的代码，时间复杂度为O(n)。先得到各位上的数字，然后逐渐合成反转数：
+
+//先求位数。
+public static int getNumLength(long num){
+        if(num < 0){
+            num = -num;
+        }
+        if (num==0) {
+            return 1;
+        }
+        return (int)(Math.log10(num) + 1);		
+        //这里返回的类型原本是double，后为int。Math.log10(num)：将num以10为底取对数。
+}
+public static int reverse(int x) {
+int length = getNumLength(x);
+        int bit = 0;
+        long ans = 0;
+        for (int i = 0; i < length; i++){
+            bit = x % 10;
+            x = x / 10;
+            ans = ans * 10 + bit; 
+        }
+        if(ans >= -2147483648 && ans <= 2147483647){
+            return (int)ans;
+        }
+        else
+            return 0;
+}
+
+
+
+改进，时间复杂度为O(n)。一边反转一边比较是否能与原数对应，同时也能防止溢出：
+
+public int reverse(int x){
+    	int result = 0;
+      while (x != 0){
+        	int tail = x % 10;
+          int newResult = result * 10 + tail;
+    	    if ((newResult - tail) / 10 != result){
+              return 0;
+          }
+          //如果溢出，除于10以后当然不等于result。
+          
+          result = newResult;
+    	    x = x / 10;
+		  }
+    	return result;
+}
