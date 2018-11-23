@@ -1,0 +1,41 @@
+我的代码，时间复杂度是O(n2)。先把二位数组里的元素用一个一维数组保存下来，然后再把i、j分别做成翻转后的位置映射：
+public void rotate(int[][] matrix) {
+    int len = matrix[0].length;
+    int[] save = new int [len * len];
+    int count = 0;
+        
+    for(int i = 0; i < len; i++){
+        for(int j = 0; j < len; j++){
+            save[count] = matrix[i][j];
+            count++;
+        }
+    }
+    //For now, count = len * len.
+        
+    for(int i = 0; i < len; i++){
+        for(int j = 0; j < len; j++){
+            matrix[i][j] = save[ i + ( (len - j - 1) * len )];
+        }
+    }
+}
+
+
+改进，时间复杂度为O(n2)。算法是先将原数组作对角线反转，然后每一行再作镜像反转。
+public void rotate(int[][] matrix) {
+    for(int i = 0; i<matrix.length; i++){
+        for(int j = i; j<matrix[0].length; j++){
+            int temp = 0;
+            temp = matrix[i][j];
+            matrix[i][j] = matrix[j][i];
+            matrix[j][i] = temp;
+        }
+    }
+    for(int i =0 ; i<matrix.length; i++){
+        for(int j = 0; j<matrix.length/2; j++){
+            int temp = 0;
+            temp = matrix[i][j];
+            matrix[i][j] = matrix[i][matrix.length-1-j];
+            matrix[i][matrix.length-1-j] = temp;
+        }
+    }
+}
