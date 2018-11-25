@@ -1,3 +1,5 @@
+# My solution, which is pretty slow.
+
 class Solution {
     public int findCircleNum(int[][] M) {
         int[] save = new int[M.length];
@@ -49,5 +51,36 @@ class Solution {
                 set.add(i);
         }
         return set.size() + count_0;
+    }
+}
+
+=======================================================================================================
+
+# Another solution using DFS.
+
+class Solution {
+    public int findCircleNum(int[][] M) {
+        int[] visited = new int[M.length];
+        int res = 0;
+
+        // i-th row, student i.
+        // If i-th row is never checked, then we can go through i-th row to see who is friend to him.
+        // visited[i] = 0 means it's never checked; otherwise visited[i] would be 1 (doesn't have to be 1, other number is fine).
+        for (int i = 0; i < M.length; i++){
+            if (visited[i] == 0){
+                dfs(M, visited,i);
+                res++;
+            }
+        }
+        return res;
+    }
+    
+    public void dfs(int[][] M, int[] visited, int i){
+        for (int j = 0; j < M.length; j++){
+            if (M[i][j] == 1 && visited[j] == 0){
+                visited[j] = 1;
+                dfs(M, visited, j);
+            }
+        }
     }
 }
