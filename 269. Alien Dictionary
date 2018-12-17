@@ -1,0 +1,72 @@
+// 用的是BFS Topological Sort。图没有做出来，只是用了两个HashMap来记录predecessor和successor。
+
+class Solution {
+    public String alienOrder(String[] words) {
+        StringBuilder sb = new StringBuilder();
+        HashMap<Character, Set<Character>> suc = new HashMap<Character, Set<Character>>();
+        HashMap<Character, Integer> pre = new HashMap<Character, Integer> ();
+        HashSet<Character> charSet = new HashSet<Character>();
+        String previousWord = "";
+
+        for (String currentWord : words) {
+            // Save all the characters that appear before.
+            for (Character c : currentWord.toCharArray()) {
+                charSet.add(c);
+            }
+
+            // Do the comparison.
+            for (int i = 0; i < Math.min(previousWord.length(), currentWord.length()); i++) {
+                // If there is a character that is different, that means we should build relation between them.
+                if (previousWord.charAt(i) != currentWord.charAt(i)) {
+                    // First, handle the character's incoming degree.
+                    if (!pre.containsKey(currentWord.charAt(i))) {
+                        pre.put(currentWord.charAt(i), 1);
+                    }
+                    else {
+                        // If the relation already exists, then there is no need to go for the rest of the step.
+                        if (suc.containsKey(previousWord.charAt(i)) && suc.get(previousWord.charAt(i)).contains(currentWord.charAt(i))) {
+                            break;
+                        }
+                        // Otherwise, add 1 for the incoming degree.
+                        pre.put(currentWord.charAt(i), pre.get(currentWord.charAt(i)) + 1);
+                    }
+
+                    // Then, handle the character's out-going degree.
+                    if (!suc.containsKey(previousWord.charAt(i))) {
+                        suc.put(previousWord.charAt(i), new HashSet<Character> ());
+                    }
+                    suc.get(previousWord.charAt(i)).add(currentWord.charAt(i));
+                    break;
+                }
+            }
+            previousWord = currentWord;
+        }
+
+        // Put those who doesn't have predecessor in the queue.
+        Queue<Character> queue = new LinkedList<Character>();
+        for (Character each : charSet) {
+            if (!pre.containsKey(each)) {
+                queue.add(each);
+            }
+        }
+
+        while (!queue.isEmpty()) {
+            Character currentChar = queue.poll();
+            sb.append(currentChar);
+
+            // Check if it has successor. If it doesn't has any, then continue.
+            if (!suc.containsKey(currentChar)) {
+                continue;
+            }
+            // Otherwise, update the successor's incoming degree.
+            for (Character each : suc.get(currentChar)) {
+                pre.put(each, pre.get(each) - 1);
+                if (pre.get(each) == 0) {
+                    queue.add(each);
+                }
+            }
+        }
+
+        return sb.length() == charSet.size() ? sb.toString() : "";
+    }
+}
