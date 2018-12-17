@@ -1,0 +1,22 @@
+// 0到i的sum - 0到j的sum = j到i的sum。
+
+class Solution {
+    public int subarraySum(int[] nums, int k) {
+        if (nums == null || nums.length == 0) {
+            return 0;
+        }
+
+        Map<Integer, Integer> sumAppear = new HashMap<>();
+        sumAppear.put(0, 1);
+        int sum = 0, res = 0;
+        for (int i = 0; i < nums.length; i++) {
+            sum = sum + nums[i];
+            if (sumAppear.containsKey(sum - k)) {
+                res = res + sumAppear.get(sum - k);
+            }
+            sumAppear.put(sum, sumAppear.getOrDefault(sum, 0) + 1);
+        }
+
+        return res;
+    }
+}
