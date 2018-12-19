@@ -1,0 +1,26 @@
+class Solution {
+    public List<String> findStrobogrammatic(int n) {
+        List<String> odd = Arrays.asList("0", "1", "8");
+        List<String> even = Arrays.asList("");
+        List<String> ans = odd;
+        if (n % 2 == 0) {
+            ans = even;
+        }
+
+        for (int i = 1; i <= n / 2; i++) {
+            List<String> tmp = new ArrayList<>();
+            for (String s : ans) {
+                if (i != n / 2) {
+                    tmp.add("0" + s + "0");
+                }
+                tmp.add("1" + s + "1");
+                tmp.add("6" + s + "9");
+                tmp.add("8" + s + "8");
+                tmp.add("9" + s + "6");
+            }
+            ans = tmp;
+        }
+
+        return ans;
+    }
+}
