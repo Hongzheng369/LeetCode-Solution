@@ -1,0 +1,11 @@
+class Solution {
+    public int numUniqueEmails(String[] emails) {
+        Set<String> seen = new HashSet<>();
+        for (String s : emails){
+            String[] parts = s.split("@");
+            String[] divideLocal = parts[0].split("\\+");
+            seen.add(divideLocal[0].replace(".", "") + "@" + parts[1]);
+        }
+        return seen.size();
+    }
+}
