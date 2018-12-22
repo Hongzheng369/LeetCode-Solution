@@ -1,0 +1,23 @@
+class Solution {
+    public int coinChange(int[] coins, int amount) {
+        int[] ans = new int[amount + 1];
+        for (int i = 1; i < ans.length; i++) {
+            ans[i] = amount + 1;
+        }
+
+        for (int i = 1; i < ans.length; i++) {
+            for (int coin : coins) {
+                if (coin <= i) {
+                    ans[i] = Math.min(ans[i], ans[i - coin] + 1);
+                }
+            }
+        }
+
+        if (ans[amount] > amount) {
+            return -1;
+        }
+        else {
+            return ans[amount];
+        }
+    }
+}
