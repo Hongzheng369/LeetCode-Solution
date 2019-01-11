@@ -1,47 +1,61 @@
 class Solution {
-    public static boolean isValid(String s){
-        Stack<Character> stack = new Stack<>();
-        for (int i = 0; i < s.length(); i++){
-            char tmp = s.charAt(i);
-            if (tmp == ')' && !stack.isEmpty() && stack.peek() == '(')
-                stack.pop();
-            else if (tmp == ')' || tmp == '(')
-                stack.push(tmp);
-        }
-        return stack.isEmpty();
-    }
-    public static List<String> removeInvalidParentheses(String s){
-        List<String> res = new ArrayList<>();
-        if (isValid(s)){
-            res.add(s);
-            return res;
-        }
-        Queue<String> level = new LinkedList<>();
-        HashSet<String> set = new HashSet<>();
-        level.add(s);
-        while (!level.isEmpty()){
-            int size = level.size();
-            for (int i = 0; i < size; i++){
-                String pop = level.remove();
-                if (isValid(pop))
-                    res.add(pop);
-                else {
-                    for (int j = 0; j < pop.length(); j++){
-                        if (pop.charAt(j) == '(' || pop.charAt(j) == ')'){
-                            String tmp = pop.substring(0, j) + pop.substring(j + 1);
-                            if (!set.contains(tmp)){
-                                level.add(tmp);
-                                set.add(tmp);
-                            }
-                        }
-                    }
-                }
+    
+    Set<String> save = new HashSet<>();
+    
+    public List<String> removeInvalidParentheses(String s) {
+        int left = 0, right = 0;
+        
+        for (int i = 0; i < s.length(); i++) {
+            if (s.charAt(i) == '(') {
+                left++;
             }
-            if (res.size() != 0)
-                break;
+            else if (s.charAt(i) == ')') {
+                right = (left == 0 ? right + 1 : right);
+                left = (left > 0 ? left - 1 : left);
+            }
         }
-        for (String i : res)
-            System.out.println(i);
-        return res;
+        
+        helper(s, 0, 0, 0, left, right, new StringBuilder());
+        return new ArrayList<String>(save);
+    }
+    
+    public void helper(String s, int idx, int leftCount, int rightCount, int leftRemove, int rightRemove, StringBuilder ans) {
+        if (idx == s.length()) {
+            if (leftRemove == 0 && rightRemove == 0) {
+                save.add(ans.toString());
+            }
+        }
+        
+        else {
+            char c = s.charAt(idx);
+            int len = ans.length();
+            
+            // 1. Delete this character.
+            if ((c == '(' && leftRemove > 0) || (c == ')' && rightRemove > 0)) {
+                helper(s, idx + 1, leftCount, rightCount, 
+                    leftRemove - (c == '(' ? 1 : 0),
+                    rightRemove - (c == ')' ? 1 : 0),
+                    ans
+                );
+            }
+            
+            // 2. Save this character.
+            ans.append(c);
+            
+            // 2.1 If it's a english character.
+            if (c != '(' && c != ')') {
+                helper(s, idx + 1, leftCount, rightCount, leftRemove, rightRemove, ans);
+            }
+            // 2.2 If it's a left parenthesis.
+            else if (c == '(') {
+                helper(s, idx + 1, leftCount + 1, rightCount, leftRemove, rightRemove, ans);
+            }
+            // 2.3 If it's a right parenthesis.
+            else if (rightCount < leftCount) {
+                helper(s, idx + 1, leftCount, rightCount + 1, leftRemove, rightRemove, ans);
+            }
+            
+            ans.deleteCharAt(len);
+        }
     }
 }
