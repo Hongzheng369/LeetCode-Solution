@@ -1,0 +1,37 @@
+class Solution {
+    public int longestValidParentheses(String s) {
+        if (s == null || s.length() == 0) {
+            return 0;
+        }
+
+        int head = 0, len = 0;
+        Stack<Integer> index = new Stack<>();
+
+        for (int i = 0; i < s.length(); i++) {
+            char ch = s.charAt(i);
+
+            // If it's a left parenthesis:
+            if (ch == '(') {
+                index.push(i);
+            }
+
+            // If it's a right parenthesis:
+            else {
+                // No left parenthesis to match?
+                // "head" should skip this one to next index.
+                if (index.isEmpty()) {
+                    head = i + 1;
+                }
+
+                // Exist one matching parenthesis?
+                // Pop that one out and compute the length.
+                else {
+                    index.pop();
+                    len = Math.max(len, (index.isEmpty() ? (i - head + 1) : (i - index.peek())));
+                }
+            }
+        }
+        
+        return len;
+    }
+}
