@@ -1,0 +1,29 @@
+class Solution {
+    public int maxCoins(int[] nums) {
+        if (nums == null || nums.length == 0) {
+            return 0;
+        }
+
+        int[][] ans = new int[nums.length + 2][nums.length + 2];
+        int[] newNums = new int[nums.length + 2];
+
+        for (int i = 0; i < newNums.length; i++) {
+            if (i == 0 || i == newNums.length - 1) {
+                newNums[i] = 1;
+            }
+            else {
+                newNums[i] = nums[i - 1];
+            }
+        }
+
+        for (int len = 0; len < nums.length; len++) {
+            for (int i = 1; i + len <= nums.length; i++) {
+                for (int j = i; j <= i + len; j++) {
+                    ans[i][i + len] = Math.max(ans[i][i + len], newNums[j] * newNums[i - 1] * newNums[i + len + 1] + ans[i][j - 1] + ans[j + 1][i + len]);
+                }
+            }
+        }
+        
+        return ans[1][nums.length];
+    }
+}
