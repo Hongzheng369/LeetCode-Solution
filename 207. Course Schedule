@@ -1,4 +1,42 @@
 class Solution {
+    /*
+    // Save the graph as a matrix.
+    public boolean canFinish(int numCourses, int[][] prerequisites) {
+        if (prerequisites == null || prerequisites.length == 0) {
+            return true;
+        }
+        int[][] graph = new int[numCourses][numCourses];
+        int[] inDegree = new int[numCourses];
+        for (int i = 0; i < prerequisites.length; i++) {
+            if (graph[prerequisites[i][1]][prerequisites[i][0]] == 0) {
+                inDegree[prerequisites[i][0]]++;
+            }
+            graph[prerequisites[i][1]][prerequisites[i][0]] = 1;
+        }
+        int count = 0;
+        Queue<Integer> queue = new LinkedList<>();
+        for (int i = 0; i < inDegree.length; i++) {
+            if (inDegree[i] == 0) {
+                queue.add(i);
+            }
+        }
+        while (!queue.isEmpty()) {
+            int course = queue.remove();
+            count++;
+            for (int i = 0; i < graph[course].length; i++) {
+                if (graph[course][i] != 0) {
+                    inDegree[i]--;
+                    if (inDegree[i] == 0) {
+                        queue.add(i);
+                    }
+                }
+            }
+        }
+        return (count == numCourses);
+    }
+    */
+
+    // Save the graph as adjacency list.
     public boolean canFinish(int numCourses, int[][] prerequisites) {
         // Special case.
         if (prerequisites == null || prerequisites.length == 0) {
@@ -28,10 +66,6 @@ class Solution {
             // Update "inDegree".
             inDegree.put(prerequisites[i][0], inDegree.getOrDefault(prerequisites[i][0], 0) + 1);
         }
-        // After updating, check if the space is enough.
-        if (numCourses < courses.size()) {
-            return false;
-        }
         // Put courses that have no in-degree in the queue.
         Queue<Integer> queue = new LinkedList<>();
         for (Integer course : courses) {
@@ -39,12 +73,9 @@ class Solution {
                 queue.add(course);
             }
         }
-        // Set the variable called "count" to see how many space to finish these courses.
-        int count = 0;
         // Now do the topological sort.
         while (!queue.isEmpty()) {
             int tempCourse = queue.remove();
-            count++;
             courses.remove(tempCourse);
             if (!children.containsKey(tempCourse)) {
                 continue;
@@ -57,6 +88,6 @@ class Solution {
             }
         }
         // If there are courses left, then that means it's impossible to finish them.
-        return ((courses.size() == 0) && (count <= numCourses));
+        return (courses.size() == 0);
     }
 }
