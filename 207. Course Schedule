@@ -5,6 +5,13 @@ class Solution {
         }
         Map<Integer, Set<Integer>> childrens = new HashMap<>();
         Set<Integer> indegree = new HashSet<>();
+        Set<Integer> courses = new HashSet<>();
         
+        for (int i = 0; i < prerequisites.length; i++) {
+        	// Update "courses".
+        	courses.add(prerequisites[i][0]);
+        	courses.add(prerequisites[i][1]);
+        	// Update 
+        }
     }
 }
