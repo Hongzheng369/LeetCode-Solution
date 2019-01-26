@@ -1,0 +1,10 @@
+class Solution {
+    public boolean canFinish(int numCourses, int[][] prerequisites) {
+        if (prerequisites == null || prerequisites.length == 0) {
+        	return false;
+        }
+        Map<Integer, Set<Integer>> childrens = new HashMap<>();
+        Set<Integer> indegree = new HashSet<>();
+        
+    }
+}
