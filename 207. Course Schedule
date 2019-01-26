@@ -1,17 +1,62 @@
 class Solution {
     public boolean canFinish(int numCourses, int[][] prerequisites) {
+        // Special case.
         if (prerequisites == null || prerequisites.length == 0) {
-        	return false;
+            return true;
         }
-        Map<Integer, Set<Integer>> childrens = new HashMap<>();
-        Set<Integer> indegree = new HashSet<>();
+        // Set the variables.
+        Map<Integer, Set<Integer>> children = new HashMap<>();
+        Map<Integer, Integer> inDegree = new HashMap<>();
         Set<Integer> courses = new HashSet<>();
-        
+        // Traverse the "prerequisites" to update information.
         for (int i = 0; i < prerequisites.length; i++) {
-        	// Update "courses".
-        	courses.add(prerequisites[i][0]);
-        	courses.add(prerequisites[i][1]);
-        	// Update 
+            // Update "courses".
+            courses.add(prerequisites[i][0]);
+            courses.add(prerequisites[i][1]);
+            // Update "children".
+            if (!children.containsKey(prerequisites[i][1])) {
+                children.put(prerequisites[i][1], new HashSet<>());
+            }
+            // If I've already seen this combination:
+            if (children.get(prerequisites[i][1]).contains(prerequisites[i][0])) {
+                continue;
+            }
+            // If I haven't:
+            else {
+                children.get(prerequisites[i][1]).add(prerequisites[i][0]);
+            }
+            // Update "inDegree".
+            inDegree.put(prerequisites[i][0], inDegree.getOrDefault(prerequisites[i][0], 0) + 1);
         }
+        // After updating, check if the space is enough.
+        if (numCourses < courses.size()) {
+            return false;
+        }
+        // Put courses that have no in-degree in the queue.
+        Queue<Integer> queue = new LinkedList<>();
+        for (Integer course : courses) {
+            if (!inDegree.containsKey(course)) {
+                queue.add(course);
+            }
+        }
+        // Set the variable called "count" to see how many space to finish these courses.
+        int count = 0;
+        // Now do the topological sort.
+        while (!queue.isEmpty()) {
+            int tempCourse = queue.remove();
+            count++;
+            courses.remove(tempCourse);
+            if (!children.containsKey(tempCourse)) {
+                continue;
+            }
+            for (Integer child : children.get(tempCourse)) {
+                inDegree.put(child, inDegree.get(child) - 1);
+                if (inDegree.get(child) == 0) {
+                    queue.add(child);
+                }
+            }
+        }
+        // If there are courses left, then that means it's impossible to finish them.
+        return ((courses.size() == 0) && (count <= numCourses));
     }
 }
