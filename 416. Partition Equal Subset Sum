@@ -1,0 +1,27 @@
+class Solution {
+    public boolean canPartition(int[] nums) {
+        int sum = 0;
+        for (int i : nums) {
+            sum += i;
+        }
+        if (sum % 2 == 1) {
+            return false;
+        }
+        boolean[][] matrix = new boolean[sum / 2 + 1][nums.length + 1];
+        for (int i = 0; i < matrix[0].length; i++) {
+            matrix[0][i] = true;
+        }
+        for (int i = 0; i < matrix.length; i++) {
+            matrix[i][0] = false;
+        }
+        for (int target = 1; target < matrix.length; target++) {
+            for (int index = 1; index < matrix[0].length; index++) {
+                matrix[target][index] = matrix[target][index - 1];
+                if (target >= nums[index - 1]) {
+                    matrix[target][index] |= matrix[target - nums[index - 1]][index - 1];
+                }
+            }
+        }
+        return matrix[sum / 2][nums.length];
+    }
+}
