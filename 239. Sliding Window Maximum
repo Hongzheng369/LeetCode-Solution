@@ -1,0 +1,27 @@
+class Solution {
+    public int[] maxSlidingWindow(int[] nums, int k) {
+        if (nums == null || nums.length == 0) {
+            return new int[0];
+        }
+        // "queue" saves the indexes.
+        Deque<Integer> queue = new ArrayDeque<>();
+        int[] answer = new int[nums.length - k + 1];
+        for (int i = 0; i < nums.length; i++) {
+            // Making sure that the first index in queue,
+            // is the largest element's index in the window.
+            if (!queue.isEmpty() && queue.peekFirst() <= i - k) {
+                queue.pollFirst();
+            }
+            while (!queue.isEmpty() && nums[queue.peekLast()] < nums[i]) {
+                queue.pollLast();
+            }
+            queue.offerLast(i);
+            // Update the element in "answer".
+            // Starting from i = k - 1.
+            if (i >= k - 1) {
+                answer[i - k + 1] = nums[queue.peekFirst()];
+            }
+        }
+        return answer;
+    }
+}
