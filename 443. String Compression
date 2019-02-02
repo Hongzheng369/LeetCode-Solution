@@ -1,0 +1,33 @@
+class Solution {
+    public int compress(char[] chars) {
+        // "cur" stands for the index that I should modify.
+        int cur = 0;
+        
+        // Using double pointers.
+        for (int i = 0, j = 0; i < chars.length; i = j) {
+            // j will stop when chars[j] != chars[i];
+            // ... or reach the end.
+            while (j < chars.length && chars[i] == chars[j]) {
+                j++;
+            }
+            
+            // Put the character first.
+            chars[cur] = chars[i];
+            cur++;
+            
+            // Then put the number of appearance.
+            // If it appears once:
+            if (j - i == 1) {
+                continue;
+            }
+            // If it appears several times:
+            String s = Integer.toString(j - i);
+            for (int k = 0; k < s.length(); k++) {
+                chars[cur] = s.charAt(k);
+                cur++;
+            }
+        }
+        
+        return cur;
+    }
+}
