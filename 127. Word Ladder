@@ -1,0 +1,47 @@
+class Solution {
+    public int ladderLength(String beginWord, String endWord, List<String> wordList) {
+        if (wordList == null || wordList.size() == 0) {
+            return 0;
+        }
+        
+        HashSet<String> words = new HashSet<>(wordList);
+        if (!words.contains(endWord)) {
+            return 0;
+        }
+        
+        Queue<String> wordTree = new LinkedList<>();
+        wordTree.add(beginWord);
+        int ans = 0;
+        
+        while(!wordTree.isEmpty()) {            
+            // Traverse by level;
+            // ... which means "wordTree"'s size.
+            int size = wordTree.size();
+            for (int i = 0; i < size; i++) {
+                String word = wordTree.remove();
+                
+                if(word.equals(endWord)) {
+                    return ans + 1;
+                }
+                
+                // Try 26 characters in every spot.
+                for (int j = 0; j < word.length(); j++) {
+                    String newWord = word;
+                    for (char ch = 'a'; ch <= 'z'; ch++) {
+                        newWord = newWord.substring(0, j) + ch + newWord.substring(j + 1, word.length());
+                        if (words.contains(newWord) && newWord != word) {
+                            wordTree.add(newWord);
+                            words.remove(newWord);
+                        }
+                    }
+                }
+            }
+            
+            // Goes to next level, path length plus one.
+            ans++;
+        }
+        
+        // No path? return 0.
+        return 0;
+    }
+}
