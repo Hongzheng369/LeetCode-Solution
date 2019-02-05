@@ -1,0 +1,63 @@
+/**
+ * Definition for a binary tree node.
+ * public class TreeNode {
+ *     int val;
+ *     TreeNode left;
+ *     TreeNode right;
+ *     TreeNode(int x) { val = x; }
+ * }
+ */
+class Solution {
+    // Perform normal BFS.
+    public List<List<Integer>> zigzagLevelOrder(TreeNode root) {
+        List<List<Integer>> ans = new ArrayList<>();
+        if (root == null) {
+            return ans;
+        }
+        
+        Queue<TreeNode> queue = new LinkedList<>();
+        boolean reverse = false;
+        queue.add(root);
+        
+        while (!queue.isEmpty()) {
+            List<Integer> level = new ArrayList<>();
+            int len = queue.size();
+            
+            // Now I know how many nodes in one level.
+            // Put their value in "level".
+            for (int i = 0; i < len; i++) {
+                TreeNode node = queue.remove();
+                level.add(node.val);
+                
+                if (node.left != null) {
+                    queue.add(node.left);
+                }
+                if (node.right != null) {
+                    queue.add(node.right);
+                }
+            }
+        
+            if (reverse) {
+                reverseList(level);
+            }
+            
+            ans.add(level);
+            reverse = !reverse;
+        }
+        
+        return ans;
+    }
+    
+    // To reverse a list.
+    private void reverseList(List<Integer> list) {
+        if (list == null || list.size() <= 1) {
+            return;
+        }
+        
+        int len = list.size();
+        for (int i = 1; i < len; i++) {
+            int move = list.remove(i);
+            list.add(0, move);
+        }
+    }
+}
