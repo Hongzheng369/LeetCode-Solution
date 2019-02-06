@@ -1,0 +1,46 @@
+/* The knows API is defined in the parent class Relation.
+      boolean knows(int a, int b); */
+
+public class Solution extends Relation {
+    // Brute force. O(n2).
+    /*
+    public int findCelebrity(int n) {
+        // Assume i is the celebrity.
+        for (int i = 0; i < n; i++) {
+            int j = 0;
+            for (; j < n; j++) {
+                if ((i != j && knows(i, j)) || (i != j && !knows(j, i))) {
+                    break;
+                }
+            }
+            
+            // Once we reach this condition, that means i is definitely the celebrity.
+            if (j == n) {
+                return i;
+            }
+        }
+        
+        return -1;
+    }*/
+    
+    // Better method.
+    public int findCelebrity(int n) {
+        int celeb = 0;
+        
+        // Find the end of the path.
+        for (int i = 1; i < n; i++) {
+            if (knows(celeb, i)) {
+                celeb = i;
+            }
+        }
+        
+        // Verify the answer.
+        for (int i = 0; i < n; i++) {
+            if ((i != celeb && knows(celeb, i)) || (i != celeb && !knows(i, celeb))) {
+                return -1;
+            }
+        }
+        
+        return celeb;
+    }
+}
