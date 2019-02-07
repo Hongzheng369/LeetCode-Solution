@@ -1,0 +1,60 @@
+class Solution {
+    // Brute force.
+    /*
+    public int kthSmallest(int[][] matrix, int k) {
+        if (matrix == null || matrix.length == 0 || matrix[0].length == 0) {
+            return Integer.MIN_VALUE;
+        }
+        
+        PriorityQueue<Integer> queue = new PriorityQueue<>();
+        int len = matrix.length;
+        for (int i = 0; i < len; i++) {
+            for (int j = 0; j < len; j++) {
+                queue.add(matrix[i][j]);
+            }
+        }
+        
+        for (int i = 1; i < k; i++) {
+            queue.remove();
+        }
+        
+        return queue.peek();
+    }*/
+    
+    // Binary search.
+    public int kthSmallest(int[][] matrix, int k) {
+        if (matrix == null || matrix.length == 0 || matrix[0].length == 0) {
+            return Integer.MIN_VALUE;
+        }
+        
+        int len = matrix.length;
+        int head = matrix[0][0];
+        int tail = matrix[len - 1][len - 1];
+        
+        while (head < tail) {
+            int mid = head + (tail - head) / 2;
+            int count = 0;
+            int i = len - 1;
+            int j = 0;
+            
+            while (i >= 0 && j < len) {
+                if (matrix[i][j] <= mid) {
+                    count += i + 1;
+                    j++;
+                }
+                else {
+                    i--;
+                }
+            }
+            
+            if (count < k) {
+                head = mid + 1;
+            }
+            else {
+                tail = mid;
+            }
+        }
+        
+        return head;
+    }
+}
