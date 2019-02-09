@@ -1,0 +1,45 @@
+/**
+ * Definition for singly-linked list.
+ * public class ListNode {
+ *     int val;
+ *     ListNode next;
+ *     ListNode(int x) { val = x; }
+ * }
+ */
+class Solution {
+    public ListNode oddEvenList(ListNode head) {
+        if (head == null) {
+            return head;
+        }
+        
+        /* Get the len and the tail. */
+        int len = 0;
+        ListNode traverse = head, tail = null;
+        // Update the length and the tail node.
+        while (traverse != null) {
+            len++;
+            tail = traverse;
+            traverse = traverse.next;
+        }
+        // Length smaller than 3? No need to process.
+        if (len < 3) {
+            return head;
+        }
+        
+        /* Move the nodes. */
+        // The number of operations is len / 2.
+        traverse = head;
+        for (int i = 0; i < len / 2; i++) {
+            // Move the node on even index.
+            ListNode temp = traverse.next;
+            traverse.next = traverse.next.next;
+            tail.next = temp;
+            temp.next = null;
+            // Move the pointers.
+            traverse = traverse.next;
+            tail = tail.next;
+        }
+        
+        return head;
+    }
+}
