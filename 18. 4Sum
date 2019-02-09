@@ -1,0 +1,162 @@
+class Solution {
+    // Method 1: brute force.
+    /*
+    public List<List<Integer>> fourSum(int[] nums, int target) {
+        List<List<Integer>> ans = new ArrayList<List<Integer>>();
+        Arrays.sort(nums);
+
+        for (int i = 0; i < (nums.length - 3); i++) {
+            for (int j = i + 1; j < (nums.length - 2); j++) {
+                int head = j + 1;
+                int tail = nums.length - 1;
+
+                while (head < tail) {
+                    if ((nums[i] + nums[j] + nums[head] + nums[tail]) == target) {
+                        List<Integer> list = new ArrayList<Integer>();
+                        list.add(nums[i]);
+                        list.add(nums[j]);
+                        list.add(nums[head]);
+                        list.add(nums[tail]);
+
+                        if (ans.contains(list) == false) {
+                            ans.add(list);
+                        }
+
+                        head++;
+                        tail--;
+                    } else if ((nums[i] + nums[j] + nums[head] + nums[tail]) > target) {
+                        tail--;
+                    } else if ((nums[i] + nums[j] + nums[head] + nums[tail]) < target) {
+                        head++;
+                    }
+                }
+            }
+        }
+
+        return ans;
+    }
+    */
+    
+    // Method 2, smarter traverse.
+    /*
+    public List<List<Integer>> fourSum(int[] nums, int target) {
+        List<List<Integer>> result = new ArrayList();
+        Arrays.sort(nums);
+
+        for (int i = 0; i < (nums.length - 3); i++) {
+            // nums[i] is already too large.
+            if ((nums[i] + nums[i + 1] + nums[i + 2] + nums[i + 3]) > target) {
+                break;
+            }
+
+            // nums[i] is too small.
+            if ((nums[i] + nums[nums.length - 1] + nums[nums.length - 2] + nums[nums.length - 3]) < target) {
+                continue;
+            }
+
+            // Already checked the same element, skip this one.
+            if ((i > 0) && (nums[i - 1] == nums[i])) {
+                continue;
+            }
+
+            for (int j = i + 1; j < (nums.length - 2); j++) {
+                // nums[j] is already too large.
+                if ((nums[i] + nums[j] + nums[j + 1] + nums[j + 2]) > target) {
+                    break;
+                }
+
+                // nums[j] is too small.
+                if ((nums[i] + nums[j] + nums[nums.length - 1] + nums[nums.length - 2]) < target) {
+                    continue;
+                }
+
+                // Already checked the same element, skip this one.
+                if ((j > (i + 1)) && (nums[j] == nums[j - 1])) {
+                    continue;
+                }
+
+                // Done with the two pointers.
+                int current = nums[i] + nums[j];
+
+                // Now set other two pointers.
+                int k = j + 1;
+                int l = nums.length - 1;
+
+                while (k < l) {
+                    int sum = current + nums[k] + nums[l];
+
+                    if (sum == target) {
+                        result.add(Arrays.asList(new Integer[] { nums[i], nums[j], nums[k], nums[l] }));
+
+                        // Skip the same elements.
+                        while ((k < l) && (nums[k] == nums[k + 1])) {
+                            k++;
+                        }
+
+                        while ((k < l) && (nums[l] == nums[l - 1])) {
+                            l--;
+                        }
+
+                        // Skip one more to reach new number.
+                        k++;
+                        l--;
+                    } else if (sum < target) {
+                        k++;
+                    } else {
+                        l--;
+                    }
+                }
+            }
+        }
+
+        return result;
+    }
+    */
+    
+    // Method 3, using data structures.
+    public List<List<Integer>> fourSum(int[] nums, int target) {
+        List<List<Integer>> ans = new ArrayList<List<Integer>>();
+        Arrays.sort(nums);
+        int len = nums.length;
+        
+        if (nums == null || len == 0 || target < 4 * nums[0] || target > 4 * nums[len - 1]) {
+            return ans;
+        }
+        
+        // Now starting to traverse.
+        HashMap<Integer, Integer> map = new HashMap<>();
+        for (int i = 0; i < len; i++) {
+            map.put(nums[i], i);
+        }
+        
+        HashSet<List<Integer>> set = new HashSet<>();
+        for (int i = 0; i < len; i++) {
+            for (int j = i + 1; j < len; j++) {
+                for (int k = j + 1; k < len; k++) {
+                    int temp = target - nums[i] - nums[j] - nums[k];
+                    
+                    // nums[i] <= nums[j] <= nums[k].
+                    // But if temp < nums[k], then no need to keep comparing.
+                    if (temp < nums[k]) {
+                        break;
+                    }
+                    
+                    // If temp is not in the array, or probably "temp" has been checked.
+                    if (!map.containsKey(temp) || map.get(temp) <= k) {
+                        continue;
+                    }
+                    
+                    List<Integer> list = new ArrayList<Integer>();
+                    list.add(nums[i]);
+                    list.add(nums[j]);
+                    list.add(nums[k]);
+                    list.add(temp);
+                    set.add(list);
+                }
+            }
+        }
+        
+        ans.addAll(set);
+        return ans;
+    }
+}
