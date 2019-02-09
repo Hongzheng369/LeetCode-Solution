@@ -1,0 +1,35 @@
+class Solution {
+    // Use another array to save the dynamic programming result.
+    // Time complexity: O(n2).
+    public int lengthOfLIS(int[] nums) {
+        if (nums == null) {
+            return 0;
+        }
+        int len = nums.length;
+        if (len < 2) {
+            return len;
+        }
+
+        int[] ans = new int[len];
+        int maxLen = -1;
+
+        for (int i = 0; i < ans.length; i++) {
+            ans[i] = 1;
+        }
+
+        for (int i = 1; i < ans.length; i++) {
+            for (int j = 0; j < i; j++) {
+                // Found a larger element but haven't update the dp array yet.
+                if (nums[i] > nums[j]) {
+                    ans[i] = Math.max(ans[i], ans[j] + 1);
+                }
+            }
+        }
+
+        for (int num : ans) {
+            maxLen = Math.max(maxLen, num);
+        }
+        
+        return maxLen;
+    }
+}
