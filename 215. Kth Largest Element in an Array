@@ -1,0 +1,61 @@
+class Solution {
+    public int findKthLargest(int[] nums, int k) {
+        if (nums == null) {
+            return Integer.MIN_VALUE;
+        }
+        int len = nums.length;
+        if (len == 0) {
+            return Integer.MIN_VALUE;
+        }
+        
+        return quickSelect(nums, 0, len - 1, len - k);
+    }
+    
+    private int quickSelect(int[] nums, int left, int right, int target) {
+        if (left == right) {
+            return nums[left];
+        }
+        
+        Random ranNum = new Random();
+        int pivotIndex = findPivotIndex(nums, left, right, left + ranNum.nextInt(right - left));
+        
+        if (target == pivotIndex) {
+            return nums[pivotIndex];
+        } else if (target < pivotIndex) {
+            return quickSelect(nums, left, pivotIndex - 1, target);
+        } else {
+            return quickSelect(nums, pivotIndex + 1, right, target);
+        }
+    }
+    
+    private int findPivotIndex(int[] nums, int left, int right, int pivotIndex) {
+        int pivot = nums[pivotIndex];
+        
+        // Put it to the right end.
+        swap(nums, pivotIndex, right);
+        int index = left;
+        
+        // Put the smaller element to the left.
+        for (int i = left; i < right; i++) {
+            if (nums[i] < pivot) {
+                swap(nums, i, index);
+                index++;
+            }
+        }
+        
+        // Put the pivot to where it should be.
+        swap(nums, index, right);
+        
+        return index;
+    }
+    
+    private void swap(int[] nums, int i, int j) {
+        if (i == j) {
+            return;
+        }
+        
+        int temp = nums[i];
+        nums[i] = nums[j];
+        nums[j] = temp;
+    }
+}
