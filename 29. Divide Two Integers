@@ -1,0 +1,60 @@
+class Solution {
+    // Method 1: Normal method.
+    /*
+    public int divide(int dividend, int divisor) {
+        if (divisor == 0) {
+            return Integer.MAX_VALUE;
+        }
+        if ((dividend == 0) || (divisor == 1)) {
+            return dividend;
+        }
+        
+        long x = Math.abs((long) dividend);
+        long y = Math.abs((long) divisor);
+        long ans = 0;
+        
+        while (x >= y) {
+            long temp = y;
+            long tempAns = 1;
+            while ((temp << 1) <= x) {
+                temp <<= 1;
+                tempAns <<= 1;
+            }
+            x -= temp;
+            ans += tempAns;
+        }
+        
+        if ((dividend > 0) != (divisor > 0)) {
+            ans = -ans;
+        }
+        
+        return (ans > Integer.MAX_VALUE) ? Integer.MAX_VALUE : (int) ans;
+    }
+    */
+    
+    // Method 2: Recursion.
+    
+    public int divide(int dividend, int divisor) {
+        long x = Math.abs((long) dividend);
+        long y = Math.abs((long) divisor);
+        
+        if (x < y) {
+            return 0;
+        }
+        
+        long temp = y;
+        long count = 1;
+        while ((temp << 1) <= x) {
+            temp <<= 1;
+            count <<= 1;
+        }
+        
+        long ans = count + divide((int)(x - temp), (int)y);
+        if ((dividend > 0) != (divisor > 0)) {
+            ans = -ans;
+        }
+        
+        return (ans > Integer.MAX_VALUE) ? Integer.MAX_VALUE : (int) ans;
+    }
+    
+}
