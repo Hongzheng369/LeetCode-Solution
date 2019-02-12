@@ -1,0 +1,104 @@
+class Solution {
+	// Method 1: using a stack.
+    
+	public int calculate(String s) {
+		if (s == null) {
+			return 0;
+		}
+		int len = s.length();
+		if (len == 0) {
+			return 0;
+		}
+        
+		Stack<Integer> stack = new Stack<>();
+		int num = 0;
+		char sign = '+';
+        
+		for (int i = 0; i < len; i++) {
+			char ch = s.charAt(i);
+            
+			if ((ch >= '0') && (ch <= '9')) {
+				num = (num * 10) + (ch - '0');
+			}
+            
+			if ((((ch < '0') || (ch > '9')) && (ch != ' ')) || (i == (len - 1))) {
+				if (sign == '-') {
+					stack.push(-num);
+				} 
+                else if (sign == '+') {
+					stack.push(num);
+				} 
+                else if (sign == '*') {
+					stack.push(stack.pop() * num);
+				} 
+                else if (sign == '/') {
+					stack.push(stack.pop() / num);
+				}
+                
+				num = 0;
+				sign = ch;
+			}
+		}
+        
+		int ans = 0;
+        
+		for (int i : stack) {
+			ans += i;
+		}
+        
+		return ans;
+	}
+    
+    
+    // Method 2: No stack, but use a variable to save the top of the stack.
+    /*
+    public int calculate(String s) {
+		char[] st = s.toCharArray();
+		char sign = '+';
+		int lastNum = 0;
+		int num = 0;
+		int ans = 0;
+        
+		for (int i = 0; i <= st.length; i++) {
+			if (i < st.length && st[i] >= '0' && st[i] <= '9') {
+				num = num * 10 + st[i] - '0';
+			} 
+            
+            else {
+				if (i < st.length && st[i] == ' ') {
+					continue;
+				}
+                
+				if (sign == '+') {
+					ans += num;
+					lastNum = num;
+				} 
+                else if (sign == '-') {
+					ans -= num;
+					lastNum = -num;
+				} 
+                // For the next two case.
+                // Because we already count the num as '+' or '-', 
+                // so we have to take it out first.
+                else if (sign == '*') {
+					ans = (ans - lastNum) + lastNum * num;
+					lastNum = lastNum * num;
+				} 
+                else if (sign == '/') {
+                    // 
+					ans = (ans - lastNum) + lastNum / num;
+					lastNum = lastNum / num;
+				}
+                
+				if (i < st.length) {
+					sign = st[i];
+				}
+                
+				num = 0;
+			}
+		}
+        
+		return ans;
+	}
+    */
+}
