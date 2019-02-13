@@ -1,4 +1,22 @@
 class Solution {
+    // Method 1: use Arrays.sort() instead of using PriorityQueue to find it out.
+    public int findKthLargest(int[] nums, int k) {
+        if (nums == null) {
+            return Integer.MIN_VALUE;
+        }
+        int len = nums.length;
+        if (len == 0) {
+            return Integer.MIN_VALUE;
+        }
+        
+        Arrays.sort(nums);
+        
+        return nums[len - k];
+    }
+    
+    // Method 2: using part of quick sort to sort half part of this array, and it looks like binary sort.
+    // Time complexity would be O(n).
+    /*
     public int findKthLargest(int[] nums, int k) {
         if (nums == null) {
             return Integer.MIN_VALUE;
@@ -57,5 +75,5 @@ class Solution {
         int temp = nums[i];
         nums[i] = nums[j];
         nums[j] = temp;
-    }
+    }*/
 }
