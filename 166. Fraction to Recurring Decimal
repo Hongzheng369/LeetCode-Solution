@@ -1,0 +1,45 @@
+class Solution {
+    public String fractionToDecimal(int numerator, int denominator) {
+        // Special case.
+        if (numerator == 0) {
+            return "0";
+        }
+        if (denominator == 0) {
+            return String.valueOf(Integer.MIN_VALUE);
+        }
+        
+        // Check whether it should be a negative number.
+        StringBuilder ans = new StringBuilder();
+        if ((numerator > 0) != (denominator > 0)) {
+            ans.append('-');
+        }
+        
+        // Handle the number before the dot.
+        ans.append(String.valueOf(Math.abs((long)(numerator / denominator))));
+        long remain = Math.abs(numerator % denominator);
+        if (remain == 0) {
+            return ans.toString();
+        }
+        ans.append('.');
+        
+        // Appending the numbers after the dot.
+        long divisor = Math.abs(Long.valueOf(denominator));
+        HashMap<Long, Integer> appear = new HashMap<>();
+        while (remain != 0) {
+            // If it has already appeared.
+            if (appear.containsKey(remain)) {
+                ans.insert(appear.get(remain), "(");
+                ans.append(')');
+                return ans.toString();
+            }
+            
+            // Otherwise...
+            appear.put(remain, ans.length());
+            remain *= 10;
+            ans.append(remain / divisor);
+            remain %= divisor;
+        }
+        
+        return ans.toString();
+    }
+}
