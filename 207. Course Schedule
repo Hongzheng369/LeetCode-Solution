@@ -1,93 +1,67 @@
 class Solution {
+    // Method 1: use adjacency list.
     /*
-    // Save the graph as a matrix.
-    public boolean canFinish(int numCourses, int[][] prerequisites) {
-        if (prerequisites == null || prerequisites.length == 0) {
-            return true;
-        }
-        int[][] graph = new int[numCourses][numCourses];
-        int[] inDegree = new int[numCourses];
-        for (int i = 0; i < prerequisites.length; i++) {
-            if (graph[prerequisites[i][1]][prerequisites[i][0]] == 0) {
-                inDegree[prerequisites[i][0]]++;
-            }
-            graph[prerequisites[i][1]][prerequisites[i][0]] = 1;
-        }
-        int count = 0;
-        Queue<Integer> queue = new LinkedList<>();
-        for (int i = 0; i < inDegree.length; i++) {
-            if (inDegree[i] == 0) {
-                queue.add(i);
-            }
-        }
-        while (!queue.isEmpty()) {
-            int course = queue.remove();
-            count++;
-            for (int i = 0; i < graph[course].length; i++) {
-                if (graph[course][i] != 0) {
-                    inDegree[i]--;
-                    if (inDegree[i] == 0) {
-                        queue.add(i);
-                    }
-                }
-            }
-        }
-        return (count == numCourses);
-    }
-    */
-
-    // Save the graph as adjacency list.
     public boolean canFinish(int numCourses, int[][] prerequisites) {
         // Special case.
-        if (prerequisites == null || prerequisites.length == 0) {
+        if (numCourses == 0 || prerequisites == null) {
             return true;
         }
-        // Set the variables.
-        Map<Integer, Set<Integer>> children = new HashMap<>();
-        Map<Integer, Integer> inDegree = new HashMap<>();
-        Set<Integer> courses = new HashSet<>();
-        // Traverse the "prerequisites" to update information.
-        for (int i = 0; i < prerequisites.length; i++) {
+        
+        // Build a graph.
+        HashMap<Integer, HashSet<Integer>> succ = new HashMap<>();
+        HashMap<Integer, Integer> inDegree = new HashMap<>();
+        HashSet<Integer> courses = new HashSet<>();
+        int len = prerequisites.length;
+        
+        for (int i = 0; i < len; i++) {
             // Update "courses".
             courses.add(prerequisites[i][0]);
             courses.add(prerequisites[i][1]);
-            // Update "children".
-            if (!children.containsKey(prerequisites[i][1])) {
-                children.put(prerequisites[i][1], new HashSet<>());
+            
+            // Update "succ".
+            if (!succ.containsKey(prerequisites[i][1])) {
+                succ.put(prerequisites[i][1], new HashSet<>());
             }
-            // If I've already seen this combination:
-            if (children.get(prerequisites[i][1]).contains(prerequisites[i][0])) {
+            
+            if (succ.get(prerequisites[i][1]).contains(prerequisites[i][0])) {
                 continue;
+            } else {
+                succ.get(prerequisites[i][1]).add(prerequisites[i][0]);
             }
-            // If I haven't:
-            else {
-                children.get(prerequisites[i][1]).add(prerequisites[i][0]);
-            }
+                
             // Update "inDegree".
             inDegree.put(prerequisites[i][0], inDegree.getOrDefault(prerequisites[i][0], 0) + 1);
         }
-        // Put courses that have no in-degree in the queue.
+        
+        // Topological sort.
         Queue<Integer> queue = new LinkedList<>();
-        for (Integer course : courses) {
+        for (int course : courses) {
             if (!inDegree.containsKey(course)) {
                 queue.add(course);
             }
         }
-        // Now do the topological sort.
+        
         while (!queue.isEmpty()) {
-            int tempCourse = queue.remove();
-            courses.remove(tempCourse);
-            if (!children.containsKey(tempCourse)) {
-                continue;
-            }
-            for (Integer child : children.get(tempCourse)) {
-                inDegree.put(child, inDegree.get(child) - 1);
-                if (inDegree.get(child) == 0) {
-                    queue.add(child);
+            int course = queue.remove();
+            courses.remove(course);
+            
+            if (succ.containsKey(course)) {
+                for (int child : succ.get(course)) {
+                    inDegree.put(child, inDegree.get(child) - 1);
+                    
+                    if (inDegree.get(child) == 0) {
+                        queue.add(child);
+                    }
                 }
             }
         }
-        // If there are courses left, then that means it's impossible to finish them.
-        return (courses.size() == 0);
+        
+        // If "courses" has something left, return false.
+        return courses.size() == 0;
+    }*/
+    
+    // Method 2: use adjacency matrix.
+    public boolean canFinish(int numCourses, int[][] prerequisites) {
+        
     }
 }
