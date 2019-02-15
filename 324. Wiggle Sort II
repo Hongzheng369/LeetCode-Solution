@@ -1,0 +1,93 @@
+class Solution {
+    // Method 1: sort them in another array and rewrite the value into "nums".
+    // Time: O(nlogn); Space: O(n).
+    /*
+    public void wiggleSort(int[] nums) {
+        if (nums == null || nums.length == 0) {
+            return;
+        }
+        
+        int[] temp = nums.clone();
+        Arrays.sort(temp);
+        
+        int idx1 = (nums.length - 1) / 2;
+        int idx2 = nums.length - 1;
+        
+        for (int i = 0; i < nums.length; i++) {
+            if ((i & 1) == 0) {
+                // Even number index.
+                nums[i] = temp[idx1--];
+            } else {
+                nums[i] = temp[idx2--];
+            }
+        }
+    }*/
+    
+    // Method 2: using the method from "Kth Largest Element in an Array".
+    public void wiggleSort(int[] nums) {
+        if (nums == null || nums.length == 0) {
+            return;
+        }
+        
+        int median = quickSortByOneElement(nums, 0, nums.length - 1, (nums.length - 1) / 2);
+        int left = 0;
+        int right = nums.length - 1;
+        int i = left;
+        int len = nums.length;
+        
+        while (i <= right) {
+            if (nums[newIndex(i, len)] == median) {
+                i++;
+            } else if (nums[newIndex(i, len)] > median) {
+                swap(nums, newIndex(i++, len), newIndex(left++, len));
+            } else {
+                swap(nums, newIndex(i, len), newIndex(right--, len));
+            }
+        }
+    }
+    
+    private int newIndex(int index, int len) {
+        return (1 + 2 * index) % (len | 1);
+    }
+    
+    private int quickSortByOneElement(int[] nums, int left, int right, int k) {
+        if (left == right) {
+            return nums[left];
+        }
+        
+        int pivotIndex = findPivotIndex(nums, left, right, left);
+        
+        if (pivotIndex == k) {
+            return nums[pivotIndex];
+        } else if (pivotIndex < k) {
+            return quickSortByOneElement(nums, pivotIndex + 1, right, k);
+        } else {
+            return quickSortByOneElement(nums, left, pivotIndex - 1, k);
+        }
+    }
+    
+    private int findPivotIndex(int[] nums, int left, int right, int pivotIndex) {
+        // Put it to the right end.
+        swap(nums, pivotIndex, right);
+        int index = left;
+        
+        // Put the smaller element to the left.
+        for (int i = left; i < right; i++) {
+            if (nums[i] < nums[right]) {
+                swap(nums, i, index);
+                index++;
+            }
+        }
+        
+        // Put the pivot to where it should be.
+        swap(nums, index, right);
+        
+        return index;
+    }
+    
+    private void swap(int[] nums, int i, int j) {
+        int temp = nums[i];
+        nums[i] = nums[j];
+        nums[j] = temp;
+    }
+}
