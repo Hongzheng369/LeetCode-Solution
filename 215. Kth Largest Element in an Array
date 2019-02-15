@@ -1,79 +1,65 @@
 class Solution {
-    // Method 1: use Arrays.sort() instead of using PriorityQueue to find it out.
+    // Method 1: first sort them then return.    
+    /*
     public int findKthLargest(int[] nums, int k) {
-        if (nums == null) {
-            return Integer.MIN_VALUE;
-        }
-        int len = nums.length;
-        if (len == 0) {
+        if (nums == null || nums.length == 0) {
             return Integer.MIN_VALUE;
         }
         
         Arrays.sort(nums);
         
-        return nums[len - k];
-    }
+        return nums[nums.length - k];
+    }*/
     
-    // Method 2: using part of quick sort to sort half part of this array, and it looks like binary sort.
-    // Time complexity would be O(n).
-    /*
+    // Method 2: quick select.
     public int findKthLargest(int[] nums, int k) {
-        if (nums == null) {
+        if (nums == null || nums.length == 0) {
             return Integer.MIN_VALUE;
         }
-        int len = nums.length;
-        if (len == 0) {
-            return Integer.MIN_VALUE;
-        }
-        
-        return quickSelect(nums, 0, len - 1, len - k);
+    
+        return quickSelect(nums, 0, nums.length - 1, nums.length - k);
     }
     
-    private int quickSelect(int[] nums, int left, int right, int target) {
+    /**
+     * This is a recursive function.
+     * The final return is the element from "nums".
+     */
+    private int quickSelect(int[] nums, int left, int right, int k) {
+        // Base case.
         if (left == right) {
             return nums[left];
         }
         
-        Random ranNum = new Random();
-        int pivotIndex = findPivotIndex(nums, left, right, left + ranNum.nextInt(right - left));
+        int index = getPivotIndex(nums, left, right, left);
         
-        if (target == pivotIndex) {
-            return nums[pivotIndex];
-        } else if (target < pivotIndex) {
-            return quickSelect(nums, left, pivotIndex - 1, target);
+        if (index == k) {
+            return nums[index];
+        } else if (index < k) {
+            return quickSelect(nums, index + 1, right, k);
         } else {
-            return quickSelect(nums, pivotIndex + 1, right, target);
+            return quickSelect(nums, left, index - 1, k);
         }
     }
     
-    private int findPivotIndex(int[] nums, int left, int right, int pivotIndex) {
-        int pivot = nums[pivotIndex];
-        
-        // Put it to the right end.
-        swap(nums, pivotIndex, right);
+    private int getPivotIndex(int[] nums, int left, int right, int pivotIndex) {
         int index = left;
         
-        // Put the smaller element to the left.
+        swap(nums, pivotIndex, right);
+        
         for (int i = left; i < right; i++) {
-            if (nums[i] < pivot) {
-                swap(nums, i, index);
-                index++;
+            if (nums[i] < nums[right]) {
+                swap(nums, i, index++);
             }
         }
         
-        // Put the pivot to where it should be.
         swap(nums, index, right);
         
         return index;
     }
     
     private void swap(int[] nums, int i, int j) {
-        if (i == j) {
-            return;
-        }
-        
         int temp = nums[i];
         nums[i] = nums[j];
         nums[j] = temp;
-    }*/
+    }
 }
