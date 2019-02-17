@@ -1,0 +1,39 @@
+class Solution {
+    // Method 1: Iteration.
+    // Problem is, "divisor" could be overflow.
+    /*
+    public int trailingZeroes(int n) {
+        int ans = 0;
+        int divisor = 5;
+        
+        while (divisor <= n) {
+            ans += n / divisor;
+            divisor *= 5;
+        }
+        
+        return ans;
+    }*/
+    
+    // Method 2: Iteration v2.
+    /*
+    public int trailingZeroes(int n) {
+        int ans = 0;
+        
+        while (n > 4) {
+            n /= 5;
+            ans += n;
+        }
+        
+        return ans;
+    }*/
+    
+    // Method 3: recursion.
+    
+    public int trailingZeroes(int n) {
+        if (n < 5) {
+            return 0;
+        }
+        
+        return trailingZeroes(n / 5) + n / 5;
+    }
+}
