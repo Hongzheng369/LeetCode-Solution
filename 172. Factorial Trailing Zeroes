@@ -1,6 +1,6 @@
 class Solution {
     // Method 1: Iteration.
-    // Problem is, "divisor" could be overflow.
+    // Problem is, "divisor" could overflow.
     /*
     public int trailingZeroes(int n) {
         int ans = 0;
