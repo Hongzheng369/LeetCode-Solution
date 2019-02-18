@@ -14,53 +14,53 @@ class Solution {
         if (root == null) {
             return null;
         }
-        
+
         Stack<TreeNode> stack = new Stack<>();
         List<TreeNode> inOrder = new ArrayList<>();
         HashMap<TreeNode, Integer> map = new HashMap<>();
         TreeNode node = root;
-        
-        while (!stack.isEmpty() || node != null) {            
+
+        while (!stack.isEmpty() || node != null) {
             while (node != null) {
                 stack.push(node);
                 node = node.left;
             }
-            
+
             node = stack.pop();
             inOrder.add(node);
             map.put(node, inOrder.size());
-            
+
             node = node.right;
         }
-        
+
         return (map.get(p) == inOrder.size() ? null : inOrder.get(map.get(p)));
     }*/
-    
+
     // Method 2: iteration.
     /*
     public TreeNode inorderSuccessor(TreeNode root, TreeNode p) {
         TreeNode succ = null;
         TreeNode node = root;
-        
+
         while (node != null) {
             if (p.val < node.val) {
                 succ = node;
                 node = node.left;
             } else {
                 node = node.right;
-            }   
+            }
         }
-        
+
         return succ;
     }*/
-    
+
     // Method 3: Recursion.
     public TreeNode inorderSuccessor(TreeNode root, TreeNode p) {
         // Base case & special case:
         if (root == null || p == null) {
             return null;
         }
-        
+
         if (p.val < root.val) {
             TreeNode succ = inorderSuccessor(root.left, p);
             return (succ == null ? root : succ);
