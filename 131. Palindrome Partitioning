@@ -1,0 +1,101 @@
+class Solution {
+    // Method 1: Brute force using substring.
+    /*
+    public List<List<String>> partition(String s) {
+        List<List<String>> ans = new ArrayList<>();
+
+        if (s == null || s.length() == 0) {
+            return ans;
+        }
+
+        helper(s, 0, new ArrayList<>(), ans);
+
+        return ans;
+    }
+
+    private void helper(String s, int startIndex, List<String> partition, List<List<String>> ans) {
+        if (startIndex == s.length()) {
+            ans.add(new ArrayList<>(partition));
+            return;
+        }
+
+        for (int i = startIndex; i < s.length(); i++) {
+            String subString = s.substring(startIndex, i + 1);
+
+            if (!isPalindrome(subString)) {
+                continue;
+            }
+
+            partition.add(subString);
+            helper(s, i+ 1, partition, ans);
+            partition.remove(partition.size() - 1);
+        }
+    }
+
+    private boolean isPalindrome(String s) {
+        for (int i = 0, j = s.length() - 1; i < j; i++, j--) {
+            if (s.charAt(i) != s.charAt(j)) {
+                return false;
+            }
+        }
+
+        return true;
+    }*/
+
+    // Method 2: "Whaaaaaat."
+
+    public List<List<String>> partition(String s) {
+        List<List<String>> res = new ArrayList<>();
+        if (s == null || s.length() == 0) {
+            return res;
+        }
+
+        int n = s.length();
+        boolean[][] palindromes = new boolean[n][n];
+        char[] chars = s.toCharArray();
+
+        buildPalindromes(palindromes, chars);
+        helper(s, palindromes, res, new ArrayList<String>(), 0);
+
+        return res;
+    }
+
+    private void buildPalindromes(boolean[][] palindromes, char[] chars) {
+        int len = chars.length;
+
+        for (int i = 0; i < len; i++) { // only one outer loop is needed!
+            // odd number of chars
+            for (int j = 0; i - j > -1 && i + j < len; j++) {
+                if (chars[i - j] != chars[i + j]) {
+                    break;
+                }
+                palindromes[i - j][i + j] = true;
+            }
+            // even number of chars
+            for (int j = 0; i - j > -1 && i + j + 1 < len; j++) {
+                if (chars[i - j] != chars[i + j + 1]) {
+                    break;
+                }
+                palindromes[i - j][i + j + 1] = true;
+            }
+        }
+    }
+
+    private void helper(String s, boolean[][] palindromes, List<List<String>> res, List<String> tmp, int index) {
+        int len = s.length();
+
+        // Base case.
+        if (index == len) {
+            res.add(new ArrayList<>(tmp));
+            return;
+        }
+
+        for (int i = index; i < len; i++) {
+            if (palindromes[index][i]) {
+                tmp.add(s.substring(index, i + 1));
+                helper(s, palindromes, res, tmp, i + 1);
+                tmp.remove(tmp.size() - 1);
+            }
+        }
+    }
+}
