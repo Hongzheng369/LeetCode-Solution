@@ -1,0 +1,125 @@
+class Solution {
+    // Method 1: Using HashMap.
+    /*
+    public int longestSubstring(String s, int k) {
+        // Special cases.
+        if (s == null || s.length() == 0 || s.length() < k) {
+            return 0;
+        }
+        if (k < 2) {
+            return s.length();
+        }
+
+        // Use map to store the appearance of one character.
+        HashMap<Character, Integer> map = new HashMap<>();
+        for (int i = 0; i < s.length(); i++) {
+            map.put(s.charAt(i), map.getOrDefault(s.charAt(i), 0) + 1);
+        }
+
+        // If one character appears less then k times,
+        // ... use this character as a splitter.
+        StringBuilder sb = new StringBuilder(s);
+        for (int i = 0; i < s.length(); i++) {
+            if (map.get(s.charAt(i)) < k) {
+                sb.setCharAt(i, ' ');
+            }
+        }
+
+        // Split the string and check the special case.
+        String[] strings = sb.toString().split(" ");
+        if (strings.length == 1) {
+            return strings[0].length();
+        }
+
+
+
+        // Traverse the whole array to find out the largest length.
+        int ans = 0;
+        for (String string : strings) {
+            ans = Math.max(ans, longestSubstring(string, k));
+        }
+
+        return ans;
+    }*/
+
+    // Method 2: using array.
+    /*
+    public int longestSubstring(String s, int k) {
+        int len = (s == null) ? 0 : s.length();
+
+        if ((len == 0) || (k < 2)) {
+            return len;
+        }
+
+        char[] arr = s.toCharArray();
+
+        // Build a "dictionary" to save the character's appearance.
+        int[] count = new int[26];
+        for (int i = 0; i < len; i++) {
+            count[arr[i] - 'a'] += 1;
+        }
+
+        boolean found = true;
+        for (int i = 0; i < 26; i++) {
+            if (count[i] == 0) {
+                continue;
+            }
+            else if (count[i] < k) {
+                found = false;
+                break;
+            }
+        }
+
+        // If "found" is true,
+        // ... then it means that all characters in "s" appear no less than k times.
+        if (found) {
+            return len;
+        }
+
+        int ans = 0;
+        int left = 0;
+
+        for (int i = 0; i < len; i++) {
+            if (count[arr[i] - 'a'] < k) {
+                ans = Math.max(ans, longestSubstring(s.substring(left, i), k));
+                left = i + 1;
+            }
+        }
+
+        ans = Math.max(ans, longestSubstring(s.substring(left), k));
+
+        return ans;
+    }*/
+
+    // Method 3: only build array for this round.
+    // ... that is, build array in one recursion.
+    public int longestSubstring(String s, int k) {
+        return helper(s.toCharArray(), 0, s.length(), k);
+    }
+
+    private int helper(char[] str, int left, int right, int k) {
+        if (right - left < k) {
+            return 0;
+        }
+
+        int[] freq = new int[26];
+        for (int i = left; i < right; i++) {
+            freq[str[i] - 'a']++;
+        }
+
+        for (int i = left; i < right; i++) {
+            if (freq[str[i] - 'a'] < k) {
+                int j = i + 1;
+
+                while (j < right && freq[str[j]-'a'] < k) {
+                    j++;
+                }
+
+                return Math.max(helper(str, left, i, k), helper(str, j, right, k));
+            }
+        }
+
+        // In this case, all the characters appear for more than k times.
+        return right - left;
+    }
+}
