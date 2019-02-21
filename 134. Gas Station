@@ -1,0 +1,74 @@
+class Solution {
+    // Method 1: brute force.
+    /*
+    public int canCompleteCircuit(int[] gas, int[] cost) {
+        int len = gas.length;
+
+        for (int i = 0; i < len; i++) {
+            if (gas[i] + 1 > cost[i] && goAround(gas, cost, i, len)) {
+                return i;
+            }
+        }
+
+        return -1;
+    }
+
+    private boolean goAround(int[] gas, int[] cost, int index, int len) {
+        int tank = gas[index];
+
+        // Jump "len" times.
+        for (int i = 0; i < len; i++) {
+            tank -= cost[index];
+
+            if (tank < 0) {
+                return false;
+            }
+            else {
+                index = (index + 1) % len;
+                tank += gas[index];
+            }
+        }
+
+        return true;
+    }*/
+
+    // Method 2: faster, but will cost space.
+
+    public int canCompleteCircuit(int[] gas, int[] cost) {
+        int[] fuel = new int[gas.length];
+        int start = 0;
+        int sum = 0;
+
+        for (int i = 0; i < gas.length; i++) {
+            fuel[i] = gas[i] - cost[i];
+            sum += fuel[i];
+
+            if (sum < 0) {
+                start = i + 1;
+                sum = 0;
+
+                // In this case, it means that "fuel" is all negative number.
+                // Then we can return immediately.
+                if (start == gas.length) {
+                    return -1;
+                }
+            }
+        }
+
+        int ans = start;
+        sum = 0;
+
+        for (int i = 0; i < gas.length; i++) {
+            if (start + i == gas.length) {
+                start = -i;
+            }
+
+            sum += fuel[start + i];
+            if (sum < 0) {
+                return -1;
+            }
+        }
+
+        return ans;
+    }
+}
