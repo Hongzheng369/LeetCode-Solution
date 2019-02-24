@@ -1,0 +1,118 @@
+class Solution {
+    // Method 1: using two stack.
+    /*
+    public boolean backspaceCompare(String S, String T) {
+        Stack<Character> stackS = new Stack<>();
+        Stack<Character> stackT = new Stack<>();
+
+        for (int i = 0; i < S.length(); i++) {
+            char c = S.charAt(i);
+
+            if (c == '#') {
+                if (!stackS.isEmpty()) {
+                    stackS.pop();
+                }
+            }
+            else {
+                stackS.push(c);
+            }
+        }
+
+        for (int i = 0; i < T.length(); i++) {
+            char c = T.charAt(i);
+
+            if (c == '#') {
+                if (!stackT.isEmpty()) {
+                    stackT.pop();
+                }
+            }
+            else {
+                stackT.push(c);
+            }
+        }
+
+        if (stackS.size() != stackT.size()) {
+            return false;
+        }
+
+        while (!stackS.isEmpty()) {
+            if (stackS.pop() != stackT.pop()) {
+                return false;
+            }
+        }
+
+        return true;
+    }*/
+
+    // Method 2: using one stack and helper function.
+    /*
+    public boolean backspaceCompare(String S, String T) {
+        return buildFinalString(S).equals(buildFinalString(T));
+    }
+
+    private String buildFinalString(String s) {
+        Stack<Character> stack = new Stack<>();
+
+        for (char c : s.toCharArray()) {
+            if (c != '#') {
+                stack.push(c);
+            }
+            else if (!stack.isEmpty()) {
+                stack.pop();
+            }
+        }
+
+        return String.valueOf(stack);
+    }*/
+
+    // Method 3: using two pointers.
+    public boolean backspaceCompare(String S, String T) {
+        int idx1 = S.length() - 1;
+        int idx2 = T.length() - 1;
+        int back1 = 0;
+        int back2 = 0;
+
+        while (idx1 > -1 || idx2 > -1) {
+            while (idx1 > -1) {
+                if (S.charAt(idx1) == '#') {
+                    back1++;
+                    idx1--;
+                }
+                else if (back1 > 0) {
+                    back1--;
+                    idx1--;
+                }
+                else {
+                    break;
+                }
+            }
+
+            while (idx2 > -1) {
+                if (T.charAt(idx2) == '#') {
+                    back2++;
+                    idx2--;
+                }
+                else if (back2 > 0) {
+                    back2--;
+                    idx2--;
+                }
+                else {
+                    break;
+                }
+            }
+
+            if (idx1 > -1 && idx2 > -1 && S.charAt(idx1) != T.charAt(idx2)) {
+                return false;
+            }
+
+            if ((idx1 > -1) != (idx2 > -1)) {
+                return false;
+            }
+
+            idx1--;
+            idx2--;
+        }
+
+        return true;
+    }
+}
