@@ -1,0 +1,70 @@
+class Solution {
+    // Method 1: using hashmap contained <content, list of filepath>.
+    // Also, using String.split().
+    /*
+    public List<List<String>> findDuplicate(String[] paths) {
+        HashMap <String, List<String>> map = new HashMap<>();
+
+        for (String path: paths) {
+            String[] files = path.split(" ");
+
+            // Now handling the filename and content.
+            for (int i = 1; i < files.length; i++) {
+                String[] info = files[i].split("\\(");
+                info[1] = info[1].replace(")", "");
+
+                List<String> list = map.getOrDefault(info[1], new ArrayList<String>());
+                list.add(files[0] + "/" + info[0]);
+                map.put(info[1], list);
+            }
+        }
+
+        List<List<String>> ans = new ArrayList<>();
+        for (String key: map.keySet()) {
+            if (map.get(key).size() > 1)
+                ans.add(map.get(key));
+        }
+
+        return ans;
+    }*/
+
+    // Method 2: using hashmap contained <content, list of filepath>.
+    // Bu this time, using String.indexOf() and String.substring().
+    public List<List<String>> findDuplicate(String[] paths) {
+        HashMap<String, List<String>> map = new HashMap<>();
+
+        for(int i = 0; i < paths.length; i++) {
+            int indexOpen = paths[i].indexOf('(');
+            int indexClose = paths[i].indexOf(')');
+            int indexSpace = paths[i].indexOf(" ");
+            String root = paths[i].substring(0, indexSpace);
+
+
+            while(indexOpen != -1) {
+                String content = paths[i].substring(indexOpen + 1, indexClose);
+
+                if(map.containsKey(content)) {
+                    map.get(content).add(root + "/" + paths[i].substring(indexSpace + 1, indexOpen));
+                }
+                else {
+                    List<String> list = new ArrayList<>();
+                    list.add(root + "/" + paths[i].substring(indexSpace + 1, indexOpen));
+                    map.put(content, list);
+                }
+
+                indexOpen = paths[i].indexOf('(', indexOpen + 1);
+                indexClose = paths[i].indexOf(')', indexClose + 1);
+                indexSpace = paths[i].indexOf(" ", indexSpace + 1);
+            }
+        }
+
+        List<List<String>> ans = new ArrayList<>();
+        for(List<String> value: map.values()) {
+            if(value.size() > 1) {
+                ans.add(value);
+            }
+        }
+
+        return ans;
+    }
+}
