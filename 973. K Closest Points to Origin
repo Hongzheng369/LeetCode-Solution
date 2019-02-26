@@ -1,0 +1,138 @@
+class Solution {
+    // Method 1: compute all the distance first, then sort the distance array.
+    // Then pick out the K-th smallest element as a ruler, then pick out all the lines no larger than target.
+    /*
+    public int[][] kClosest(int[][] points, int K) {
+        if (points == null || points.length == 0) {
+            return points;
+        }
+
+        int[] dis = new int[points.length];
+        for (int i = 0; i < points.length; i++) {
+            dis[i] = distance(points[i]);
+        }
+
+        Arrays.sort(dis);
+        int target = dis[K - 1];
+
+        int[][] ans = new int[K][2];
+        int index = 0;
+        for (int i = 0; i < points.length; i++) {
+            if (distance(points[i]) <= target) {
+                ans[index++] = points[i];
+            }
+
+            if (index == K) {
+                break;
+            }
+        }
+
+        return ans;
+    }
+
+    private int distance(int[] line) {
+        return line[0] * line[0] + line[1] * line[1];
+    }*/
+
+    // Method 2: use quickSort's pivot to get the K-th smaller element. Maybe it'll be faster...
+    /*
+    public int[][] kClosest(int[][] points, int K) {
+        if (points == null || points.length == 0) {
+            return points;
+        }
+
+        int[] dis = new int[points.length];
+
+        for (int i = 0; i < points.length; i++) {
+            dis[i] = distance(points[i]);
+        }
+
+        quickSort(dis, 0, dis.length - 1, K - 1);
+        int target = dis[K - 1];
+
+        int[][] ans = new int[K][2];
+        int index = 0;
+
+        for (int i = 0; i < points.length; i++) {
+            if (distance(points[i]) <= target) {
+                ans[index++] = points[i];
+            }
+            // If "ans" is filled up, break.
+            if (index == K) {
+                break;
+            }
+        }
+
+        return ans;
+    }
+
+    private void quickSort(int[] dis, int left, int right, int target) {
+        if (left == right) {
+            return;
+        }
+
+        int mid = left + (right - left) / 2;
+        int pivot = dis[left] + dis[mid] + dis[right] - Math.max(dis[left], Math.max(dis[mid], dis[right])) - Math.min(dis[left], Math.min(dis[mid], dis[right]));
+        int i = left;
+        int j = right;
+
+        while (i <= j) {
+            while (dis[i] < pivot) {
+                i++;
+            }
+            while (dis[j] > pivot) {
+                j--;
+            }
+
+            if (i <= j) {
+                swap(dis, i, j);
+                i++;
+                j--;
+            }
+        }
+
+        if (target > i - 1) {
+            quickSort(dis, i, right, target);
+        }
+        else {
+            quickSort(dis, left, i - 1, target);
+        }
+    }
+
+    private void swap(int[] dis, int i, int j) {
+        int temp = dis[i];
+        dis[i] = dis[j];
+        dis[j] = temp;
+    }
+
+    private int distance(int[] line) {
+        return line[0] * line[0] + line[1] * line[1];
+    }*/
+
+    // Method 3: using new Comparator.
+    public int[][] kClosest(int[][] points, int K) {
+        if (points == null || points.length == 0) {
+            return points;
+        }
+
+        Comparator comp = new Comparator<int[]>() {
+            @Override
+            public int compare(int[] o1, int[] o2) {
+                return distance(o1) - distance(o2);
+            }
+        };
+
+        Arrays.sort(points, comp);
+
+        int[][] ans = new int[K][2];
+        for (int i = 0; i < K; i++) {
+            ans[i] = points[i];
+        }
+
+        return ans;
+    }
+
+    private int distance(int[] line) {
+        return line[0] * line[0] + line[1] * line[1];
+    }
+}
