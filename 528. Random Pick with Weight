@@ -1,0 +1,76 @@
+// Method 1: traverse the list from left to right.
+/*
+class Solution {
+    int total;
+    ArrayList<Integer> list;
+    Random rand;
+
+    public Solution(int[] w) {
+        total = 0;
+        list = new ArrayList<>();
+        rand = new Random();
+
+        for (int i = 0; i < w.length; i++) {
+            total += w[i];
+            list.add(total - 1);
+        }
+    }
+
+    public int pickIndex() {
+        int index = rand.nextInt(total);
+
+        for (int i = 0; i < list.size(); i++) {
+            if (index <= list.get(i)) {
+                return i;
+            }
+        }
+
+        return -1;
+    }
+}*/
+
+// Method 2: using binary search while traversing the list.
+class Solution {
+    int total;
+    ArrayList<Integer> list;
+    Random rand;
+
+    public Solution(int[] w) {
+        total = 0;
+        list = new ArrayList<>();
+        rand = new Random();
+
+        for (int i = 0; i < w.length; i++) {
+            total += w[i];
+            list.add(total - 1);
+        }
+    }
+
+    public int pickIndex() {
+        int index = rand.nextInt(total);
+        int left = 0;
+        int right = list.size();
+
+        while (left < right) {
+            int mid = left + (right - left) / 2;
+
+            if (index == list.get(mid)) {
+                return mid;
+            }
+            else if (index > list.get(mid)) {
+                left = mid + 1;
+            }
+            else {
+                right = mid;
+            }
+        }
+
+        return left;
+    }
+}
+
+/**
+ * Your Solution object will be instantiated and called as such:
+ * Solution obj = new Solution(w);
+ * int param_1 = obj.pickIndex();
+ */
