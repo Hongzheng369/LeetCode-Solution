@@ -110,6 +110,7 @@ class Solution {
     }*/
 
     // Method 3: using new Comparator.
+    /*
     public int[][] kClosest(int[][] points, int K) {
         if (points == null || points.length == 0) {
             return points;
@@ -134,5 +135,60 @@ class Solution {
 
     private int distance(int[] line) {
         return line[0] * line[0] + line[1] * line[1];
+    }*/
+
+    // Method 4:
+    public int[][] kClosest(int[][] points, int K) {
+        if (points == null || points.length == 0) {
+            return points;
+        }
+
+        quickSort(points, 0, points.length - 1, K - 1);
+
+        return Arrays.copyOfRange(points, 0, K);
+    }
+
+    private void quickSort(int[][] matrix, int start, int end, int target) {
+        if (start == end) {
+            return;
+        }
+
+        int index = getPivotIndex(matrix, start, end, start);
+
+        if (index < target) {
+            quickSort(matrix, index + 1, end, target);
+        }
+        else if (index > target) {
+            quickSort(matrix, start, index - 1, target);
+        }
+    }
+
+    private int getPivotIndex(int[][] matrix, int start, int end, int pivotIndex) {
+        int index = start;
+
+        swap(matrix, pivotIndex, end);
+
+        for (int i = start; i < end; i++) {
+            if (dist(matrix, i) < dist(matrix, end)) {
+                swap(matrix, i, index++);
+            }
+        }
+
+        swap(matrix, end, index);
+
+        return index;
+    }
+
+    private int dist(int[][] matrix, int i) {
+        return matrix[i][0] * matrix[i][0] + matrix[i][1] * matrix[i][1];
+    }
+
+    private void swap(int[][] matrix, int i, int j) {
+        int val0 = matrix[i][0];
+        int val1 = matrix[i][1];
+        matrix[i][0] = matrix[j][0];
+        matrix[i][1] = matrix[j][1];
+        matrix[j][0] = val0;
+        matrix[j][1] = val1;
     }
 }
