@@ -1,16 +1,17 @@
+// Method 1.
+/*
 class HitCounter {
 
     int index;
     HashMap<Integer, int[]> map;
     
-    /** Initialize your data structure here. */
+    // Initialize your data structure here.
     public HitCounter() {
         index = 0;
         map = new HashMap<>();
     }
     
-    /** Record a hit.
-        @param timestamp - The current timestamp (in seconds granularity). */
+    // Record a hit.
     public void hit(int timestamp) {
         if (!map.containsKey(timestamp)) {
             map.put(timestamp, new int[2]);
@@ -20,8 +21,7 @@ class HitCounter {
         map.get(timestamp)[1] = index++;
     }
     
-    /** Return the number of hits in the past 5 minutes.
-        @param timestamp - The current timestamp (in seconds granularity). */
+    // Return the number of hits in the past 5 minutes.
     public int getHits(int timestamp) {        
         int end = timestamp;
         int start = timestamp - 299;
@@ -39,6 +39,54 @@ class HitCounter {
         }
         
         return map.get(end)[1] - map.get(start)[0] + 1;
+    }
+}
+*/
+
+// Method 2. Smart but has problem.
+// Weird output:
+// ["HitCounter","hit","hit","hit","getHits","getHits","getHits","getHits","getHits","hit","getHits", "getHits"]
+// [[],[2],[3],[4],[300],[301],[302],[303],[304],[501],[600],[300]]
+// Output: [null,null,null,null,3,3,2,1,0,null,1,4]
+// Expected: [null,null,null,null,3,3,2,1,0,null,1,1]
+
+class HitCounter {
+
+    int[] times;
+    int[] hits;
+    
+    /** Initialize your data structure here. */
+    public HitCounter() {
+        times = new int[300];
+        hits = new int[300];
+    }
+    
+    /** Record a hit.
+        @param timestamp - The current timestamp (in seconds granularity). */
+    public void hit(int timestamp) {
+        int index = timestamp % 300;
+        
+        if (times[index] != timestamp) {
+            times[index] = timestamp;
+            hits[index] = 1;
+        }
+        else {
+            hits[index]++;
+        }
+    }
+    
+    /** Return the number of hits in the past 5 minutes.
+        @param timestamp - The current timestamp (in seconds granularity). */
+    public int getHits(int timestamp) {
+        int total = 0;
+        
+        for (int i = 0; i < 300; i++) {
+            if (timestamp - times[i] < 300) {
+                total += hits[i];
+            }
+        }
+        
+        return total;
     }
 }
 
