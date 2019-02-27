@@ -1,0 +1,103 @@
+class Solution {
+    // Method 1: brute force.
+    /*
+    public int threeSumClosest(int[] nums, int target) {
+        int i = 0;
+        int j = i + 1;
+
+        ArrayList<Integer> ans = new ArrayList<>();
+
+        while (i < nums.length - 2) {
+            for (int k = j + 1; k < nums.length; k++) {
+                if(!ans.contains(nums[k] + nums[i] + nums[j])) {
+                    ans.add(nums[k] + nums[i] + nums[j]);
+                }
+            }
+
+            j++;
+            if(j == nums.length - 1){
+                i++;
+                j = i + 1;
+            }
+        }
+
+        int dis = Integer.MAX_VALUE;
+        int res = Integer.MAX_VALUE;
+
+        for(int tmp : ans){
+            if(Math.abs(tmp - target) < dis){
+                dis = Math.abs(tmp - target);
+                res = tmp;
+            }
+        }
+
+        return res;
+    }*/
+
+    // Method 2: fix pointer i, then left = i + 1, right = nums.length - 1 to perform traverse.
+    public int threeSumClosest(int[] nums, int target) {
+        if (nums.length < 3) {
+            return 0;
+        }
+
+        Arrays.sort(nums);
+
+        int min = Integer.MAX_VALUE;
+        int result =Integer.MAX_VALUE;
+
+        for (int i = 0; i < nums.length - 2; i++) {
+            if(3 * nums[i] > target) {
+                int sum3 = nums[i] + nums[i + 1] + nums[i + 2];
+                if (Math.abs(sum3 - target) < min) {
+                    return sum3;
+                }
+            }
+
+            int left = i + 1;
+            int right = nums.length - 1;
+            int targetSum = target - nums[i];
+
+            if(2 * nums[right] < targetSum) {
+                int sum3 = nums[i] + nums[right] + nums[right - 1];
+                if(Math.abs(sum3 - target) < min){
+                    min = Math.abs(target - sum3);
+                    result = sum3;
+                }
+                
+                // For this time the sum is smaller than target,
+                // but i should plus one to see if the sum can get larger.
+                continue;
+            }
+
+            while (left < right) {
+                int temp = nums[i] + nums[left] + nums[right];
+
+                if(temp == target) {
+                    return target;
+                }
+
+                if(2 * nums[left] > targetSum) {
+                    int sum3 = nums[i] + nums[left] + nums[left + 1];
+                    if (Math.abs(sum3 - target) < min) {
+                        min = Math.abs(target - sum3);
+                        result = sum3;
+                    }
+                    break;
+                }
+                else if (Math.abs(target - temp) < min) {
+                    min = Math.abs(target - temp);
+                    result = temp;
+                }
+
+                if (temp < target) {
+                    left++;
+                }
+                else {
+                    right--;
+                }
+            }
+        }
+        
+        return result;
+    }
+}
