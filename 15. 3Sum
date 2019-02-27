@@ -1,0 +1,141 @@
+class Solution {
+    // Method 1: brute force.
+    /*
+    public List<List<Integer>> threeSum(int[] nums) {
+        Arrays.sort(nums);
+
+        List<List<Integer>> ans = new ArrayList<>();
+        HashSet<List<Integer>> save = new HashSet<>();
+
+        for (int i = 0; i < nums.length - 2; i++) {
+            int head = i + 1;
+            int tail = nums.length - 1;
+
+            while (head < tail) {
+                if (nums[i] + nums[head] + nums[tail] == 0) {
+                    List<Integer> temp = new ArrayList<>();
+                    temp.add(nums[i]);
+                    temp.add(nums[head]);
+                    temp.add(nums[tail]);
+                    if (!save.contains(temp)) {
+                        save.add(temp);
+                        ans.add(temp);
+                    }
+
+                    head++;
+                    tail--;
+                }
+                else if (nums[i] + nums[head] + nums[tail] > 0) {
+                    tail--;
+                }
+                else {
+                    head++;
+                }
+            }
+        }
+
+        return ans;
+    }*/
+
+    // Method 2.
+    public List<List<Integer>> threeSum(int[] nums) {
+        List<List<Integer>> res = new ArrayList<>();
+        if (nums.length < 3) {
+            return res;
+        }
+
+        int max = nums[0];
+        int min = nums[0];
+        int positiveCount = 0;
+        int negativeCount = 0;
+        int zeroCount = 0;
+
+        for (int i = 0; i < nums.length; i++) {
+            max = Math.max(max, nums[i]);
+            min = Math.min(min, nums[i]);
+
+            if (nums[i] > 0) {
+                positiveCount++;
+            }
+            else if (nums[i] < 0) {
+                negativeCount++;
+            }
+            else {
+                zeroCount++;
+            }
+        }
+
+        if (zeroCount > 2) {
+            res.add(Arrays.asList(0, 0, 0));
+        }
+        if (positiveCount == 0 || negativeCount == 0) {
+            return res;
+        }
+
+        // Reduce the searching scope
+        if (min * 2 + max > 0) {
+            max = -2 * min;
+        }
+        else if (max * 2 + min < 0) {
+            min = -2 * max;
+        }
+
+        int[] map = new int[max - min + 1];
+        int[] positive = new int[positiveCount];
+        int[] negative = new int[negativeCount];
+        positiveCount = 0;
+        negativeCount = 0;
+
+        for (int num : nums) {
+            if (num >= min && num <= max && map[num - min]++ == 0) {
+                if (num > 0) {
+                    positive[positiveCount++] = num;
+                }
+                if (num < 0) {
+                    negative[negativeCount++] = num;
+                }
+            }
+        }
+
+        Arrays.sort(positive, 0, positiveCount);
+        Arrays.sort(negative, 0, negativeCount);
+
+        int basej = 0;
+
+        for (int i = negative.length - 1; i >= 0; i--) {
+            int n1 = negative[i];
+
+            while(basej < positive.length && positive[basej] < (- n1 / 2)) {
+                basej++;
+            }
+
+            for (int j = basej; j < positive.length; j++) {
+                int n3 = positive[j];       //2 * n3 > - n1
+                int n2 = 0 - n1 - n3;       //n2 > 2 * n3 - n3 = n3
+
+                if (n2 >= n1 && n2 <= n3) {
+                    if (n2 == n1) {
+                        if (map[n1 - min] > 1) {
+                            res.add(Arrays.asList(n1, n1, n3));
+                        }
+                    }
+                    else if (n2 == n3) {
+                        if (map[n3 - min] > 1) {
+                            res.add(Arrays.asList(n1, n3, n3));
+                        }
+                    }
+                    else {
+                        if (map[n2 - min] > 0) {
+                            res.add(Arrays.asList(n1, n2, n3));
+                        }
+                    }
+                }
+                else if (n2 < n1) {
+                    break;
+                }
+            }
+        }
+
+        return res;
+    }
+}
