@@ -1,0 +1,87 @@
+/**
+ * Definition for a binary tree node.
+ * public class TreeNode {
+ *     int val;
+ *     TreeNode left;
+ *     TreeNode right;
+ *     TreeNode(int x) { val = x; }
+ * }
+ */
+class Solution {
+    // Method 1: get the hashmap first.
+    /*
+    public int[] findFrequentTreeSum(TreeNode root) {
+        if (root == null) {
+            return new int[0];
+        }
+
+        HashMap<Integer, Integer> appearance = new HashMap<>();
+        getSum(root, appearance);
+
+        int maxAppearance = 1;
+        int count = 0;
+        int[] ans = new int[appearance.size()];
+        for (HashMap.Entry<Integer, Integer> entry : appearance.entrySet()) {
+            if (entry.getValue() == maxAppearance) {
+                ans[count++] = entry.getKey();
+            }
+            else if (entry.getValue() > maxAppearance) {
+                maxAppearance = entry.getValue();
+                count = 0;
+                ans[count++] = entry.getKey();
+            }
+        }
+
+        return Arrays.copyOfRange(ans, 0, count);
+    }
+
+    private int getSum(TreeNode root, HashMap<Integer, Integer> appearance) {
+        if (root == null) {
+            return 0;
+        }
+
+        int leftSum = getSum(root.left, appearance);
+        int rightSum = getSum(root.right, appearance);
+        int sum = leftSum + rightSum + root.val;
+
+        appearance.put(sum, appearance.getOrDefault(sum, 0) + 1);
+
+        return sum;
+    }*/
+
+    // Method 2: get everything when computing the sum.
+    int maxAppearance = 0;
+
+    public int[] findFrequentTreeSum(TreeNode root) {
+        if (root == null) {
+            return new int[0];
+        }
+
+        HashMap<Integer, Integer> appearance = new HashMap<>();
+        ArrayList<Integer> list = new ArrayList<>();
+        getSum(root, appearance, list);
+
+        int[] ans = new int[list.size()];
+        for (int i = 0; i < ans.length; i++) {
+            ans[i] = list.get(i);
+        }
+
+        return ans;
+    }
+
+    private int getSum(TreeNode root, HashMap<Integer, Integer> appearance, ArrayList list) {
+        int sum = (root.left != null ? getSum(root.left, appearance, list) : 0) + (root.right != null ? getSum(root.right, appearance, list) : 0) + root.val;
+        appearance.put(sum, appearance.getOrDefault(sum, 0) + 1);
+
+        if (appearance.get(sum) > maxAppearance) {
+            list.clear();
+            list.add(sum);
+            maxAppearance = appearance.get(sum);
+        }
+        else if (appearance.get(sum) == maxAppearance) {
+            list.add(sum);
+        }
+
+        return sum;
+    }
+}
