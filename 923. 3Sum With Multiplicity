@@ -1,0 +1,63 @@
+class Solution {
+    public int threeSumMulti(int[] A, int target) {
+        long[] count = new long[101];
+        int unique = 0;
+        
+        for (int i = 0; i < A.length; i++) {
+            count[A[i]]++;
+            if (count[A[i]] == 1) {
+                unique++;
+            }
+        }
+        
+        int[] nums = new int[unique];
+        int index = 0;
+        for (int i = 0; i < 101; i++) {
+            if(count[i] != 0) {
+                nums[index++] = i;
+            }
+        }
+        // Till now "nums" is already sorted.
+        
+        long ans = 0;
+        
+        for (int i = 0; i < nums.length; i++) {
+            int x = nums[i];
+            int T = target - x;
+            int j = i;
+            int k = nums.length - 1;
+            
+            while (j <= k) {
+                int y = nums[j];
+                int z = nums[k];
+                
+                if (y + z < T) {
+                    j++;
+                } 
+                else if (y + z > T) {
+                    k--;
+                } 
+                else {
+                    if (i < j && j < k) {
+                        ans += count[x] * count[y] * count[z];
+                    } 
+                    else if (i == j && j < k) {
+                        ans += count[x] * (count[x] - 1) / 2 * count[z];
+                    } 
+                    else if (i < j && j == k) {
+                        ans += count[x] * count[y] * (count[y] - 1) / 2;
+                    } 
+                    else {  // i == j == k
+                        ans += count[x] * (count[x] - 1) * (count[x] - 2) / 6;
+                    }
+
+                    ans %= 1000000007;
+                    j++;
+                    k--;
+                }
+            }
+        }
+        
+        return (int)ans;
+    }
+}
