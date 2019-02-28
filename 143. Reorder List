@@ -7,68 +7,71 @@
  * }
  */
 class Solution {
+    // Method 1.
+    // Partition, reverse, and combine.
+    /*
     public void reorderList(ListNode head) {
         if (head == null || head.next == null || head.next.next == null) {
             return;
         }
-        
+
         // Partition.
         ListNode firstPartEnd = findNodeBeforeMiddle(head);
         ListNode SecondPartStart = firstPartEnd.next;
         firstPartEnd.next = null;
-        
+
         // Reverse.
         SecondPartStart = reverseList(SecondPartStart);
-        
+
         // Combine.
         combineList(head, SecondPartStart);
-        
+
         return;
     }
-    
+
     private ListNode findNodeBeforeMiddle(ListNode head) {
         if (head == null) {
             return head;
         }
-        
+
         ListNode slow = head;
         ListNode fast = head;
         ListNode node = null;
-        
+
         while (fast != null && fast.next != null) {
             node = slow;
             slow = slow.next;
             fast = fast.next.next;
         }
-        
+
         return node;
     }
-    
+
     private ListNode reverseList(ListNode head) {
         if (head == null || head.next == null) {
             return head;
         }
-        
+
         ListNode n1 = null;
         ListNode n2 = head;
         ListNode n3 = head.next;
-        
+
         while (n2 != null) {
             n2.next = n1;
-            
+
             n1 = n2;
             n2 = n3;
             n3 = n3 != null ? n3.next : null;
         }
-        
+
         return n1;
     }
-    
+
     private void combineList(ListNode n1, ListNode n2) {
         ListNode tra1 = n1;
         ListNode tra2 = n2;
         boolean connectFirst = true;
-        
+
         while(tra1 != null) {
             if (connectFirst) {
                 ListNode temp = tra1.next;
@@ -80,10 +83,50 @@ class Solution {
                 tra2.next = tra1;
                 tra2 = temp;
             }
-            
+
             connectFirst = !connectFirst;
         }
-        
+
         return;
+    }
+     */
+
+    // Method 2.
+    public void reorderList(ListNode head) {
+        if (head == null || head.next == null || head.next.next == null) {
+            return;
+        }
+
+        ListNode slow = head;
+        ListNode fast = head;
+
+        // Find middle.
+        while (fast.next != null && fast.next.next != null) {
+            slow = slow.next;
+            fast = fast.next.next;
+        }
+
+        // Reverse.
+        ListNode reverse = slow.next;
+        while (reverse.next != null) {
+            ListNode node = reverse.next;
+
+            reverse.next = reverse.next.next;
+            node.next = slow.next;
+            slow.next = node;
+        }
+
+        // Re-connect.
+        reverse = slow;
+        fast = reverse.next;
+        slow = head;
+        while (slow != reverse) {
+            reverse.next = fast.next;
+            fast.next = slow.next;
+            slow.next = fast;
+
+            slow = fast.next;
+            fast = reverse.next;
+        }
     }
 }
