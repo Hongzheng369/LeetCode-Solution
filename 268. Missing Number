@@ -1,0 +1,38 @@
+class Solution {
+    // Method 1: using another array to save the elements' appeearance.
+    /*
+    public int missingNumber(int[] nums) {
+        if (nums == null || nums.length == 0) {
+            return -1;
+        }
+        
+        int[] appear = new int[nums.length + 1];
+        for (int num : nums) {
+            appear[num]++;
+        }
+        
+        for (int i = 0; i < appear.length; i++) {
+            if (appear[i] == 0) {
+                return i;
+            }
+        }
+        
+        return -1;
+    }*/
+    
+    // Method 2: in-space operation.
+    public int missingNumber(int[] nums) {
+        if (nums == null || nums.length == 0) {
+            return -1;
+        }
+        
+        int len = nums.length;
+        int expectedSum = (1 + len) * len / 2;
+        
+        for (int num : nums) {
+            expectedSum -= num;
+        }
+        
+        return expectedSum;
+    }
+}
