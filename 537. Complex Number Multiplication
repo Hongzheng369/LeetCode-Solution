@@ -1,0 +1,19 @@
+class Solution {
+    public String complexNumberMultiply(String a, String b) {
+        int indexA = a.indexOf('+');
+        int realA = Integer.parseInt(a.substring(0, indexA));
+        int imagA = Integer.parseInt(a.substring(indexA + 1, a.length() - 1));
+        
+        int indexB = b.indexOf('+');
+        int realB = Integer.parseInt(b.substring(0, indexB));
+        int imagB = Integer.parseInt(b.substring(indexB + 1, b.length() - 1));
+        
+        int realAns = realA * realB - imagA * imagB;
+        int imagAns = realA * imagB + imagA * realB;
+        
+        StringBuilder ans = new StringBuilder();
+        ans.append(realAns).append('+').append(imagAns).append('i');
+        
+        return ans.toString();
+    }
+}
