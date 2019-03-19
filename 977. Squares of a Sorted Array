@@ -1,0 +1,60 @@
+class Solution {
+    public int[] sortedSquares(int[] A) {
+        if (A.length == 1) {
+            A[0] *= A[0];
+            return A;
+        }
+        
+        int pos = 0;
+        int len = A.length;
+        
+        while (pos < len && A[pos] < 0) {
+            pos++;
+        }
+    
+        // Special cases.
+        if (pos == 0) {
+            for (int i = 0; i < len; i++) {
+                A[i] *= A[i];
+            }
+            return A;
+        }
+        if (pos == len) {
+            for (int i = 0, j = len - 1; i < j; i++, j--) {
+                int temp = A[i] * A[i];
+                A[i] = A[j] * A[j];
+                A[j] = temp;
+            }
+            return A;
+        }
+        
+        int[] ans = new int[len];
+        int neg = pos - 1;
+        int index = 0;
+        
+        while (neg > -1 && pos < len) {
+            int Neg = A[neg] * A[neg];
+            int Pos = A[pos] * A[pos];
+            
+            if (Neg > Pos) {
+                ans[index++] = Pos;
+                pos++;
+            }
+            else {
+                ans[index++] = Neg;
+                neg--;
+            }
+        }
+        
+        while (neg > -1) {
+            ans[index++] = A[neg] * A[neg];
+            neg--;
+        }
+        while (pos < len) {
+            ans[index++] = A[pos] * A[pos];
+            pos++;
+        }
+        
+        return ans;
+    }
+}
