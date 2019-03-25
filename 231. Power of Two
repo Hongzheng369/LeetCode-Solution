@@ -1,0 +1,15 @@
+public class PowerofTwo {
+    // Method 1. Brute force, using Google to get that special number first.
+    /*
+    public boolean isPowerOfTwo(int n) {
+        return n > 0 && 1073741824 % n == 0;
+    }*/
+
+    // Method 2. Bit manipulation.
+    public boolean isPowerOfTwo(int n) {
+        if (n < 1 || n == Integer.MAX_VALUE) {
+            return false;
+        }
+        return (n & (n - 1)) == 0;
+    }
+}
