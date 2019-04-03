@@ -1,44 +1,33 @@
 class Solution {
+    // Method 1: brute force.
+    /*
     public List<List<Integer>> permute(int[] nums) {
         List<List<Integer>> res = new ArrayList<>();
-        
-        //Handling two special cases: "no element", and "only one element".
-        if (nums.length == 0)
+        if (nums.length == 0){
             return res;
-        else if (nums.length == 1)
-        {
+        }
+        else if (nums.length == 1){
             List<Integer> tmp = new ArrayList<>();
             tmp.add(nums[0]);
             res.add(tmp);
         }
-        
-        //Now we start here.
-        else
-        {
+        else{
             Queue<List<Integer>> queue = new LinkedList<>();
             
-            //1. Add the list which has only one element into the queue;
-            for (int i : nums)
-            {
+            for (int i : nums){
                 List<Integer> tmp = new ArrayList<>();
                 tmp.add(i);
                 queue.add(tmp);
-            }      
+            }
             
-            //2. Pop one list, add elements for several times.
-            //How many times should I run? nums.length - 1 times. (Because I've already did one step ahead)
-            for (int i = 0; i < nums.length - 1; i++)
-            {                        
-                //Run "size" times so that I can add element to every list in queue.
+            for (int i = 0; i < nums.length - 1; i++){
                 int size = queue.size();
-                for (int j = 0; j < size; j++)
-                {                           
+                
+                for (int j = 0; j < size; j++){
                     List<Integer> tra = queue.remove();
-                    for (int k : nums)
-                    {
-                        //If the list doesn't has element "k", then add it to the list.
-                        if (!tra.contains(k))
-                        {
+                    
+                    for (int k : nums){
+                        if (!tra.contains(k)){
                             List<Integer> tmp = new ArrayList<>(tra);
                             tmp.add(k);
                             queue.add(tmp);
@@ -47,10 +36,37 @@ class Solution {
                 }
             }
             
-            //3. Since the result is already saved in queue, now we just need to "get them out".
-            while (!queue.isEmpty())
+            while (!queue.isEmpty()) {
                 res.add(queue.remove());
+            }
         }
         return res;
+    }*/
+    
+    // Method 2: backtracking.
+    public List<List<Integer>> permute(int[] nums) {
+        List<List<Integer>> ans = new ArrayList<>();
+        List<Integer> list = new ArrayList<>();
+        for (int num : nums) {
+            list.add(num);
+        }
+        
+        backtracking(nums.length, 0, ans, list);
+        
+        return ans;
+    }
+    
+    private void backtracking(int len, int first, List<List<Integer>> ans, List<Integer> list) {
+        if (first == len) {
+            ans.add(new ArrayList<>(list));
+            return;
+        }
+        
+        for (int i = first; i < len; i++) {
+            Collections.swap(list, first, i);
+            backtracking(len, first + 1, ans, list);
+            Collections.swap(list, first, i);
+        }
+        return;
     }
 }
