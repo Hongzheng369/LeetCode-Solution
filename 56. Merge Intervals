@@ -2,47 +2,33 @@
  * Definition for an interval.
  * public class Interval {
  *     int start;
- *     int en;d
+ *     int end;
  *     Interval() { start = 0; end = 0; }
  *     Interval(int s, int e) { start = s; end = e; }
  * }
  */
 class Solution {
-    public static List<Interval> merge(List<Interval> intervals) {
-        //1. Sort the list according to Interval.start.
-        Comparator<Interval> comp = new Comparator<Interval>() {
-            @Override
+    public List<Interval> merge(List<Interval> intervals) {
+        if (intervals == null || intervals.size() == 0) {
+            return intervals;
+        }
+        
+        Collections.sort(intervals, new Comparator<Interval>(){
             public int compare(Interval o1, Interval o2) {
                 return o1.start - o2.start;
             }
-        };
-        intervals.sort(comp);
+        });
         
-        //2. Start merging. 
-        int idx = 0;
-        while (idx + 1 <= intervals.size() - 1){
-            //2.1 First, pick out two Interval.
-            Interval tmp_1 = intervals.get(idx);
-            Interval tmp_2 = intervals.get(idx + 1);
-            
-            //2.2 If they don't ovrelap, then there is no need to merge.
-            if (tmp_1.end < tmp_2.start)
-                idx++;
-                
-            //2.3 If they overlap, then merge. 
-            //Since I haven't delete the existing Interval, I have to delete them first, and then inserting the new Interval.
+        LinkedList<Interval> ans = new LinkedList<>();
+        for (Interval interval : intervals) {
+            if (ans.isEmpty() || ans.getLast().end < interval.start) {
+                ans.add(interval);
+            }
             else {
-                int maxEnd = tmp_2.end;
-                if (tmp_1.end > tmp_2.end)
-                    maxEnd = tmp_1.end;
-                Interval add = new Interval(tmp_1.start, maxEnd);
-                intervals.remove(idx);
-                intervals.remove(idx);
-                intervals.add(idx, add);
+                ans.getLast().end = Math.max(ans.getLast().end, interval.end);
             }
         }
         
-        //3. Return the result.
-        return intervals;
+        return ans;
     }
 }
