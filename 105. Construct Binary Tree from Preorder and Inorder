@@ -9,35 +9,28 @@
  */
 class Solution {
     public TreeNode buildTree(int[] preorder, int[] inorder) {
-        // Base case: nothing to work on.
-        if (preorder.length == 0 || inorder.length == 0)
+        if (preorder == null || preorder.length == 0) {
             return null;
-
-        TreeNode head = recursiveBuild(preorder, inorder, 0, preorder.length - 1, 0, inorder.length - 1);
-        return head;
-    }
-
-    public TreeNode recursiveBuild(int[] preorder, int[] inorder, int headForPre, int tailForPre, int headForIn, int tailForIn) {
-
-        if (headForIn == tailForIn || headForPre == tailForPre)
-            return new TreeNode(inorder[headForIn]);
-        if (headForIn > tailForIn || headForPre > tailForPre)
-            return null;
-
-        TreeNode head = new TreeNode(preorder[headForPre]);
-
-        int indexForHead = 0;
-        for (int i = 0; i < inorder.length; i++){
-            if (inorder[i] == head.val){
-                indexForHead = i;
-                break;
-            }
         }
-        int leftTreeLen = indexForHead - headForIn;
-        int rightTreeLen = tailForIn - indexForHead;
-
-        head.left = recursiveBuild(preorder, inorder, headForPre + 1, headForPre + leftTreeLen, headForIn, indexForHead - 1);
-        head.right = recursiveBuild(preorder, inorder, tailForPre - rightTreeLen + 1, tailForPre, indexForHead + 1, tailForIn);
-        return head;
+        return makeTree(preorder, 0, preorder.length - 1, inorder, 0, inorder.length - 1);
+    }
+    
+    private TreeNode makeTree(int[] preorder, int preHead, int preTail, int[] inorder, int inHead, int inTail) {
+        if (preHead == preTail) {
+            return new TreeNode(preorder[preHead]);
+        } else if (preHead > preTail) {
+            return null;
+        }
+        // Make root node.
+        TreeNode root = new TreeNode(preorder[preHead]);
+        int rootIndex = 0;
+        while (inorder[rootIndex] != preorder[preHead]) {
+            rootIndex++;
+        }
+        // Size of left tree: rootIndex - inHead;
+        // Size of right tree: inTail - rootIndex;
+        root.left = makeTree(preorder, preHead + 1, preHead + rootIndex - inHead, inorder, inHead, rootIndex - 1);
+        root.right = makeTree(preorder, preHead + rootIndex - inHead + 1, preTail, inorder, rootIndex + 1, inTail);
+        return root;
     }
 }
