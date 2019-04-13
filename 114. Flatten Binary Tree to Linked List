@@ -1,0 +1,74 @@
+// In-space.
+/**
+ * Definition for a binary tree node.
+ * public class TreeNode {
+ *     int val;
+ *     TreeNode left;
+ *     TreeNode right;
+ *     TreeNode(int x) { val = x; }
+ * }
+ */
+class Solution {
+    public void flatten(TreeNode root) {
+        helper(root, null);
+    }
+    
+    private TreeNode helper(TreeNode root, TreeNode pre) {
+        if (root == null) {
+            return pre;
+        }
+        TreeNode node = helper(root.right, pre);
+        node = helper(root.left, node);
+        root.right = node;
+        root.left = null;
+        return root;
+    }
+}
+
+// Use extra data structure.
+/**
+ * Definition for a binary tree node.
+ * public class TreeNode {
+ *     int val;
+ *     TreeNode left;
+ *     TreeNode right;
+ *     TreeNode(int x) { val = x; }
+ * }
+ */
+class Solution {
+    public void flatten(TreeNode root) {
+        if (root == null) {
+            return;
+        }
+        buildTree(getPreorder(root));
+    }
+    
+    private List<TreeNode> getPreorder(TreeNode root) {
+        List<TreeNode> list = new ArrayList<>();
+        Stack<TreeNode> stack = new Stack<>();
+        stack.add(root);
+        while (!stack.isEmpty()) {
+            TreeNode node = stack.pop();
+            list.add(node);
+            if (node.right != null) {
+                stack.add(node.right);
+            }
+            if (node.left != null) {
+                stack.add(node.left);
+            }
+        }
+        return list;
+    }
+    
+    private void buildTree(List<TreeNode> list) {
+        TreeNode node = list.get(0);
+        for (int i = 1; i < list.size(); i++) {
+            TreeNode next = list.get(i);
+            node.left = null;
+            node.right = next;
+            node = next;
+        }
+        node.left = null;
+        node.right = null;
+    }
+}
