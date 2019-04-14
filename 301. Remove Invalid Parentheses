@@ -1,61 +1,44 @@
 class Solution {
-    
     Set<String> save = new HashSet<>();
-    
+
     public List<String> removeInvalidParentheses(String s) {
-        int left = 0, right = 0;
-        
+        int leftParen = 0;
+        int rightParen = 0;
         for (int i = 0; i < s.length(); i++) {
             if (s.charAt(i) == '(') {
-                left++;
-            }
-            else if (s.charAt(i) == ')') {
-                right = (left == 0 ? right + 1 : right);
-                left = (left > 0 ? left - 1 : left);
+                leftParen++;
+            } else if (s.charAt(i) == ')') {
+                rightParen = leftParen == 0 ? rightParen + 1 : rightParen;
+                leftParen = leftParen > 0 ? leftParen - 1 : leftParen;
             }
         }
-        
-        helper(s, 0, 0, 0, left, right, new StringBuilder());
-        return new ArrayList<String>(save);
+        helpRemove(s, 0, 0, leftParen, 0, rightParen, new StringBuilder());
+        return new ArrayList<>(save);
     }
-    
-    public void helper(String s, int idx, int leftCount, int rightCount, int leftRemove, int rightRemove, StringBuilder ans) {
-        if (idx == s.length()) {
-            if (leftRemove == 0 && rightRemove == 0) {
-                save.add(ans.toString());
+
+    private void helpRemove(String s, int index, int leftCount, int leftToRemove, int rightCount, int rightToRemove, StringBuilder temp) {
+        if (index == s.length()) {
+            if (leftToRemove == 0 && rightToRemove == 0) {
+                save.add(temp.toString());
             }
-        }
-        
-        else {
-            char c = s.charAt(idx);
-            int len = ans.length();
-            
-            // 1. Delete this character.
-            if ((c == '(' && leftRemove > 0) || (c == ')' && rightRemove > 0)) {
-                helper(s, idx + 1, leftCount, rightCount, 
-                    leftRemove - (c == '(' ? 1 : 0),
-                    rightRemove - (c == ')' ? 1 : 0),
-                    ans
-                );
+        } else {
+            char c = s.charAt(index);
+            // Delete this character.
+            if (c == '(' && leftToRemove > 0) {
+                helpRemove(s, index + 1, leftCount, leftToRemove - 1, rightCount, rightToRemove, temp);
+            } else if (c == ')' && rightToRemove > 0) {
+                helpRemove(s, index + 1, leftCount, leftToRemove, rightCount, rightToRemove - 1, temp);
             }
-            
-            // 2. Save this character.
-            ans.append(c);
-            
-            // 2.1 If it's a english character.
+            // Append this character.
+            temp.append(c);
             if (c != '(' && c != ')') {
-                helper(s, idx + 1, leftCount, rightCount, leftRemove, rightRemove, ans);
+                helpRemove(s, index + 1, leftCount, leftToRemove, rightCount, rightToRemove, temp);
+            } else if (c == '(') {
+                helpRemove(s, index + 1, leftCount + 1, leftToRemove, rightCount, rightToRemove, temp);
+            } else if (rightCount < leftCount) {
+                helpRemove(s, index + 1, leftCount, leftToRemove, rightCount + 1, rightToRemove, temp);
             }
-            // 2.2 If it's a left parenthesis.
-            else if (c == '(') {
-                helper(s, idx + 1, leftCount + 1, rightCount, leftRemove, rightRemove, ans);
-            }
-            // 2.3 If it's a right parenthesis.
-            else if (rightCount < leftCount) {
-                helper(s, idx + 1, leftCount, rightCount + 1, leftRemove, rightRemove, ans);
-            }
-            
-            ans.deleteCharAt(len);
+            temp.deleteCharAt(temp.length() - 1);
         }
     }
 }
