@@ -1,31 +1,46 @@
 class Solution {
-    public static int maximalSquare(char[][] matrix) {
-        int res = 0;
-        for (int i = 0 ; i < matrix.length; i++){
-            for (int j = 0; j < matrix[i].length; j++){
-                if (matrix[i][j] == '1'){
-                    int len = helperFindSquare(i, j, matrix, 1);
-                    res = Math.max(res, len * len);
+    /* 2D dynamic programming.
+    public int maximalSquare(char[][] matrix) {
+        if (matrix == null || matrix.length == 0) {
+            return 0;
+        }
+        int row = matrix.length;
+        int col = matrix[0].length;
+        int maxLen = 0;
+        int[][] dp = new int[row + 1][col + 1];
+        for (int i = 0; i < row; i++) {
+            for (int j = 0; j < col; j++) {
+                if (matrix[i][j] == '1') {
+                    dp[i + 1][j + 1] = Math.min(dp[i][j], Math.min(dp[i + 1][j], dp[i][j + 1])) + 1;
+                    maxLen = Math.max(maxLen, dp[i + 1][j + 1]);
                 }
             }
         }
-        return res;
-    }
-    public static int helperFindSquare(int i, int j, char[][] matrix, int len){
-        if (i + len >= matrix.length || j + len >= matrix[i].length)
-            return len;
-
-        //Search the new row;
-        for (int col = j; col <= j + len; col++){
-            if (matrix[i + len][col] == '0')
-                return len;
+        return maxLen * maxLen;
+    }*/
+    
+    // 1D dynamic programming.
+    public int maximalSquare(char[][] matrix) {
+        if (matrix == null || matrix.length == 0) {
+            return 0;
         }
-        //Search the new col;
-        for (int row = i; row <= i + len; row++){
-            if (matrix[row][j + len] == '0')
-                return len;
+        int row = matrix.length;
+        int col = matrix[0].length;
+        int maxLen = 0;
+        int prev = 0;
+        int[] dp = new int[col + 1];
+        for (int i = 0; i < row; i++) {
+            for (int j = 0; j < col; j++) {
+                int temp = dp[j + 1];
+                if (matrix[i][j] == '1') {
+                    dp[j + 1] = Math.min(prev, Math.min(dp[j], dp[j + 1])) + 1;
+                    maxLen = Math.max(maxLen, dp[j + 1]);
+                } else {
+                    dp[j + 1] = 0;
+                }
+                prev = temp;
+            }
         }
-        int res = helperFindSquare(i, j, matrix, len + 1);
-        return res;
+        return maxLen * maxLen;
     }
 }
