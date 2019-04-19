@@ -8,27 +8,61 @@
  * }
  */
 class Solution {
-    
+    // Method 1: recursion and using a variable that is outside the functions.
+    /*
     TreeNode ans = null;
-
+    
     public TreeNode lowestCommonAncestor(TreeNode root, TreeNode p, TreeNode q) {
-        helper(root, p, q);
+        if (root == null) {
+            return null;
+        }
+        helpFindAncestor(root, p, q);
         return ans;
     }
-
-    public boolean helper(TreeNode root, TreeNode p, TreeNode q) {
+    
+    private boolean helpFindAncestor(TreeNode root, TreeNode p, TreeNode q) {
         if (root == null) {
             return false;
         }
-
-        int left = helper(root.left, p, q) ? 1 : 0;
-        int right = helper(root.right, p, q) ? 1 : 0;
-        int mid = ((root == p) || (root == q)) ? 1 : 0;
-
-        if (left + right + mid >= 2) {
+        int left = helpFindAncestor(root.left, p, q) ? 1 : 0;
+        int right = helpFindAncestor(root.right, p, q) ? 1 : 0;
+        int mid = (root == p || root == q) ? 1 : 0;
+        if (mid + left + right > 1) {
             ans = root;
         }
-
-        return (left + right + mid) > 0;
+        return mid + left + right > 0;
+    }*/
+    
+    // Method 2: iteraion. Find all the ancestors first, then compare them one by one.
+    public TreeNode lowestCommonAncestor(TreeNode root, TreeNode p, TreeNode q) {
+        if (root == null) {
+            return null;
+        }
+        Map<TreeNode, TreeNode> parents = new HashMap<>();
+        Queue<TreeNode> traverse = new LinkedList<>();
+        parents.put(root, null);
+        traverse.add(root);
+        while (!parents.containsKey(p) || !parents.containsKey(q)) {
+            TreeNode node = traverse.remove();
+            if (node.left != null) {
+                parents.put(node.left, node);
+                traverse.add(node.left);
+            }
+            if (node.right != null) {
+                parents.put(node.right, node);
+                traverse.add(node.right);
+            }
+        }
+        Set<TreeNode> ancestors = new HashSet<>();
+        TreeNode node = p;
+        while (node != null) {
+            ancestors.add(node);
+            node = parents.get(node);
+        }
+        node = q;
+        while (!ancestors.contains(node)){
+            node = parents.get(node);
+        }
+        return node;
     }
 }
