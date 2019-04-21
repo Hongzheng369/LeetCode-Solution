@@ -1,0 +1,75 @@
+# Basically, DFS.
+
+/**
+ * Definition for a binary tree node.
+ * public class TreeNode {
+ *     int val;
+ *     TreeNode left;
+ *     TreeNode right;
+ *     TreeNode(int x) { val = x; }
+ * }
+ */
+class Solution {
+    // Method 1: recursion.
+    public List<List<Integer>> pathSum(TreeNode root, int sum) {
+        List<List<Integer>> res  = new ArrayList<>();
+        helpFindPath(root, sum, new ArrayList<>(), res);
+        return res;
+    }
+    
+    private void helpFindPath(TreeNode root, int target, List<Integer> path, List<List<Integer>> res) {
+        if (root == null) {
+            return;
+        }
+        
+        if (root.left == null && root.right == null && target == root.val) {
+            path.add(root.val);
+            res.add(new ArrayList<>(path));
+            path.remove(path.size() - 1);
+            return;
+        } else {
+            path.add(root.val);
+            helpFindPath(root.left, target - root.val, path, res);
+            helpFindPath(root.right, target - root.val, path, res);
+        }
+        path.remove(path.size() - 1);
+    }
+    
+    // Method 2: iteration.
+    /*
+    public List<List<Integer>> pathSum(TreeNode root, int sum) {
+        List<List<Integer>> res = new ArrayList<>();
+        List<Integer> path = new ArrayList<>();
+        Stack<TreeNode> stack = new Stack<TreeNode>();
+        TreeNode curr = root;
+        TreeNode prev = null;
+        
+        // Traverse the tree using inorder traversal.
+        while (curr != null || !stack.isEmpty()) {
+            while (curr != null) {
+                path.add(curr.val);
+                stack.push(curr);
+                sum -= curr.val;
+                curr = curr.left;
+            }
+            
+            curr = stack.peek();
+            // Now we definitely can't go to left anymore. Try to go right.
+            if (curr.right != null && curr.right != prev) {
+                // In this case, "curr" still has right child which we haven't visited yet.
+                curr = curr.right;
+            } else {
+                if (curr.left == null && curr.right == null && sum == 0) {
+                    res.add(new ArrayList<>(path));
+                }
+                
+                prev = stack.pop();
+                path.remove(path.size() - 1);
+                sum += prev.val;
+                curr = null;
+            }
+        }
+        
+        return res;
+    }*/
+}
