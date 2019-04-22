@@ -16,6 +16,7 @@ class Solution {
         if (root == null) {
             return null;
         }
+        
         helpFindAncestor(root, p, q);
         return ans;
     }
@@ -24,45 +25,56 @@ class Solution {
         if (root == null) {
             return false;
         }
+        
         int left = helpFindAncestor(root.left, p, q) ? 1 : 0;
         int right = helpFindAncestor(root.right, p, q) ? 1 : 0;
         int mid = (root == p || root == q) ? 1 : 0;
-        if (mid + left + right > 1) {
+        
+        if (left + right + mid > 1) {
             ans = root;
         }
-        return mid + left + right > 0;
+        
+        return (left + right + mid) > 0;
     }*/
     
-    // Method 2: iteraion. Find all the ancestors first, then compare them one by one.
-    public TreeNode lowestCommonAncestor(TreeNode root, TreeNode p, TreeNode q) {
+    // Method 2: iteration.
+    public TreeNode lowestCommonAncestor(TreeNode root, TreeNode p, TreeNode q) { 
         if (root == null) {
             return null;
         }
+        
         Map<TreeNode, TreeNode> parents = new HashMap<>();
-        Queue<TreeNode> traverse = new LinkedList<>();
+        Queue<TreeNode> queue = new LinkedList<>();
         parents.put(root, null);
-        traverse.add(root);
+        queue.add(root);
+        
         while (!parents.containsKey(p) || !parents.containsKey(q)) {
-            TreeNode node = traverse.remove();
+            TreeNode node = queue.remove();
+            
             if (node.left != null) {
                 parents.put(node.left, node);
-                traverse.add(node.left);
+                queue.add(node.left);
             }
+            
             if (node.right != null) {
                 parents.put(node.right, node);
-                traverse.add(node.right);
+                queue.add(node.right);
             }
         }
-        Set<TreeNode> ancestors = new HashSet<>();
+        
+        Set<TreeNode> seenAncestors = new HashSet<>();
         TreeNode node = p;
+        
         while (node != null) {
-            ancestors.add(node);
+            seenAncestors.add(node);
             node = parents.get(node);
         }
+        
         node = q;
-        while (!ancestors.contains(node)){
+        while (!seenAncestors.contains(node)) {
             node = parents.get(node);
         }
+        
         return node;
     }
 }
