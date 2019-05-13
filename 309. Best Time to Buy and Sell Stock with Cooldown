@@ -1,26 +1,24 @@
+// It's a problem of state changing.
+
 class Solution {
-    // Problem about state.
-    // s1: the state when buy, comes from s0 or s1 itself(stays in "purchased" state).
-    // s2: the state when sell, comes only from s1.
-    // s0: the state when cooldown, comes from s2 or s0 itself(keeps cooldown).
     public int maxProfit(int[] prices) {
-        if (prices.length == 0) {
+        if (prices == null || prices.length < 2) {
             return 0;
         }
         
-        int s0 = 0, s0prev = 0;
-        int s1 = 0, s1prev = -prices[0];
-        int s2 = 0, s2prev = 0;
+        // S0: cooldown. S1: buy. S2: sell.
+        int S0 = 0, S1 = 0, S2 = 0;
+        int prevS0 = 0, prevS1 = -prices[0], prevS2 = 0;
         
-        for(int p : prices){
-            s0 = Math.max(s0prev, s2prev);
-            s1 = Math.max(s1prev, s0prev - p);
-            s2 = s1prev + p;
-            s0prev = s0;
-            s1prev = s1;
-            s2prev = s2;
+        for (int price : prices) {
+            S0 = Math.max(prevS0, prevS2);
+            S1 = Math.max(prevS1, prevS0 - price);
+            S2 = prevS1 + price;
+            prevS0 = S0;
+            prevS1 = S1;
+            prevS2 = S2;
         }
         
-        return Math.max(s0, s2);
+        return Math.max(prevS0, prevS2);
     }
 }
