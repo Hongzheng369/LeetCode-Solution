@@ -1,27 +1,28 @@
 class Solution {
-    HashMap<String, PriorityQueue<String>> map = new HashMap<String, PriorityQueue<String>>();
-	LinkedList<String> result = new LinkedList<String>();
- 
-	public List<String> findItinerary(String[][] tickets) {
-		for (String[] ticket : tickets) {
-			if (!map.containsKey(ticket[0])) {
-				map.put(ticket[0], new PriorityQueue<String>());
-			}
-			map.get(ticket[0]).offer(ticket[1]);
-		}
- 
+    LinkedList<String> result = new LinkedList<>();
+    Map<String, PriorityQueue<String>> availableDst = new HashMap<>();
+    
+    public List<String> findItinerary(List<List<String>> tickets) {
+        for (List<String> list : tickets) {
+            if (!availableDst.containsKey(list.get(0))) {
+                availableDst.put(list.get(0), new PriorityQueue<>());
+            }
+            availableDst.get(list.get(0)).add(list.get(1));
+        }
+        
+        System.out.println(availableDst);
+        
         dfs("JFK");
-		return result;
-	}
- 
-	public void dfs(String s) {
-        // Reach the end, then start adding.
-		PriorityQueue<String> queue = map.get(s);
- 
-		while (queue != null && !queue.isEmpty()) {
-			dfs(queue.poll());
-		}
- 
-		result.addFirst(s);
-	}
+        return result;
+    }
+    
+    private void dfs(String s) {
+        PriorityQueue<String> queue = availableDst.get(s);
+        System.out.println(s);
+        while (queue != null && !queue.isEmpty()) {
+            dfs(queue.remove());
+        }
+        
+        result.addFirst(s);
+    }
 }
