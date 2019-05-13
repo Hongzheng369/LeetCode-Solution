@@ -3,18 +3,21 @@ class Solution {
         if (n == 0) {
             return tasks.length;
         }
-        Map<Character, Integer> map = new HashMap<>();
+        
+        Map<Character, Integer> appear = new HashMap<>();
         int maxAppear = 0;
-        for (char c : tasks) {
-            map.put(c, map.getOrDefault(c, 0) + 1);
-            maxAppear = Math.max(maxAppear, map.get(c));
+        for (char ch : tasks) {
+            appear.put(ch, appear.getOrDefault(ch, 0) + 1);
+            maxAppear = Math.max(maxAppear, appear.get(ch));
         }
+        
         int sameAppear = 0;
-        for (int i : map.values()) {
-            if (i == maxAppear) {
+        for (Integer i : appear.values()) {
+            if ((int)i == maxAppear) {
                 sameAppear++;
             }
         }
-        return Math.max(tasks.length, (maxAppear - 1) * (n + 1) + sameAppear);
+        
+        return Math.max(tasks.length, (n + 1) * (maxAppear - 1) + sameAppear);
     }
 }
