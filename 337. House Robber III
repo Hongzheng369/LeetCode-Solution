@@ -8,58 +8,33 @@
  * }
  */
 class Solution {
-    // Method 1: using a hashmap to save previous result.
-    /*
     public int rob(TreeNode root) {
         if (root == null) {
             return 0;
         }
-
-        Map<TreeNode, Integer> sum = new HashMap<>();
-        return helper(sum, root);
+        
+        return profit(new HashMap<>(), root);
     }
-
-    private int helper(Map<TreeNode, Integer> sum, TreeNode root) {
-        if (root == null) {
+    
+    private int profit(Map<TreeNode, Integer> sum, TreeNode node) {
+        if (node == null) {
             return 0;
-        } else if (sum.containsKey(root)) {
-            return sum.get(root);
-        }
-
-        // "val1" is the maximum sum when robbing "root".
-        int val1 = root.val;
-        if (root.right != null) {
-            val1 += (helper(sum, root.right.left) + helper(sum, root.right.right));
-        }
-        if (root.left != null) {
-            val1 += (helper(sum, root.left.left) + helper(sum, root.left.right));
-        }
-
-        // "val2" is the sum when not robbing "root".
-        int val2 = helper(sum, root.left) + helper(sum, root.right);
-
-        int profit = Math.max(val1, val2);
-        sum.put(root, profit);
-        return profit;
-    }*/
-    
-    // Method 2: using an array to save previous result.
-    public int rob(TreeNode root) {
-        return helperRob(root)[1];
-    }
-    
-    public int[] helperRob(TreeNode root) {
-        // ans[0] = To this node's children level, how much can I steal.
-        // ans[1] = To this node's level, how much can I steal.
-        int[] ans = {0, 0};
-        
-        if (root != null) {
-            int[] robLeft = helperRob(root.left);
-            int[] robRight = helperRob(root.right);
-            ans[0] = robLeft[1] + robRight[1];
-            ans[1] = Math.max(ans[0], robLeft[0] + robRight[0] + root.val);
+        } else if (sum.containsKey(node)) {
+            return sum.get(node);
         }
         
-        return ans;
+        int val1 = node.val;
+        if (node.left != null) {
+            val1 += profit(sum, node.left.left) + profit(sum, node.left.right);
+        }
+        if (node.right != null) {
+            val1 += profit(sum, node.right.left) + profit(sum, node.right.right);
+        }
+        
+        int val2 = profit(sum, node.left) + profit(sum, node.right);
+        
+        int maxVal = Math.max(val1, val2);
+        sum.put(node, maxVal);
+        return maxVal;
     }
 }
