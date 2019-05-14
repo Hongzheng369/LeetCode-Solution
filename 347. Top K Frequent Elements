@@ -1,28 +1,24 @@
-# 这题我没有想出O(n*logn)的做法，所以还是用了暴力解法：
-# 首先，在第一次for循环内，把每个元素和它出现的次数都放入HashMap中；
-# 接着再遍历HashMap，把前k个出现次数最多的元素找出来，并把它放入res中。
-
-# 代码如下：
-
 class Solution {
     public List<Integer> topKFrequent(int[] nums, int k) {
-        List<Integer> res = new ArrayList<>();
-        HashMap<Integer, Integer> map = new HashMap<>();
-        for (int i : nums)
-            map.put(i, map.getOrDefault(i, 0) + 1);
-        while (k > 0){
-            int max_key = Integer.MIN_VALUE;
-            int max_val = Integer.MIN_VALUE;
-            for (Map.Entry<Integer, Integer> en : map.entrySet()){
-                if ((int)en.getValue() > max_val){
-                    max_key = (int)en.getKey();
-                    max_val = (int)en.getValue();
-                }
-            }
-            map.remove(max_key, max_val);
-            res.add(max_key);
-            k -= 1;
+        Map<Integer, Integer> appear = new HashMap<>();
+        for (int num : nums) {
+            appear.put(num, appear.getOrDefault(num, 0) + 1);
         }
-        return res;
+        
+        PriorityQueue<Integer> heap = new PriorityQueue<>(new Comparator<Integer>(){
+            public int compare(Integer o1, Integer o2) {
+                return appear.get(o2) - appear.get(o1);
+            }
+        });
+        for (Integer num : appear.keySet()) {
+            heap.add(num);
+        }
+        
+        List<Integer> answer = new ArrayList<>();
+        for (int i = 0; i < k; i++) {
+            answer.add(heap.remove());
+        }
+        
+        return answer;
     }
 }
