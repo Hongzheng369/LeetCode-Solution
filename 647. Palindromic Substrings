@@ -1,35 +1,24 @@
-# 分情况讨论，检查奇数长度的String和偶数长度的String，如果对称sum就加1。
-
-# 代码如下：
-
 class Solution {
+    int count = 0;
+    
     public int countSubstrings(String s) {
-        char[] tmp = s.toCharArray();
-        int sum = 0;
-        
-        //Check one by one.
-        for(int i = 0; i < s.length(); i++) {
+        char[] chars = s.toCharArray();
+        for (int i = 0; i < chars.length; i++) {
+            expandAndCount(chars, i, i);
             
-            //First, check the palindromic string that has odd number length.
-        	for(int j = 0; i - j >= 0 && i + j <s.length(); j++) {
-        		if(tmp[i - j] == tmp[i + j])
-        			sum++;
-                else
-                    break;
-        	}
-        	
-            //Then, check the palindromic string that has even number length.
-        	if(i + 1 < s.length() && tmp[i] == tmp[i + 1]) {
-                sum++;
-        		for(int j = 1; i - j >= 0 && i + 1 + j < s.length(); j++) {
-        			if(tmp[i - j] == tmp[i + 1 +j])
-        				sum++;
-                    else 
-                        break;
-        		}
-        	}
+            if (i < chars.length - 1) {
+                expandAndCount(chars, i, i + 1);
+            }
         }
         
-        return sum;
+        return count;
+    }
+    
+    private void expandAndCount(char[] chars, int i, int j) {
+        while (i > -1 && j < chars.length && chars[i] == chars[j]) {
+            count++;
+            i--;
+            j++;
+        }
     }
 }
