@@ -1,61 +1,21 @@
 class Solution {
-    /*
-    // A global variable.
-    int ans = 0;
-    
     public int findTargetSumWays(int[] nums, int S) {
-        // Special case.
-        if (nums == null || nums.length == 0) {
-            return (S == 0 ? 1 : 0);
-        }
-        // Run the helper function.
-        helper(nums, S, 0);
-        // Return the answer.
-        return ans;
-    }
-    
-    private void helper(int[] nums, int S, int index) {
-        // Base case.
-        if (index == nums.length) {
-            // Since we reach the end, we shall see if S is equal to 0.
-            if (S == 0) {
-                ans++;
+        Map<Integer, Integer> possi = new HashMap<>();
+        possi.put(0, 1);
+        
+        for (int num : nums) {
+            Map<Integer, Integer> nextLevel = new HashMap<>();
+            for (int tempAns : possi.keySet()) {
+                int times = possi.get(tempAns);
+                int addNum = tempAns + num;
+                int minusNum = tempAns - num;
+                nextLevel.put(addNum, nextLevel.getOrDefault(addNum, 0) + times);
+                nextLevel.put(minusNum, nextLevel.getOrDefault(minusNum, 0) + times);
             }
-            return;
+            
+            possi = nextLevel;
         }
-        //
-        helper(nums, S - nums[index], index + 1);
-        helper(nums, S + nums[index], index + 1);
-    }*/
-    
-    // Use HashMap to save the status from last level.
-    public int findTargetSumWays(int[] nums, int S) {
-        // Special case.
-        if (nums == null || nums.length == 0) {
-            return (S == 0 ? 1 : 0);
-        }
-        HashMap<Integer, Integer> map = new HashMap<>();
-        map.put(0, 1);
-        for(int num : nums) {
-            HashMap<Integer, Integer> temp = new HashMap<>();
-            for (int tempAns : map.keySet()) {
-                int add = tempAns + num;
-                int minus = tempAns - num;
-                if (!temp.containsKey(add)) {
-                    temp.put(add, map.get(tempAns));
-                }
-                else {
-                    temp.put(add, temp.get(add) + map.get(tempAns));
-                }
-                if (!temp.containsKey(minus)) {
-                    temp.put(minus, map.get(tempAns));
-                }
-                else {
-                    temp.put(minus, temp.get(minus) + map.get(tempAns));
-                }
-            }
-            map = temp;
-        }
-        return (map.get(S) == null ? 0 : map.get(S));
+        
+        return possi.get(S) == null ? 0 : possi.get(S);
     }
 }
