@@ -1,17 +1,22 @@
 class Solution {
     public boolean wordBreak(String s, List<String> wordDict) {
+        if (s == null || s.length() == 0) {
+            return true;
+        }
+        
         Set<String> dict = new HashSet<>(wordDict);
-        boolean[] check = new boolean[s.length() + 1];
-        check[0] = true;
+        boolean[] buildString = new boolean[s.length() + 1];
+        buildString[0] = true;
         for (int i = 0; i < s.length(); i++) {
             for (int j = i; j > -1; j--) {
                 String temp = s.substring(j, i + 1);
-                if (dict.contains(temp) && check[j]) {
-                    check[i + 1] = true;
+                if (dict.contains(temp) && buildString[j]) {
+                    buildString[i + 1] = true;
                     break;
                 }
             }
         }
-        return check[s.length()];
+        
+        return buildString[s.length()];
     }
 }
