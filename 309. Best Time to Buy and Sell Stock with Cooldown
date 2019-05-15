@@ -1,24 +1,22 @@
-// It's a problem of state changing.
-
 class Solution {
     public int maxProfit(int[] prices) {
         if (prices == null || prices.length < 2) {
             return 0;
         }
         
-        // S0: cooldown. S1: buy. S2: sell.
-        int S0 = 0, S1 = 0, S2 = 0;
-        int prevS0 = 0, prevS1 = -prices[0], prevS2 = 0;
-        
+        // Multiple "buy" stands for holding the stock for this period.
+        // s1 = cooldown, s2 = buy, s3 = sell.
+        int s1 = 0, s2 = 0, s3 = 0;
+        int s1Prev = 0, s2Prev = -prices[0], s3Prev = 0;
         for (int price : prices) {
-            S0 = Math.max(prevS0, prevS2);
-            S1 = Math.max(prevS1, prevS0 - price);
-            S2 = prevS1 + price;
-            prevS0 = S0;
-            prevS1 = S1;
-            prevS2 = S2;
+            s1 = Math.max(s1Prev, s3Prev);
+            s2 = Math.max(s1Prev - price, s2Prev);
+            s3 = s2Prev + price;
+            s1Prev = s1;
+            s2Prev = s2;
+            s3Prev = s3;
         }
         
-        return Math.max(prevS0, prevS2);
+        return Math.max(s1, s3);
     }
 }
