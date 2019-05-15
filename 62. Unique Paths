@@ -1,28 +1,48 @@
 class Solution {
-    public int uniquePaths(int m, int n) {
-        // n = row, m = col.
-        
-        // Corner case.
+    // Method 1: dynamic programming.
+    /*public int uniquePaths(int m, int n) {
+        // "m" -> m columns.
+        // "n" -> n rows.
         if (n == 0 || m == 0) {
             return 0;
         }
         
-        // Initiating.
-        int[][] countRoute = new int[n][m];
-        for (int i = 0; i < n; i++) {
-            countRoute[i][0] = 1;
+        int[][] grid = new int[n][m];
+        for (int i = 0; i < m; i++) {
+            grid[0][i] = 1;
         }
-        for (int i = 1; i < m; i++) {
-            countRoute[0][i] = 1;
+        for (int i = 0; i < n; i++) {
+            grid[i][0] = 1;
         }
         
-        // Count the route.
         for (int i = 1; i < n; i++) {
             for (int j = 1; j < m; j++) {
-                countRoute[i][j] = countRoute[i - 1][j] + countRoute[i][j - 1];
+                grid[i][j] = grid[i - 1][j] + grid[i][j - 1];
             }
         }
         
-        return countRoute[n - 1][m - 1];
+        return grid[n - 1][m - 1];
+    }*/
+    
+    // Method 2: mathematical calculation.
+    public int uniquePaths(int m, int n) {
+        // "m" -> m columns.
+        // "n" -> n rows.
+        if (n == 0 || m == 0) {
+            return 0;
+        }
+        
+        int base = m + n - 2;
+        int upper = Math.min(m, n) - 1;
+        return calculateCombination(base, upper);
+    }
+    
+    private int calculateCombination(int base, int upper) {
+        long ans = 1;
+        for (int i = 0; i < upper; i++) {
+            ans = ans * (base - upper + i + 1) / (i + 1);
+        }
+        
+        return (int)ans;
     }
 }
