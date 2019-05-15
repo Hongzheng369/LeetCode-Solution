@@ -5,17 +5,17 @@ class Solution {
         
         for (int num : nums) {
             Map<Integer, Integer> nextLevel = new HashMap<>();
-            for (int tempAns : possi.keySet()) {
-                int times = possi.get(tempAns);
-                int addNum = tempAns + num;
-                int minusNum = tempAns - num;
-                nextLevel.put(addNum, nextLevel.getOrDefault(addNum, 0) + times);
-                nextLevel.put(minusNum, nextLevel.getOrDefault(minusNum, 0) + times);
+            
+            for (int thisLevel : possi.keySet()) {
+                int addNum = thisLevel + num;
+                int minusNum = thisLevel - num;
+                nextLevel.put(addNum, nextLevel.getOrDefault(addNum, 0) + possi.get(thisLevel));
+                nextLevel.put(minusNum, nextLevel.getOrDefault(minusNum, 0) + possi.get(thisLevel));
             }
             
             possi = nextLevel;
         }
         
-        return possi.get(S) == null ? 0 : possi.get(S);
+        return (possi.get(S) == null ? 0 : possi.get(S));
     }
 }
