@@ -1,0 +1,34 @@
+class Solution {
+    public int minimumTotal(List<List<Integer>> triangle) {
+        if (triangle == null || triangle.size() == 0) {
+            return 0;
+        }
+        
+        int[] lastLevel = new int[triangle.size()];
+        lastLevel[0] = triangle.get(0).get(0);
+        
+        for (int i = 1; i < triangle.size(); i++) {
+            List<Integer> thisLevel = triangle.get(i);
+            int[] temp = new int[triangle.size()];
+            
+            for (int j = 0; j < thisLevel.size(); j++) {
+                if (j == 0) {
+                    temp[j] = lastLevel[j] + thisLevel.get(j);
+                } else if (j == thisLevel.size() - 1) {
+                    temp[j] = lastLevel[j - 1] + thisLevel.get(j);
+                } else {
+                    temp[j] = Math.min(lastLevel[j - 1], lastLevel[j]) + thisLevel.get(j);
+                }
+            }
+            
+            lastLevel = temp;
+        }
+        
+        int ans = lastLevel[0];
+        for (int i = 1; i < lastLevel.length; i++) {
+            ans = Math.min(ans, lastLevel[i]);
+        }
+        
+        return ans;
+    }
+}
