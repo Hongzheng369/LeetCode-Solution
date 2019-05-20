@@ -1,0 +1,39 @@
+class Solution {
+    // Method 1: iteration.
+    /*public int fib(int N) {
+        if (N == 0) {
+            return 0;
+        } else if (N == 1) {
+            return 1;
+        }
+        
+        int prev = 0;
+        int curr = 1;
+        for (int i = 1; i < N; i++) {
+            int temp = prev + curr;
+            prev = curr;
+            curr = temp;
+        }
+        
+        return curr;
+    }*/
+    
+    // Method 2: recursion.
+    public int fib(int N) {
+        if (N == 0) {
+            return 0;
+        } else if (N == 1) {
+            return 1;
+        }
+        
+        return calculateFib(0, 1, 1, N);
+    }
+    
+    private int calculateFib(int prev, int curr, int n, int N) {
+        if (n == N) {
+            return curr;
+        }
+        
+        return calculateFib(curr, prev + curr, n + 1, N);
+    }
+} 
