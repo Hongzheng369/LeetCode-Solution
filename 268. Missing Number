@@ -1,38 +1,21 @@
 class Solution {
-    // Method 1: using another array to save the elements' appeearance.
-    /*
-    public int missingNumber(int[] nums) {
-        if (nums == null || nums.length == 0) {
-            return -1;
-        }
-        
-        int[] appear = new int[nums.length + 1];
+    // Method 1: math calculation.
+    /*public int missingNumber(int[] nums) {
+        int sum = 0;
         for (int num : nums) {
-            appear[num]++;
+            sum += num;
         }
-        
-        for (int i = 0; i < appear.length; i++) {
-            if (appear[i] == 0) {
-                return i;
-            }
-        }
-        
-        return -1;
+        int len = nums.length;
+        return (1 + len) * len / 2 - sum;
     }*/
     
-    // Method 2: in-space operation.
+    // Method 2: bit manipulation.
     public int missingNumber(int[] nums) {
-        if (nums == null || nums.length == 0) {
-            return -1;
-        }
-        
         int len = nums.length;
-        int expectedSum = (1 + len) * len / 2;
-        
-        for (int num : nums) {
-            expectedSum -= num;
+        int ans = len;
+        for (int i = 0; i < len; i++) {
+            ans ^= i ^ nums[i];
         }
-        
-        return expectedSum;
+        return ans;
     }
 }
