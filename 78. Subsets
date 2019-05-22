@@ -1,55 +1,16 @@
-# 将“第i次”的这个i，转换成二进制，对应的就是“拿不拿第n位”的问题了。
-# 代码如下：
-// "To be, or not to be, that is the question"
-// To take or not to take, that's THE question here.
-class Solution {
-    public List<List<Integer>> subsets(int[] nums) {
-        List<List<Integer>> ans = new ArrayList<List<Integer>>();
-
-        //Two special cases: no number, or only one number.
-        if (nums.length == 0 || nums == null)
-            ans.add(new ArrayList<Integer>());
-        else if (nums.length == 1){
-            ans.add(new ArrayList<Integer>());
-            List<Integer> tmp = new ArrayList<Integer>();
-            tmp.add(nums[0]);
-            ans.add(tmp);
-        }
-
-        //Normally, here is how we do when "nums" has more than one element.
-        else {
-            for (int i = 0; i < (int)Math.pow(2,nums.length); i++){
-                int num = i;
-                int idx = nums.length - 1;
-                List<Integer> tmp = new ArrayList<Integer>();
-                while (num != 0){
-                    if (num % 2 == 1)
-                        tmp.add(nums[idx]);
-                    idx--;
-                    num /= 2;
-                }
-                ans.add(tmp);
-            }
-        }
-
-        return ans;
-    }
-}
-
-# 使用backtracking来添加subset。
 class Solution {
     public List<List<Integer>> subsets(int[] nums) {
         List<List<Integer>> ans = new ArrayList<>();
-        findSub(ans, new ArrayList<>(), nums, 0);
+        helper(ans, new ArrayList<>(), nums, 0);
         return ans;
     }
     
-    private void findSub(List<List<Integer>> ans, List<Integer> list, int[] nums, int start) {
-        ans.add(new ArrayList<>(list));
-        for (int i = start; i < nums.length; i++) {
-            list.add(nums[i]);
-            findSub(ans, list, nums, i + 1);
-            list.remove(list.size() - 1);
+    private void helper(List<List<Integer>> ans, List<Integer> subset, int[] nums, int pos) {
+        ans.add(new ArrayList<>(subset));
+        for (int i = pos; i < nums.length; i++) {
+            subset.add(nums[i]);
+            helper(ans, subset, nums, i + 1);
+            subset.remove(subset.size() - 1);
         }
     }
 }
