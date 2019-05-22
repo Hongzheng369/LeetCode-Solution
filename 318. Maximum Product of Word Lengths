@@ -1,0 +1,80 @@
+class Solution {
+    // Method 1: brute force.
+    /*public int maxProduct(String[] words) {
+        List<Set<Character>> list = new ArrayList<>();
+        
+        for (String word : words) {
+            Set<Character> set = new HashSet<>();
+            
+            for (char ch : word.toCharArray()) {
+                set.add(ch);
+            }
+            
+            list.add(set);
+        }
+        
+        int ans = 0;
+        int size = list.size();
+        
+        for (int i = 0; i < size; i++) {
+            Set<Character> set1 = list.get(i);
+            
+            for (int j = i + 1; j < size; j++) {
+                Set<Character> set2 = list.get(j);
+                boolean flag = true;
+                
+                for (char ch : set2) {
+                    if (set1.contains(ch)) {
+                        flag = false;
+                        break;
+                    }
+                }
+                
+                if (flag) {
+                    ans = Math.max(ans, words[i].length() * words[j].length());
+                }
+            }
+        }
+        
+        return ans;
+    }*/
+    
+    // Method 2: bit manipulation.
+    public int maxProduct(String[] words) {
+        int len = words.length;
+        int[] masks = new int[len];
+        int[] lens = new int[len];
+        
+        for (int i = 0; i < len; i++) {
+            String word = words[i];
+            lens[i] = word.length();
+            int mask = 0;
+            for (int j = 0; j < lens[i]; j++) {
+                mask |= 1 << (word.charAt(j) - 'a');
+            }
+            masks[i] = mask;
+        }
+        // a 1->1
+        // b 2->10
+        // c 4->100
+        // d 8->1000
+        // ab 3->11
+        // ac 5->101
+        // abc 7->111
+        // az 33554433->10000000000000000000000001
+        
+        int max = 0;
+        for (int i = 0; i < len; i++) {
+            int masksi = masks[i];
+            int lensi = lens[i];
+            for (int j = i + 1; j < len; j++) {
+                if ((masksi & masks[j]) == 0) {
+                    int curProduct = lensi * lens[j];
+                    max = Math.max(max, curProduct);
+                }
+            }
+        }
+        
+        return max;
+    }
+}
