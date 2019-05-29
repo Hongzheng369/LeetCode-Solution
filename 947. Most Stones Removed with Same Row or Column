@@ -1,0 +1,43 @@
+class Solution {
+    // Method 1: union-find.
+    int parts;
+    
+    public int removeStones(int[][] stones) {
+        int len = stones.length;
+        parts = len;
+        int[] root = new int[1000];
+        for (int i = 0; i < len; i++) {
+            root[i] = i;
+        }
+        
+        for (int i = 0; i < len; i++) {
+            for (int j = i + 1; j < len; j++) {
+                if (stones[i][0] == stones[j][0] || stones[i][1] == stones[j][1]) {
+                    union(i, j, root);
+                }
+            }
+        }
+        
+        return len - parts;
+    }
+    
+    private int getRoot(int i, int[] root) {
+        while (i != root[i]) {
+            i = root[i];
+        }
+        
+        return i;
+    }
+    
+    private void union(int i, int j, int[] root) {
+        int iRoot = getRoot(i, root);
+        int jRoot = getRoot(j, root);
+        
+        if (iRoot == jRoot) {
+            return;
+        } else {
+            root[iRoot] = jRoot;
+            parts--;
+        }
+    }
+}
