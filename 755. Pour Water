@@ -1,0 +1,60 @@
+class Solution {
+    /**
+     * K is the index.
+     * V is the amount of rain drops.
+     */
+    
+    // Method 1: find left and right seperately, and then decide where to put.
+    /*public int[] pourWater(int[] heights, int V, int K) {
+        for (int i = 0; i < V; i++) {
+            int left = K, right = K;
+            
+            // Check left first.
+            // From K to 0, find the possible spot to drop the rain.
+            while (left > 0 && heights[left] >= heights[left - 1]) {
+                left--;
+            }
+            // If doesn't find the suitable place, then go back.
+            while (left < K && heights[left] == heights[left + 1]) {
+                left++;
+            }
+            
+            // Check right then.
+            while (right < heights.length - 1 && heights[right] >= heights[right + 1]) {
+                right++;
+            }
+            while (right > K && heights[right] == heights[right - 1]) {
+                right--;
+            }
+            
+            // Now drop the rain.
+            if (heights[left] < heights[K]) {
+                heights[left]++;
+            } else {
+                heights[right]++;
+            }
+        }
+        
+        return heights;
+    }*/
+    
+    // Method 2: scan through: K -> left -> right, and then see if it's possible to drop on K's left.
+    public int[] pourWater(int[] heights, int V, int K) {
+        for (int i = 0; i < V; i++) {
+            int cur = K;
+            while (cur > 0 && heights[cur] >= heights[cur - 1]) {
+                cur--;
+            }
+            while (cur < heights.length - 1 && heights[cur] >= heights[cur + 1]) {
+                cur++;
+            }
+            while (cur > K && heights[cur] >= heights[cur - 1]) {
+                cur--;
+            }
+            
+            heights[cur]++;
+        }
+        
+        return heights;
+    }
+}
