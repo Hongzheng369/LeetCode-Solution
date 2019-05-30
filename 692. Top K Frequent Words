@@ -1,0 +1,58 @@
+class Solution {
+    /**
+     * Please notice the difference when initializing the comparator.
+     */
+    
+    // Method 1: put in all the keys and then do the sorting.
+    /*public List<String> topKFrequent(String[] words, int k) {
+        Map<String, Integer> appear = new HashMap<>();
+        for (String word : words) {
+            appear.put(word, appear.getOrDefault(word, 0) + 1);
+        }
+        
+        List<String> ans = new ArrayList<>(appear.keySet());
+        Collections.sort(ans, new Comparator<String>(){
+            public int compare(String o1, String o2){
+                if (appear.get(o1).equals(appear.get(o2))) {
+                    return o1.compareTo(o2);
+                } else {
+                    return appear.get(o2) - appear.get(o1);
+                }
+            }
+        });
+        
+        return ans.subList(0, k);
+    }*/
+    
+    // Method 2: put in the keys and do the sorting at the same time.
+    public List<String> topKFrequent(String[] words, int k) {
+        Map<String, Integer> appear = new HashMap<>();
+        for (String word : words) {
+            appear.put(word, appear.getOrDefault(word, 0) + 1);
+        }
+        
+        PriorityQueue<String> heap = new PriorityQueue<>(new Comparator<String>(){
+            public int compare(String o1, String o2){
+                if (appear.get(o1).equals(appear.get(o2))) {
+                    return o2.compareTo(o1);
+                } else {
+                    return appear.get(o1) - appear.get(o2);
+                }
+            }
+        });
+        
+        for (String s : appear.keySet()) {
+            heap.add(s);
+            if (heap.size() > k) {
+                heap.remove();
+            }
+        }
+        
+        List<String> ans = new ArrayList<>();
+        while (!heap.isEmpty()) {
+            ans.add(heap.remove());
+        }
+        Collections.reverse(ans);
+        return ans;
+    }
+}
