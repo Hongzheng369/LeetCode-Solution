@@ -1,0 +1,89 @@
+/**
+ * Definition for a binary tree node.
+ * public class TreeNode {
+ *     int val;
+ *     TreeNode left;
+ *     TreeNode right;
+ *     TreeNode(int x) { val = x; }
+ * }
+ */
+public class Codec {
+    /**
+     * Encoding means to get a preorder sequence.
+     * Sort them, then it becomes inorder sequence.
+     * According to these sequences, we can rebuild the tree.
+     */
+    
+    // Encodes a tree to a single string.
+    public String serialize(TreeNode root) {
+        if (root == null) {
+            return "";
+        }
+        
+        TreeNode node = root;
+        StringBuilder sb = new StringBuilder();
+        getPreorder(node, sb);
+        
+        return sb.toString();
+    }
+    
+    private void getPreorder(TreeNode node, StringBuilder sb) {
+        if (node == null) {
+            return;
+        }
+        
+        sb.append(node.val);
+        sb.append(' ');
+        getPreorder(node.left, sb);
+        getPreorder(node.right, sb);
+    }
+
+    // Decodes your encoded data to tree.
+    public TreeNode deserialize(String data) {
+        if (data == null || data.length() == 0) {
+            return null;
+        }
+        
+        String[] values = data.split(" ");
+        int len = values.length;
+        
+        int[] preorder = new int[len];
+        for (int i = 0; i < len; i++) {
+            preorder[i] = Integer.valueOf(values[i]);
+        }
+        
+        int[] inorder = Arrays.copyOf(preorder, len);
+        Arrays.sort(inorder);
+        
+        return buildTree(preorder, 0, len - 1, inorder, 0, len - 1);
+    }
+    
+    private TreeNode buildTree(int[] preorder, int leftPre, int rightPre, int[] inorder, int leftIn, int rightIn) {
+        if (leftPre > rightPre) {
+            return null;
+        } else if (leftPre == rightPre) {
+            return new TreeNode(preorder[leftPre]);
+        }
+        
+        TreeNode node = new TreeNode(preorder[leftPre]);
+        
+        int index = 0;
+        for (int i = leftIn; i <= rightIn; i++) {
+            if (inorder[i] == preorder[leftPre]) {
+                index = i;
+                break;
+            }
+        }
+        
+        int leftTreeLen = index - leftIn;
+        int rightTreeLen = rightIn - index;
+        
+        node.left = buildTree(preorder, leftPre + 1, leftPre + leftTreeLen, inorder, leftIn, index - 1);
+        node.right = buildTree(preorder, leftPre + leftTreeLen + 1, rightPre, inorder, index + 1, rightIn);
+        return node;
+    }
+}
+
+// Your Codec object will be instantiated and called as such:
+// Codec codec = new Codec();
+// codec.deserialize(codec.serialize(root));
