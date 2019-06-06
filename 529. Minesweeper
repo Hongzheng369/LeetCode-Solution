@@ -1,0 +1,98 @@
+class Solution {
+    // Method 1: DFS.
+    /*
+    public char[][] updateBoard(char[][] board, int[] click) {
+        int row = click[0], col = click[1];
+        
+        if (board[row][col] == 'M') {
+            board[row][col] = 'X';
+        } 
+        else {
+            int countMine = 0;
+            for (int i = -1; i < 2; i++) {
+                for (int j = -1; j < 2; j++) {
+                    if ((i == 0 && j == 0) || row + i < 0 || row + i >= board.length || col + j < 0 || col + j >= board[0].length) {
+                        continue;
+                    }
+                    
+                    if (board[row + i][col + j] == 'M') {
+                        countMine++;
+                    }
+                }
+            }
+            
+            if (countMine > 0) {
+                board[row][col] = (char)('0' + countMine);
+            } 
+            else {
+                board[row][col] = 'B';
+                for (int i = -1; i < 2; i++) {
+                    for (int j = -1; j < 2; j++) {
+                        if ((i == 0 && j == 0) || row + i < 0 || row + i >= board.length || col + j < 0 || col + j >= board[0].length) {
+                            continue;
+                        }
+                        
+                        if (board[row + i][col + j] == 'E') {
+                            updateBoard(board, new int[]{row + i, col + j});
+                        }
+                    }
+                }
+            }
+        }
+        
+        return board;
+    }
+    */
+    
+    // Method 2: BFS
+    ///*
+    public char[][] updateBoard(char[][] board, int[] click) {
+        Queue<int[]> queue = new LinkedList<>();
+        queue.add(click);
+        
+        while (!queue.isEmpty()) {
+            int[] temp = queue.remove();
+            int row = temp[0], col = temp[1];
+            
+            if (board[row][col] == 'M') {
+                board[row][col] = 'X';
+            }
+            else {
+                int countMine = 0;
+                for (int i = -1; i < 2; i++) {
+                    for (int j = -1; j < 2; j++) {
+                        if ((i == 0 && j == 0) || row + i < 0 || row + i >= board.length || col + j < 0 || col + j >= board[0].length) {
+                            continue;
+                        }
+
+                        if (board[row + i][col + j] == 'M') {
+                            countMine++;
+                        }
+                    }
+                }
+                
+                if (countMine > 0) {
+                    board[row][col] = (char)('0' + countMine);
+                } 
+                else {
+                    board[row][col] = 'B';
+                    for (int i = -1; i < 2; i++) {
+                        for (int j = -1; j < 2; j++) {
+                            if ((i == 0 && j == 0) || row + i < 0 || row + i >= board.length || col + j < 0 || col + j >= board[0].length) {
+                                continue;
+                            }
+
+                            if (board[row + i][col + j] == 'E') {
+                                queue.add(new int[]{row + i, col + j});
+                                board[row + i][col + j] = '$';
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        
+        return board;
+    }
+    //*/
+}
