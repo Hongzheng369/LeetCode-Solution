@@ -1,0 +1,55 @@
+/*
+// Definition for a Node.
+class Node {
+    public int val;
+    public List<Node> neighbors;
+
+    public Node() {}
+
+    public Node(int _val,List<Node> _neighbors) {
+        val = _val;
+        neighbors = _neighbors;
+    }
+};
+*/
+class Solution {
+    // Method 1: DFS.
+    /*HashMap<Node, Node> copied = new HashMap<>();
+    
+    public Node cloneGraph(Node node) {
+        copied.put(node, new Node(node.val, new ArrayList<>()));
+        
+        for (Node neighbor : node.neighbors) {
+            if (copied.containsKey(neighbor)) {
+                copied.get(node).neighbors.add(copied.get(neighbor));
+            } else {
+                copied.get(node).neighbors.add(cloneGraph(neighbor));
+            }
+        }
+        
+        return copied.get(node);
+    }*/
+    
+    // Method 1: BFS.
+    public Node cloneGraph(Node node) {
+        Map<Node, Node> copied = new HashMap<>();
+        Queue<Node> queue = new LinkedList<>();
+        copied.put(node, new Node(node.val, new ArrayList<>()));
+        queue.add(node);
+        
+        while (!queue.isEmpty()) {
+            Node temp = queue.remove();
+
+            for (Node neighbor : temp.neighbors) {
+                if (!copied.containsKey(neighbor)) {
+                    copied.put(neighbor, new Node(neighbor.val, new ArrayList<>()));
+                    queue.offer(neighbor);
+                }
+                
+                copied.get(temp).neighbors.add(copied.get(neighbor));
+            }
+        }
+
+        return copied.get(node);
+    }
+}
