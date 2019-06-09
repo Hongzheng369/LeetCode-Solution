@@ -1,0 +1,111 @@
+/**
+ * Definition for singly-linked list.
+ * public class ListNode {
+ *     int val;
+ *     ListNode next;
+ *     ListNode(int x) { val = x; }
+ * }
+ */
+class Solution {
+    /**
+     * Method 1: pick the part that needs the reversal, reverse it, and then re-connect.
+     * Probably... not one-pass?
+     */
+    
+    /*
+    public ListNode reverseBetween(ListNode head, int m, int n) {
+        if (n == 1 || m == n) {
+            return head;
+        }
+
+        ListNode dummy = new ListNode(-1);
+        dummy.next = head;
+
+        int index = 1;
+        ListNode n1 = dummy;
+        ListNode end = head;
+        while (index != m) {
+            index++;
+            n1 = n1.next;
+            end = end.next;
+        }
+        while (index != n) {
+            index++;
+            end = end.next;
+        }
+
+        ListNode n2 = end.next;
+        ListNode start = n1.next;
+        n1.next = n2;
+        end.next = null;
+
+        end = reverseWholeList(start);
+
+        n1.next = end;
+        start.next = n2;
+
+        return dummy.next;
+    }
+
+    private ListNode reverseWholeList(ListNode head) {
+        if (head == null) {
+            return head;
+        }
+
+        ListNode n1 = null;
+        ListNode n2 = head;
+
+        while (n2 != null) {
+            ListNode n3 = n2.next;
+            n2.next = n1;
+
+            n1 = n2;
+            n2 = n3;
+        }
+
+        return n1;
+    }
+    */
+    
+    /**
+     * Method 2: for one-pass, recursion is a must-need.
+     */
+    
+    ListNode left;
+    boolean stop;
+    
+    public ListNode reverseBetween(ListNode head, int m, int n) {
+        left = head;
+        stop = false;
+        helper(head, m, n);
+        
+        return head;
+    }
+    
+    private void helper(ListNode right, int m, int n) {
+        // If "right" reaches the destination, it can stop by according to whether n equals to 1.
+        if (n == 1) {
+            return;
+        }
+        
+        right = right.next;
+        if (m > 1) {
+            left = left.next;
+        }
+        
+        helper(right, m - 1, n - 1);
+        
+        if (left == right || right.next == left) {
+            stop = true;
+        }
+        
+        // To define when the reversal should continue:
+        if (!stop) {
+            int temp = left.val;
+            left.val = right.val;
+            right.val = temp;
+            
+            left = left.next;
+        }
+    }
+}
