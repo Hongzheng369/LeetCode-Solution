@@ -1,0 +1,79 @@
+/*
+// Definition for a Node.
+class Node {
+    public int val;
+    public List<Node> children;
+
+    public Node() {}
+
+    public Node(int _val,List<Node> _children) {
+        val = _val;
+        children = _children;
+    }
+};
+*/
+class Codec {
+    /**
+     * This method is similar to pairing parentheses.
+     * Use a special symbol to specify the end of the subtree. Therefore we should use a stack.
+     * And the values are devided by one space bar.
+     */
+
+    // Encodes a tree to a single string.
+    public String serialize(Node root) {
+        if (root == null) {
+            return "";
+        }
+        
+        StringBuilder sb = new StringBuilder();
+        helpSerialize(root, new HashSet<>(), sb);
+        System.out.println(sb);
+        
+        return sb.toString();
+    }
+    
+    private void helpSerialize(Node root, HashSet<Node> seen, StringBuilder sb) {
+        seen.add(root);
+        sb.append(root.val + " ");
+        
+        for (Node child : root.children) {
+            helpSerialize(child, seen, sb);
+        }
+        
+        if (seen.contains(root)) {
+            sb.append(") ");
+        }
+    }
+
+    // Decodes your encoded data to tree.
+    public Node deserialize(String data) {
+        if (data == null || data.length() == 0) {
+            return null;
+        }
+        
+        Stack<Node> stack = new Stack<>();
+        String[] values = data.split(" ");
+        Node ans = null;
+        
+        for (String value : values) {
+            if (!value.equals(")")) {
+                stack.push(new Node(Integer.parseInt(value), new ArrayList<>()));
+            }
+            else {
+                Node node = stack.pop();
+                if (stack.size() > 0) {
+                    stack.peek().children.add(node);
+                }
+                else {
+                    ans = node;
+                }
+            }
+        }
+        
+        return ans;
+    }
+}
+
+// Your Codec object will be instantiated and called as such:
+// Codec codec = new Codec();
+// codec.deserialize(codec.serialize(root));
