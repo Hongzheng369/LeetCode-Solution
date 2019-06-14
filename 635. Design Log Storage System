@@ -1,0 +1,156 @@
+// Method 1: using List.
+class LogSystem {
+    List<long[]> logs;
+    
+    public LogSystem() {
+        logs = new ArrayList<>();
+    }
+    
+    public void put(int id, String timestamp) {
+        String[] parts = timestamp.split(":");
+        int[] times = new int[6];
+        for (int i = 0; i < 6; i++) {
+            times[i] = Integer.parseInt(parts[i]);
+        }
+        
+        logs.add(new long[] {convertToSeconds(times), id});
+    }
+    
+    public List<Integer> retrieve(String s, String e, String gra) {
+        List<Integer> ans = new ArrayList<>();
+        long start = getScope(s, gra, false);
+        long end = getScope(e, gra, true);
+        
+        for (long[] log : logs) {
+            if (log[0] >= start && log[0] < end) {
+                ans.add((int)log[1]);
+            }
+        }
+        
+        return ans;
+    }
+    
+    // My own functions.
+    private long convertToSeconds(int[] times) {
+        long year = (times[0] - 2000) * 12 * 31 * 24 * 60 * 60;
+        long month = (times[1] - 1) * 31 * 24 * 60 * 60;
+        long day = (times[2] - 1) * 24 * 60 * 60;
+        long hour = times[3] * 60 * 60;
+        long minute = times[4] * 60;
+        long second = times[5];
+        
+        return year + month + day + hour + minute + second; 
+    }
+    
+    private long getScope(String timestamp, String gra, boolean isEnd) {
+        HashMap<String, Integer> graToIndex = new HashMap<>();
+        graToIndex.put("Year", 0);
+        graToIndex.put("Month", 1);
+        graToIndex.put("Day", 2);
+        graToIndex.put("Hour", 3);
+        graToIndex.put("Minute", 4);
+        graToIndex.put("Second", 5);
+        
+        String[] scope = new String[] {"2000", "01", "01", "00", "00", "00"};
+        String[] parts = timestamp.split(":");
+        for (int i = 0 ; i <= graToIndex.get(gra); i++) {
+            scope[i] = parts[i];
+        }
+        
+        int[] times = new int[6];
+        for (int i = 0; i < 6; i++) {
+            times[i] = Integer.parseInt(scope[i]);
+        }
+        if (isEnd) {
+            times[graToIndex.get(gra)]++;
+        }
+        
+        return convertToSeconds(times);
+    }
+}
+
+/**
+ * Your LogSystem object will be instantiated and called as such:
+ * LogSystem obj = new LogSystem();
+ * obj.put(id,timestamp);
+ * List<Integer> param_2 = obj.retrieve(s,e,gra);
+ */
+
+// Method 2: using TreeMap.
+class LogSystem {
+    TreeMap<Long, Integer> logs;
+    
+    public LogSystem() {
+        logs = new TreeMap<>();
+    }
+    
+    public void put(int id, String timestamp) {
+        String[] parts = timestamp.split(":");
+        int[] times = new int[6];
+        for (int i = 0; i < 6; i++) {
+            times[i] = Integer.parseInt(parts[i]);
+        }
+        
+        logs.put(convertToSeconds(times), id);
+    }
+    
+    public List<Integer> retrieve(String s, String e, String gra) {
+        List<Integer> ans = new ArrayList<>();
+        long start = getScope(s, gra, false);
+        long end = getScope(e, gra, true);
+        
+        // Returns a view of the portion of this map whose keys are greater than or equal to fromKey.
+        for (long key : logs.tailMap(start).keySet()) {
+            if (key >= start && key < end) {
+                ans.add(logs.get(key));
+            }
+        }
+        
+        return ans;
+    }
+    
+    // My own functions.
+    private long convertToSeconds(int[] times) {
+        long year = (times[0] - 2000) * 12 * 31 * 24 * 60 * 60;
+        long month = (times[1] - 1) * 31 * 24 * 60 * 60;
+        long day = (times[2] - 1) * 24 * 60 * 60;
+        long hour = times[3] * 60 * 60;
+        long minute = times[4] * 60;
+        long second = times[5];
+        
+        return year + month + day + hour + minute + second; 
+    }
+    
+    private long getScope(String timestamp, String gra, boolean isEnd) {
+        HashMap<String, Integer> graToIndex = new HashMap<>();
+        graToIndex.put("Year", 0);
+        graToIndex.put("Month", 1);
+        graToIndex.put("Day", 2);
+        graToIndex.put("Hour", 3);
+        graToIndex.put("Minute", 4);
+        graToIndex.put("Second", 5);
+        
+        String[] scope = new String[] {"2000", "01", "01", "00", "00", "00"};
+        String[] parts = timestamp.split(":");
+        for (int i = 0 ; i <= graToIndex.get(gra); i++) {
+            scope[i] = parts[i];
+        }
+        
+        int[] times = new int[6];
+        for (int i = 0; i < 6; i++) {
+            times[i] = Integer.parseInt(scope[i]);
+        }
+        if (isEnd) {
+            times[graToIndex.get(gra)]++;
+        }
+        
+        return convertToSeconds(times);
+    }
+}
+
+/**
+ * Your LogSystem object will be instantiated and called as such:
+ * LogSystem obj = new LogSystem();
+ * obj.put(id,timestamp);
+ * List<Integer> param_2 = obj.retrieve(s,e,gra);
+ */
