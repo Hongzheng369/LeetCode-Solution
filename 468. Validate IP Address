@@ -1,0 +1,112 @@
+class Solution {
+    public String validIPAddress(String IP) {
+        if (isIPv4(IP)) {
+            return "IPv4";
+        }
+        else if (isIPv6(IP)) {
+            return "IPv6";
+        }
+        else {
+            return "Neither";
+        }
+    }
+    
+    private boolean isIPv4(String ip) {
+        // How long is this address?
+        if (ip.length() < 7) {
+            return false;
+        }
+        
+        // How many dots it has?
+        int count = 0;
+        for (char c : ip.toCharArray()) {
+            if (c == '.') {
+                count++;
+            }
+        }
+        if (count > 3) {
+            return false;
+        }
+        
+        // How many parts it has?
+        String[] parts = ip.split("\\.");
+        if (parts.length != 4) {
+            return false;
+        }
+        
+        for (String part : parts) {
+            char[] chars = part.toCharArray();
+            
+            // How long is this part?
+            if (chars == null || chars.length == 0 || chars.length > 3) {
+                return false;
+            }
+            
+            // Dose it start with 0?
+            if (chars[0] == '0' && chars.length > 1) {
+                return false;
+            }
+            
+            // Does it contain character?
+            for (char c : chars) {
+                if ((c >= 'a' && c <= 'z') || (c >= 'A' && c <= 'Z')) {
+                    return false;
+                }
+            }
+            
+            // Is the number in the correct scope?
+            int num = Integer.parseInt(part);
+            if (num < 0 || num > 255) {
+                return false;
+            }
+            
+            // Is it the special case "-0"?
+            if (num == 0 && chars[0] != '0') {
+                return false;
+            }
+        }
+        
+        return true;
+    }
+    
+    private boolean isIPv6(String ip) {
+        // How long is this address?
+        if (ip.length() < 15) {
+            return false;
+        }
+        
+        // How many colons it has?
+        int count = 0;
+        for (char c : ip.toCharArray()) {
+            if (c == ':') {
+                count++;
+            }
+        }
+        if (count > 7) {
+            return false;
+        }
+        
+        // How many parts it has?
+        String[] parts = ip.split(":");
+        if (parts.length != 8) {
+            return false;
+        }
+            
+        for (String part : parts) {
+            // How long is this part?
+            if (part.length() > 4 || part.length() == 0) {
+                return false;
+            }
+            
+            // Are all the characters in this part legal?
+            char[] chars = part.toCharArray();
+            for (char c : chars) {
+                if (!((c >= 'a' && c <= 'f') || (c >= 'A' && c <= 'F') || (Character.isDigit(c)))) {
+                    return false;
+                }
+            }
+        }
+            
+        return true;
+    }
+}
