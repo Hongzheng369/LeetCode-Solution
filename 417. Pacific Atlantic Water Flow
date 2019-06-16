@@ -1,0 +1,60 @@
+class Solution {
+    public List<int[]> pacificAtlantic(int[][] matrix) {
+        List<int[]> ans = new ArrayList<>();
+        
+        if (matrix == null) {
+            return ans;
+        }
+        
+        int rows = matrix.length;
+        if (rows == 0) {
+            return ans;
+        }
+        
+        int cols = matrix[0].length;
+        if (cols == 0) {
+            return ans;
+        }
+        
+        boolean[][] canGoPacific = new boolean[rows][cols];
+        boolean[][] canGoAtlantic = new boolean[rows][cols];
+        
+        for (int i = 0; i < rows; i++) {
+            dfs(matrix, i, 0, rows, cols, 0, canGoPacific);
+            dfs(matrix, i, cols - 1, rows, cols, 0, canGoAtlantic);
+        }
+        for (int i = 0; i < cols; i++) {
+            dfs(matrix, 0, i, rows, cols, 0, canGoPacific);
+            dfs(matrix, rows - 1, i, rows, cols, 0, canGoAtlantic);
+        }
+        
+        for (int i = 0; i < rows; i++) {
+            for (int j = 0; j < cols; j++) {
+                if (canGoPacific[i][j] && canGoAtlantic[i][j]) {
+                    ans.add(new int[] {i, j});
+                }
+            }
+        }
+        
+        return ans;
+    }
+    
+    private void dfs(int[][] matrix, int i, int j, int rows, int cols, int height, boolean[][] canGo) {
+        if (i < 0 || j < 0 || i == rows || j == cols) {
+            return;
+        }
+        
+        // Two cases to stop:
+        // 1. I already know that from here I can reach the pre-set ocean;
+        // 2. There's no way that the water can flow from this spot to the previous spot.
+        if (canGo[i][j] || (matrix[i][j] < height)) {
+            return;
+        }
+        
+        canGo[i][j] = true;
+        dfs(matrix, i + 1, j, rows, cols, matrix[i][j], canGo);
+        dfs(matrix, i - 1, j, rows, cols, matrix[i][j], canGo);
+        dfs(matrix, i, j + 1, rows, cols, matrix[i][j], canGo);
+        dfs(matrix, i, j - 1, rows, cols, matrix[i][j], canGo);
+    }
+}
