@@ -1,0 +1,115 @@
+class WordDictionary {
+    /** Method 1: using HashMap and using length as the key. */
+//     HashMap<Integer, HashSet<String>> dic;
+
+//     /** Initialize your data structure here. */
+//     public WordDictionary() {
+//         dic = new HashMap<>();
+//     }
+
+//     /** Adds a word into the data structure. */
+//     public void addWord(String word) {
+//         int len = word.length();
+//         if (!dic.containsKey(len)) {
+//             dic.put(len, new HashSet<>());
+//         }
+
+//         dic.get(len).add(word);
+//     }
+
+//     /** Returns if the word is in the data structure. A word could contain the dot character '.' to represent any one letter. */
+//     public boolean search(String word) {
+//         int len = word.length();
+//         if (!dic.containsKey(len)) {
+//             return false;
+//         }
+
+//         HashSet<String> words = dic.get(len);
+//         for (String save : words) {
+//             if (compareTwoWords(save, word, len)) {
+//                 return true;
+//             }
+//         }
+
+//         return false;
+//     }
+
+//     /** My functions */
+//     private boolean compareTwoWords(String s1, String s2, int len) {
+//         char[] chars1 = s1.toCharArray();
+//         char[] chars2 = s2.toCharArray();
+
+//         for (int i = 0; i < len; i++) {
+//             if (chars2[i] != '.' && chars2[i] != chars1[i]) {
+//                 return false;
+//             }
+//         }
+
+//         return true;
+//     }
+
+    /** Method 2: using Trie. */
+    public class Trie {
+        Trie[] trie;
+        boolean isWord;
+        
+        Trie() {
+            trie = new Trie[26];
+            isWord = false;
+        }
+        
+        private void insert(String word, int wordIndex, int len) {
+            if (wordIndex == len) {
+                isWord = true;
+                return;
+            }
+            
+            if (trie[word.charAt(wordIndex) - 'a'] == null) {
+                trie[word.charAt(wordIndex) - 'a'] = new Trie();
+            }
+            trie[word.charAt(wordIndex) - 'a'].insert(word, wordIndex + 1, len);
+        }
+        
+        private boolean find(String word, int wordIndex, int len) {
+            if (wordIndex == len) {
+                return isWord;
+            }
+            
+            if (word.charAt(wordIndex) == '.') {
+                for (int i = 0; i < 26; i++) {
+                    if (trie[i] != null && trie[i].find(word, wordIndex + 1, len)) {
+                        return true;
+                    }
+                }
+                
+                return false;
+            }
+            
+            return trie[word.charAt(wordIndex) - 'a'] != null && trie[word.charAt(wordIndex) - 'a'].find(word, wordIndex + 1, len);
+        }
+    }
+    
+    Trie root;
+    
+    /** Initialize your data structure here. */
+    public WordDictionary() {
+        root = new Trie();
+    }
+    
+    /** Adds a word into the data structure. */
+    public void addWord(String word) {
+        root.insert(word, 0, word.length());
+    }
+    
+    /** Returns if the word is in the data structure. A word could contain the dot character '.' to represent any one letter. */
+    public boolean search(String word) {
+        return root.find(word, 0, word.length());
+    }
+}
+
+/**
+ * Your WordDictionary object will be instantiated and called as such:
+ * WordDictionary obj = new WordDictionary();
+ * obj.addWord(word);
+ * boolean param_2 = obj.search(word);
+ */
