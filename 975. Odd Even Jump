@@ -1,0 +1,45 @@
+class Solution {
+    /**
+     * Here we use TreeMap to save some time.
+     * But in fact we use array as an alternative for TreeMap, but we need to sort it first.
+     */
+    public int oddEvenJumps(int[] A) {
+        int len = A.length;
+        boolean[] oddJumpToHere = new boolean[len];
+        boolean[] evenJumpToHere = new boolean[len];
+        oddJumpToHere[len - 1] = true;
+        evenJumpToHere[len - 1] = true;
+
+        TreeMap<Integer, Integer> valueToIndex = new TreeMap<>();
+        valueToIndex.put(A[len - 1], len - 1);
+
+        for (int i = len - 2; i > -1; i--) {
+            if (valueToIndex.containsKey(A[i])) {
+                evenJumpToHere[i] = oddJumpToHere[valueToIndex.get(A[i])];
+                oddJumpToHere[i] = evenJumpToHere[valueToIndex.get(A[i])];
+            }
+            else {
+                Integer larger = valueToIndex.higherKey(A[i]);
+                Integer smaller = valueToIndex.lowerKey(A[i]);
+
+                if (larger != null) {
+                    evenJumpToHere[i] = oddJumpToHere[valueToIndex.get(larger)];
+                }
+                if (smaller != null) {
+                    oddJumpToHere[i] = evenJumpToHere[valueToIndex.get(smaller)];
+                }
+            }
+
+            valueToIndex.put(A[i], i);
+        }
+
+        int ans = 0;
+        for (boolean ele : evenJumpToHere) {
+            if (ele) {
+                ans++;
+            }
+        }
+
+        return ans;
+    }
+}
