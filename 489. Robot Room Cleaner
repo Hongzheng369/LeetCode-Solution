@@ -1,0 +1,59 @@
+/**
+ * // This is the robot's control interface.
+ * // You should not implement it, or speculate about its implementation
+ * interface Robot {
+ *     // Returns true if the cell in front is open and robot moves into the cell.
+ *     // Returns false if the cell in front is blocked and robot stays in the current cell.
+ *     public boolean move();
+ *
+ *     // Robot will stay in the same cell after calling turnLeft/turnRight.
+ *     // Each turn will be 90 degrees.
+ *     public void turnLeft();
+ *     public void turnRight();
+ *
+ *     // Clean the current cell.
+ *     public void clean();
+ * }
+ */
+class Solution {
+    int[][] directionValue = {{-1, 0},
+            {0, 1},
+            {1, 0},
+            {0, -1}};
+    HashMap<Integer, HashSet<Integer>> visited = new HashMap<>();
+    Robot instance;
+
+    private void goBack(){
+        instance.turnRight();
+        instance.turnRight();
+        instance.move();
+        instance.turnRight();
+        instance.turnRight();
+    }
+
+    private void startCleaning(int row, int col, int direction) {
+        if (!visited.containsKey(row)) {
+            visited.put(row, new HashSet<>());
+        }
+        visited.get(row).add(col);
+        instance.clean();
+
+        for (int i = 0; i < 4; i++) {
+            int newDirection = (direction + i) % 4;
+            int newRow = row + directionValue[newDirection][0];
+            int newCol = col + directionValue[newDirection][1];
+            
+            if ((!visited.containsKey(newRow) || !visited.get(newRow).contains(newCol)) && instance.move()) {
+                startCleaning(newRow, newCol, newDirection);
+                goBack();
+            }
+            
+            instance.turnRight();
+        }
+    }
+    
+    public void cleanRoom(Robot robot) {
+        instance = robot;
+        startCleaning(0, 0, 0);
+    }
+}
