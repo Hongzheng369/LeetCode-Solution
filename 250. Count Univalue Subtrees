@@ -1,0 +1,140 @@
+/**
+ * Definition for a binary tree node.
+ * public class TreeNode {
+ *     int val;
+ *     TreeNode left;
+ *     TreeNode right;
+ *     TreeNode(int x) { val = x; }
+ * }
+ */
+class Solution {
+    /**
+     * Method 1: My method.
+     * Reach the leaf nodes first;
+     * Then return the results from bottom to head.
+     */
+    /*
+    int ans = 0;
+
+    public int countUnivalSubtrees(TreeNode root) {
+        if (root == null) {
+            return ans;
+        }
+
+        checkUniValue(root, new HashMap<>());
+        return ans;
+    }
+
+    private void checkUniValue(TreeNode node, HashMap <TreeNode, Boolean> map) {
+        if (node.left != null && !map.containsKey(node.left)) {
+            checkUniValue(node.left, map);
+        }
+        if (node.right != null && !map.containsKey(node.right)) {
+            checkUniValue(node.right, map);
+        }
+
+        // Both children are null.
+        if (node.left == null && node.right == null) {
+            map.put(node, true);
+            ans++;
+        }
+        // One of the child is null.
+        else if (node.left == null || node.right == null) {
+            if (node.left == null) {
+                if (node.val != node.right.val) {
+                    map.put(node, false);
+                } else {
+                    if (map.get(node.right)) {
+                        map.put(node, true);
+                        ans++;
+                    } else {
+                        map.put(node, false);
+                    }
+                }
+            } else {
+                if (node.val != node.left.val) {
+                    map.put(node, false);
+                } else {
+                    if (map.get(node.left)) {
+                        map.put(node, true);
+                        ans++;
+                    } else {
+                        map.put(node, false);
+                    }
+                }
+            }
+        }
+        // None of the children is null.
+        else {
+            if (map.get(node.left) && map.get(node.right) && node.val == node.left.val && node.val == node.right.val) {
+                map.put(node, true);
+                ans++;
+            } else {
+                map.put(node, false);
+            }
+        }
+    }
+    */
+    
+    /**
+     * Method 2: A shorter version.
+     */
+    /*
+    int ans = 0;
+
+    public int countUnivalSubtrees(TreeNode root) {
+        if (root == null) {
+            return ans;
+        }
+        
+        isUnivalue(root);
+        return ans;
+    }
+
+    private boolean isUnivalue(TreeNode node) {
+        if (node.left == null && node.right == null) {
+            ans++;
+            return true;
+        }
+
+        boolean isUnival = true;
+        if (node.left != null) {
+            isUnival = isUnivalue(node.left) && (node.left.val == node.val);
+        }
+        if (node.right != null) {
+            isUnival = isUnivalue(node.right) && isUnival && (node.right.val == node.val);
+        }
+        
+        if (isUnival) {
+            ans++;
+            return true;
+        } else {
+            return false;
+        }
+    }
+    */
+    
+    /**
+     * Method 3: Another shorter & smarter version. Passing the parent's value.
+     * By: Stefan Pochmann
+     */
+    int ans = 0;
+
+    public int countUnivalSubtrees(TreeNode root) {
+        isUnivalue(root, 0);
+        return ans;
+    }
+
+    private boolean isUnivalue(TreeNode node, int val) {
+        if (node == null) {
+            return true;
+        }
+
+        if (!isUnivalue(node.left, node.val) | !isUnivalue(node.right, node.val)) {
+            return false;
+        }
+
+        ans++;
+        return node.val == val;
+    }
+}
