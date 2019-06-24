@@ -1,0 +1,89 @@
+class WordDistance {
+    /**
+     * Method 1: My method.
+     * Build a mapping dictionary to save the index;
+     * Then calculate the distance by traversing (actually by popping out elements).
+     */
+    /*
+    HashMap<String, PriorityQueue<Integer>> map;
+
+    public WordDistance(String[] words) {
+        map = new HashMap<>();
+        for (int i = 0; i < words.length; i++) {
+            if (!map.containsKey(words[i])) {
+                map.put(words[i], new PriorityQueue<>());
+            }
+
+            map.get(words[i]).add(i);
+        }
+    }
+
+    public int shortest(String word1, String word2) {
+        PriorityQueue<Integer> pq1 = new PriorityQueue<>(map.get(word1));
+        PriorityQueue<Integer> pq2 = new PriorityQueue<>(map.get(word2));
+        int ans = Integer.MAX_VALUE;
+
+        while (!pq1.isEmpty() || !pq2.isEmpty()) {
+            int index1 = (pq1.isEmpty() ? Integer.MAX_VALUE : pq1.peek());
+            int index2 = (pq2.isEmpty() ? Integer.MAX_VALUE : pq2.peek());
+            if (index1 == index2) {
+                return 0;
+            }
+
+            ans = Math.min(ans, (index1 > index2 ? index1 - index2 : index2 - index1));
+
+            if (index1 < index2 && !pq1.isEmpty()) {
+                pq1.remove();
+            }
+            else if (index1 > index2 && !pq2.isEmpty()) {
+                pq2.remove();
+            }
+        }
+
+        return ans;
+    }
+    */
+    
+    /**
+     * Method 2: Just use the ArrayList... 
+     * Since we traverse from head to tail, so there is no need to sort the index.
+     */
+    HashMap<String, ArrayList<Integer>> map;
+
+    public WordDistance(String[] words) {
+        map = new HashMap<>();
+
+        for (int i = 0; i < words.length; i++) {
+            if (!map.containsKey(words[i])) {
+                map.put(words[i], new ArrayList<>());
+            }
+
+            map.get(words[i]).add(i);
+        }
+    }
+
+    public int shortest(String word1, String word2) {
+        ArrayList<Integer> list1 = map.get(word1);
+        ArrayList<Integer> list2 = map.get(word2);
+
+        int index1 = 0, index2 = 0, ans = Integer.MAX_VALUE;
+        while (index1 < list1.size() && index2 < list2.size()) {
+            int loca1 = list1.get(index1), loca2 = list2.get(index2);
+            ans = Math.min(ans, Math.abs(loca1 - loca2));
+
+            if (loca1 < loca2) {
+                index1++;
+            } else {
+                index2++;
+            }
+        }
+
+        return ans;
+    }
+}
+
+/**
+ * Your WordDistance object will be instantiated and called as such:
+ * WordDistance obj = new WordDistance(words);
+ * int param_1 = obj.shortest(word1,word2);
+ */
