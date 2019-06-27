@@ -1,0 +1,92 @@
+class Solution {
+    public int splitArray(int[] nums, int m) {
+        /** Method 1: using dynamic programming & 2D array. */
+//         int[][] dp = new int[m + 1][nums.length];
+//         dp[1][0] = nums[0];
+//         for (int i = 1; i < nums.length; i++) {
+//             dp[1][i] = dp[1][i - 1] + nums[i];
+//         }
+
+//         for (int i = 2; i < m + 1; i++) {
+//             int sum = nums[0];
+
+//             for (int j = 1; j < nums.length; j++) {
+//                 sum += nums[j];
+//                 int sumForSecondPart = sum;
+//                 dp[i][j] = Integer.MAX_VALUE;
+
+//                 for (int k = 0; k < j; k++) {
+//                     sumForSecondPart -= nums[k];
+//                     dp[i][j] = Math.min(dp[i][j], Math.max(dp[i - 1][k], sumForSecondPart));
+//                 }
+//             }
+//         }
+
+//         return dp[m][nums.length - 1];
+        
+        /** Method 2: using dynamic programming & 1D array. */
+//         int len = nums.length;
+//         int[] ans = new int[len];
+//         ans[0] = nums[0];
+//         for (int i = 1; i < len; i++) {
+//             ans[i] = ans[i - 1] + nums[i];
+//         }
+
+//         for (int i = 2; i < m + 1; i ++) {
+//             int sum = nums[0];
+//             int[] temp = new int[len];
+
+//             for (int j = 1; j < len; j++) {
+//                 sum += nums[j];
+//                 int sumForSecondPart = sum;
+//                 temp[j] = Integer.MAX_VALUE;
+                
+//                 for (int k = 0; k < j; k++) {
+//                     sumForSecondPart -= nums[k];
+//                     temp[j] = Math.min(temp[j], Math.max(ans[k], sumForSecondPart));
+//                 }
+//             }
+            
+//             ans = temp;
+//         }
+        
+//         return ans[len - 1];
+        
+        /** Method 3: using binary search to shrink the scope of possible answers. */
+        int max = Integer.MIN_VALUE, sum = 0;
+        for (int num : nums) {
+            max = Math.max(max, num);
+            sum += num;
+        }
+
+        int lowerBound = max, upperBound = sum;
+        while (upperBound > lowerBound) {
+            int mid = lowerBound + (upperBound - lowerBound) / 2;
+            int groupCount = getGroupAmount(nums, mid);
+
+            if (groupCount > m) {
+                lowerBound = mid + 1;
+            } else {
+                upperBound = mid;
+            }
+        }
+
+        return lowerBound;
+    }
+    
+    private int getGroupAmount(int[] nums, int target) {
+        int count = 1;
+        int sum = nums[0];
+
+        for (int j = 1; j < nums.length; j++) {
+            if (sum + nums[j] > target) {
+                count++;
+                sum = nums[j];
+            } else {
+                sum += nums[j];
+            }
+        }
+
+        return count;
+    }
+}
