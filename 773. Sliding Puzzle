@@ -1,0 +1,151 @@
+class Solution {
+    public int slidingPuzzle(int[][] board) {
+        if (boardToString(board).equals("123450")) {
+            return 0;
+        }
+        
+        HashSet<String> seen = new HashSet<>();
+        HashSet<String> curr = new HashSet<>();
+        curr.add(boardToString(board));
+        int moves = 0;
+
+        while (!curr.isEmpty()) {
+            HashSet<String> nextStep = new HashSet<>();
+            for (String s : curr) {
+                int index = s.indexOf('0'), i = index / 3, j = index - i * 3;
+                if (i == 1) {
+                    StringBuilder temp = new StringBuilder(s);
+                    temp.setCharAt(index, s.charAt((i - 1) * 3 + j));
+                    temp.setCharAt((i - 1) * 3 + j, '0');
+                    String tempS = temp.toString();
+                    if (!seen.contains(tempS)) {
+                        nextStep.add(tempS);
+                    }
+                }
+                if (i == 0) {
+                    StringBuilder temp = new StringBuilder(s);
+                    temp.setCharAt(index, s.charAt((i + 1) * 3 + j));
+                    temp.setCharAt((i + 1) * 3 + j, '0');
+                    String tempS = temp.toString();
+                    if (!seen.contains(tempS)) {
+                        nextStep.add(tempS);
+                    }
+                }
+                if (j > 0) {
+                    StringBuilder temp = new StringBuilder(s);
+                    temp.setCharAt(index, s.charAt(index - 1));
+                    temp.setCharAt(index - 1, '0');
+                    String tempS = temp.toString();
+                    if (!seen.contains(tempS)) {
+                        nextStep.add(tempS);
+                    }
+                }
+                if (j < 2) {
+                    StringBuilder temp = new StringBuilder(s);
+                    temp.setCharAt(index, s.charAt(index + 1));
+                    temp.setCharAt(index + 1, '0');
+                    String tempS = temp.toString();
+                    if (!seen.contains(tempS)) {
+                        nextStep.add(tempS);
+                    }
+                }
+            }
+            moves++;
+
+            if (nextStep.contains("123450")) {
+                return moves;
+            }
+            curr = nextStep;
+            seen.addAll(nextStep);
+        }
+
+        return -1;
+    }
+
+    private String boardToString(int[][] board) {
+        StringBuilder sb = new StringBuilder();
+        for (int[] row : board) {
+            for (int i : row) {
+                sb.append(i);
+            }
+        }
+        return sb.toString();
+    }
+}
+
+
+
+class Solution {
+    public int slidingPuzzle(int[][] board) {
+        if (boardToString(board).equals("123450")) {
+            return 0;
+        }
+
+        HashSet<String> seen = new HashSet<>();
+        int moves = 0;
+
+        Queue<String> queue = new LinkedList<>();
+        queue.add(boardToString(board));
+        while (!queue.isEmpty()) {
+            int size = queue.size();
+            for (int i = 0; i < size; i++) {
+                String s = queue.remove();
+                seen.add(s);
+                int index = s.indexOf('0'), x = index / 3, y = index - x * 3;
+                if (x == 0) {
+                    StringBuilder temp = new StringBuilder(s);
+                    temp.setCharAt(index, s.charAt((x + 1) * 3 + y));
+                    temp.setCharAt((x + 1) * 3 + y, '0');
+                    String tempS = temp.toString();
+                    if (!seen.contains(tempS)) {
+                        queue.add(tempS);
+                    }
+                }
+                if (x == 1) {
+                    StringBuilder temp = new StringBuilder(s);
+                    temp.setCharAt(index, s.charAt((x - 1) * 3 + y));
+                    temp.setCharAt((x - 1) * 3 + y, '0');
+                    String tempS = temp.toString();
+                    if (!seen.contains(tempS)) {
+                        queue.add(tempS);
+                    }
+                }
+                if (y > 0) {
+                    StringBuilder temp = new StringBuilder(s);
+                    temp.setCharAt(index, s.charAt(index - 1));
+                    temp.setCharAt(index - 1, '0');
+                    String tempS = temp.toString();
+                    if (!seen.contains(tempS)) {
+                        queue.add(tempS);
+                    }
+                }
+                if (y < 2) {
+                    StringBuilder temp = new StringBuilder(s);
+                    temp.setCharAt(index, s.charAt(index + 1));
+                    temp.setCharAt(index + 1, '0');
+                    String tempS = temp.toString();
+                    if (!seen.contains(tempS)) {
+                        queue.add(tempS);
+                    }
+                }
+            }
+            moves++;
+
+            if (queue.contains("123450")) {
+                return moves;
+            }
+        }
+
+        return -1;
+    }
+
+    private String boardToString(int[][] board) {
+        StringBuilder sb = new StringBuilder();
+        for (int[] row : board) {
+            for (int i : row) {
+                sb.append(i);
+            }
+        }
+        return sb.toString();
+    }
+}
