@@ -1,47 +1,113 @@
 class Solution {
+    /**
+     * Method 1: use a new class and BFS to solve the problem.
+     */
+    /*
+    class WordNode {
+        String word;
+        int step;
+
+        public WordNode(String word, int step) {
+            this.word = word;
+            this.step = step;
+        }
+    }
+
     public int ladderLength(String beginWord, String endWord, List<String> wordList) {
-        if (wordList == null || wordList.size() == 0) {
-            return 0;
-        }
-        
-        HashSet<String> words = new HashSet<>(wordList);
-        if (!words.contains(endWord)) {
-            return 0;
-        }
-        
-        Queue<String> wordTree = new LinkedList<>();
-        wordTree.add(beginWord);
-        int ans = 0;
-        
-        while(!wordTree.isEmpty()) {            
-            // Traverse by level;
-            // ... which means "wordTree"'s size.
-            int size = wordTree.size();
-            for (int i = 0; i < size; i++) {
-                String word = wordTree.remove();
-                
-                if(word.equals(endWord)) {
-                    return ans + 1;
-                }
-                
-                // Try 26 characters in every spot.
-                for (int j = 0; j < word.length(); j++) {
-                    String newWord = word;
-                    for (char ch = 'a'; ch <= 'z'; ch++) {
-                        newWord = newWord.substring(0, j) + ch + newWord.substring(j + 1, word.length());
-                        if (words.contains(newWord) && newWord != word) {
-                            wordTree.add(newWord);
-                            words.remove(newWord);
-                        }
+        HashSet<String> dictionary = new HashSet<>(wordList);
+        Queue<WordNode> queue = new LinkedList<>();
+        queue.add(new WordNode(beginWord, 1));
+
+        while (!queue.isEmpty()) {
+            WordNode node = queue.remove();
+
+            if (node.word.equals(endWord)) {
+                return node.step;
+            }
+
+            char[] arr = node.word.toCharArray();
+            for (int i = 0; i < arr.length; i++) {
+                for (char c = 'a'; c <= 'z'; c++) {
+                    if (arr[i] == c) {
+                        continue;
                     }
+
+                    char temp = arr[i];
+                    arr[i] = c;
+
+                    String newWord = new String(arr);
+                    if (dictionary.contains(newWord)) {
+                        queue.add(new WordNode(newWord, node.step + 1));
+                        dictionary.remove(newWord);
+                    }
+                    
+                    arr[i] = temp;
                 }
             }
-            
-            // Goes to next level, path length plus one.
-            ans++;
         }
-        
-        // No path? return 0.
+
+        return 0;
+    }
+    */
+    
+    /**
+     * Method 2: start BFS from both the head and the end.
+     */
+    public int ladderLength(String beginWord, String endWord, List<String> wordList) {
+        HashSet<String> dict = new HashSet<>(wordList);
+        if (!dict.contains(endWord)) {
+            return 0;
+        }
+
+        HashSet<String> startFromHead = new HashSet<>();
+        HashSet<String> startFromEnd = new HashSet<>();
+        startFromHead.add(beginWord);
+        startFromEnd.add(endWord);
+
+        int step = 0;
+        int wordLength = beginWord.length();
+
+        while (!startFromHead.isEmpty() && !startFromEnd.isEmpty()) {
+            step++;
+            if (startFromHead.size() > startFromEnd.size()) {
+                HashSet<String> temp = startFromHead;
+                startFromHead = startFromEnd;
+                startFromEnd = temp;
+            }
+
+            HashSet<String> nextStep = new HashSet<>();
+
+            for (String word : startFromHead) {
+                char[] arr = word.toCharArray();
+
+                for (int i = 0; i < wordLength; i++) {
+                    char temp = arr[i];
+
+                    for (char j = 'a'; j < 'z'; j++) {
+                        if (temp == j) {
+                            continue;
+                        }
+
+                        arr[i] = j;
+                        String newWord = new String(arr);
+                        if (startFromEnd.contains(newWord)) {
+                            return step + 1;
+                        }
+                        if (!dict.contains(newWord)) {
+                            continue;
+                        }
+
+                        dict.remove(newWord);
+                        nextStep.add(newWord);
+                    }
+
+                    arr[i] = temp;
+                }
+            }
+
+            startFromHead = nextStep;
+        }
+
         return 0;
     }
 }
