@@ -1,0 +1,115 @@
+# Another method: https://www.programcreek.com/2014/06/leetcode-word-ladder-ii-java/
+
+class Solution {
+    public List<List<String>> findLadders(String beginWord, String endWord, List<String> wordList) {
+        List<List<String>> ans = new ArrayList<>();
+        HashSet<String> dict = new HashSet<>(wordList);
+        if (!dict.contains(endWord)) {
+            return ans;
+        }
+
+        dict.remove(beginWord);
+        dict.remove(endWord);
+        
+        // Key: Word. 
+        // Value: steps to take to this word.
+        HashMap<String, Integer> stepsToThisWord = new HashMap<>();
+        stepsToThisWord.put(beginWord, 0);
+
+        // Key: Word. 
+        // Value: Parents of this word.
+        HashMap<String, ArrayList<String>> parents = new HashMap<>();
+        
+        Queue<String> queue = new LinkedList<>();
+        queue.add(beginWord);
+
+        int len = beginWord.length();
+        int step = 0;
+        boolean found = false;
+
+        while (!queue.isEmpty() && !found) {
+            step++;
+            
+            int size = queue.size();
+            
+            // i: an index to perform BFS on one level.
+            for (int i = 0; i < size; i++) {
+                String word = queue.remove();
+                char[] arr = word.toCharArray();
+
+                // j: an index on the current word.
+                for (int j = 0; j < len; j++) {
+                    char temp = arr[j];
+
+                    // k: a character to replace the original one.
+                    for (char k = 'a'; k <= 'z'; k++) {
+                        if (temp == k) {
+                            continue;
+                        }
+
+                        arr[j] = k;
+                        String newWord = new String(arr);
+                        
+                        // If I reach the end:
+                        if (newWord.equals(endWord)) {
+                            if (!parents.containsKey(newWord)) {
+                                parents.put(newWord, new ArrayList<>());
+                            }
+                            parents.get(newWord).add(word);
+
+                            found = true;
+                        } 
+                        // If not:
+                        else {
+                            // If I reach to this word before,
+                            // and now I reach here again with smaller or same steps:
+                            if (stepsToThisWord.containsKey(newWord) && step <= stepsToThisWord.get(newWord)) {
+                                if (!parents.containsKey(newWord)) {
+                                    parents.put(newWord, new ArrayList<>());
+                                }
+                                parents.get(newWord).add(word);
+                            }
+                        }
+                        
+                        if (dict.contains(newWord)) {
+                            dict.remove(newWord);
+                            queue.add(newWord);
+                            
+                            // I haven't reach this word before, so update is needed.
+                            stepsToThisWord.put(newWord, stepsToThisWord.get(word) + 1);
+                            if (!parents.containsKey(newWord)) {
+                                parents.put(newWord, new ArrayList<>());
+                            }
+                            parents.get(newWord).add(word);
+                        }
+                    }
+
+                    arr[j] = temp;
+                }
+            }
+        }
+
+        if (found) {
+            List<String> oneResult = new ArrayList<>();
+            oneResult.add(endWord);
+            getPaths(endWord, beginWord, parents, oneResult, ans);
+        }
+
+        return ans;
+    }
+
+    private void getPaths(String word, String beginWord, HashMap<String, ArrayList<String>> parents, List<String> oneResult, List<List<String>> ans) {
+        if (word.equals(beginWord)) {
+            List<String> list = new ArrayList<>(oneResult);         // Since I'm adding the parent to the end of the list,
+            Collections.reverse(list);                              // ... so to get the path in right direction, I have to reverse it.
+            ans.add(list);
+            return;
+        }
+
+        for (String s : parents.get(word)) {
+            oneResult.add(s);
+            getPaths(s, beginWord, parents, oneResult, ans);
+            oneResult.remove(oneResult.size() - 1);
+        }
+    }
+}
