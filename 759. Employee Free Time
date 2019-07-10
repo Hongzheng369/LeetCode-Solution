@@ -1,0 +1,67 @@
+/**
+ * Definition for an interval.
+ * public class Interval {
+ *     int start;
+ *     int end;
+ *     Interval() { start = 0; end = 0; }
+ *     Interval(int s, int e) { start = s; end = e; }
+ * }
+ */
+/*
+// Definition for an Interval.
+class Interval {
+    public int start;
+    public int end;
+
+    public Interval() {}
+
+    public Interval(int _start,int _end) {
+        start = _start;
+        end = _end;
+    }
+};
+*/
+class Solution {
+    public List<Interval> employeeFreeTime(List<List<Interval>> schedule) {
+        List<Interval> notFreeTime = schedule.get(0);
+        for (int i = 1; i < schedule.size(); i++) {
+            notFreeTime = mergeInterval(notFreeTime, schedule.get(i));
+        }
+        
+        List<Interval> result = new ArrayList<>();
+        for (int i = 0; i < notFreeTime.size() - 1; i++) {
+            result.add(new Interval(notFreeTime.get(i).end, notFreeTime.get(i + 1).start));
+        }
+        
+        return result;
+    }
+    
+    private List<Interval> mergeInterval(List<Interval> l1, List<Interval> l2) {
+        List<Interval> result = new ArrayList<>();
+        Queue<Interval> queue1 = new LinkedList<>(l1), queue2 = new LinkedList<>(l2);
+        
+        while (!queue1.isEmpty() && !queue2.isEmpty()) {
+            Interval time1 = queue1.peek(), time2 = queue2.peek();
+            if (time1.end < time2.start) {
+                result.add(queue1.remove());
+            }
+            else if (time1.start > time2.end) {
+                result.add(queue2.remove());
+            }
+            else {
+                if (time1.end > time2.end) {
+                    time1.start = Math.min(time1.start, time2.start);
+                    queue2.remove();
+                }
+                else {
+                    time2.start = Math.min(time1.start, time2.start);
+                    queue1.remove();
+                }
+            }
+        }
+        
+        result.addAll(queue1);
+        result.addAll(queue2);
+        return result;
+    }
+}
