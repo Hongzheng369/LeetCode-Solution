@@ -1,4 +1,4 @@
-/**   My method   */
+/**     My method     */
 public class ZigzagIterator {
     int index1, index2;
     int len1, len2;
@@ -48,3 +48,31 @@ public class ZigzagIterator {
  
  
  
+/**     A better idea using iterator.        */
+public class ZigzagIterator {
+    Iterator<Integer> i, j, tmp;
+    
+    public ZigzagIterator(List<Integer> v1, List<Integer> v2) {
+        i = v1.iterator();
+        j = v2.iterator();
+    }
+
+    public int next() {
+        if (i.hasNext()) {
+            tmp = i;
+            i = j;
+            j = tmp;
+        }
+        return j.next();
+    }
+
+    public boolean hasNext() {
+        return (i.hasNext() || j.hasNext());
+    }
+}
+
+/**
+ * Your ZigzagIterator object will be instantiated and called as such:
+ * ZigzagIterator i = new ZigzagIterator(v1, v2);
+ * while (i.hasNext()) v[f()] = i.next();
+ */
