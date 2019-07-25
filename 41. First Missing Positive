@@ -15,3 +15,53 @@ class Solution {
         return Integer.MAX_VALUE;
     }
 }
+
+
+
+/**     Better method, using index i as a marker, showing if the number "i" is existing in the array.       */
+class Solution {
+    public int firstMissingPositive(int[] nums) {
+        // Handling base cases.
+        int len = nums.length;
+        boolean containsOne = false;
+        for (int i = 0; i < len; i++) {
+            if (nums[i] == 1) {
+                containsOne = true;
+                break;
+            }
+        }
+        if (!containsOne) {
+            return 1;
+        } else if (len == 1) {
+            return 2;
+        }
+        
+        // Cleaning up useless data.
+        for (int i = 0; i < len; i++) {
+            if (nums[i] < 1 || nums[i] > len) {
+                nums[i] = 1;
+            }
+        }
+        
+        // Marking the numbers.
+        for (int i = 0; i < len; i++) {
+            int num = Math.abs(nums[i]);
+            if (num == len) {
+                nums[0] = -Math.abs(nums[0]);
+            } else {
+                nums[num] = -Math.abs(nums[num]);
+            }
+        }
+        
+        // Getting for the result.
+        for (int i = 1; i < len; i++) {
+            if (nums[i] > 0) {
+                return i;
+            }
+        }
+        if (nums[0] > 0) {
+            return len;
+        }
+        return len + 1;
+    }
+}
