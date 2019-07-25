@@ -1,0 +1,17 @@
+/**     My method. O(N) time complexity, but not O(1) space complexity.     */
+class Solution {
+    public int firstMissingPositive(int[] nums) {
+        HashMap<Integer, Integer> appear = new HashMap<>();
+        for (int i = 0; i < nums.length; i++) {
+            if (nums[i] > 0) {
+                appear.put(nums[i], appear.getOrDefault(nums[i], 0) + 1);
+            }
+        }
+        for (int i = 1; i < Integer.MAX_VALUE; i++) {
+            if (!appear.containsKey(i)) {
+                return i;
+            }
+        }
+        return Integer.MAX_VALUE;
+    }
+}
