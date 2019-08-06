@@ -1,3 +1,2 @@
-# LeetCode
-
-### Sharing my code :)
+## Description
+These are my solution for LeetCode problems. Will keep updating :)
