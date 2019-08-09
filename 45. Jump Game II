@@ -1,0 +1,70 @@
+/**     Brute force again, time complexity is O(n2), and space complexity is O(n).      */
+class Solution {
+    public int jump(int[] nums) {
+        int len = nums.length;
+        int[] minJump = new int[len];
+        Arrays.fill(minJump, 1, len, Integer.MAX_VALUE);
+        
+        for (int i = 0; i < len; i++) {
+            for (int j = 1; j <= nums[i] && i + j < len; j++) {
+                minJump[i + j] = Math.min(minJump[i + j], minJump[i] + 1);
+            }
+        }
+        
+        return minJump[len - 1];
+    }
+}
+
+------------------------------------------------------------------------------------------------------------------------
+
+/**     
+ * Greedy algorithm, time complexity is O(n), and space complexity is O(1).      
+ * 
+ * In here we are not jumping the maximum distance for each step, instead we are going to get the maximum range of this jump,
+ * ... and traverse in this scope in each iteration.
+ */
+class Solution {
+    public int jump(int[] nums) {
+        int minJump = 0, index = 0, currReach = 0;
+        while (currReach < nums.length - 1) {
+            minJump++;
+            int prevReach = currReach;
+            for (; index <= prevReach; index++) {
+                currReach = Math.max(currReach, index + nums[index]);
+            }
+            //System.out.println("minJump = " + minJump + ", prevReach = " + prevReach + ", currReach = " + currReach + ", index = " + index);
+        }
+        return minJump;
+    }
+}
+
+------------------------------------------------------------------------------------------------------------------------
+
+/**     
+ * Another Greedy algorithm, time complexity is O(n), and space complexity is O(1).      
+ * 
+ * In here we are jumping for the maximum distance for each step,
+ * ... and traverse and update values in this scope in each iteration.
+ */
+class Solution {
+    public int jump(int[] nums) {
+        int minJump = 0, last = 0, cur = 0;
+        
+        for (int i = 0; i < nums.length - 1; i++) {
+            // Looking for the maximum distance I can jump.
+            cur = Math.max(cur, i + nums[i]);
+            
+            if (i == last) {
+                last = cur;
+                minJump++;
+                
+                // If I can reach the end right now, then no need to continue.
+                if (cur >= nums.length - 1) {
+                    break;
+                }
+            }
+        }
+        
+        return minJump;
+    }
+}
