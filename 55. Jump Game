@@ -1,14 +1,77 @@
-// Greedy
-
+/**
+ *     Optimized brute force.       Time complexity: O(n2).      Sapce complexity: O(n).
+ */
 class Solution {
+    public boolean canJump(int[] nums) {
+        int len = nums.length;
+        boolean[] canReach = new boolean[len];
+        canReach[len - 1]  = true;
+        
+        for (int i = len - 2; i > -1; i--) {
+            int maxJump = nums[i];
+            for (int j = maxJump; j > 0; j--) {
+                if (i + j > len - 1) {
+                    continue;
+                }
+                
+                /** 
+                 * If this position can reach the end, and I can reach this position,
+                 * ... then I can reach the end, too.
+                 */
+                if (canReach[i + j]) {
+                    canReach[i] = true;
+                    break;
+                }
+            }
+        }
+        
+        return canReach[0];
+    }
+}
+
+----------------------------------------------------------------------------------------------------------------------
+
+/**
+ *     Greedy.       Time complexity: O(n).      Sapce complexity: O(1).
+ */
+class Solution {
+    public boolean canJump(int[] nums) {
+        // "goal" is so far the smallest index that can reach the end.
+        int goal = nums.length - 1;
+        
+        /**
+         * If the max jump can jump to/over the "goal" index,
+         * ... then update this "smallest index that can reach the end".
+         */
+        for (int i = goal; i > -1; i--) {
+            if (i + nums[i] >= goal) {
+                goal = i;
+            }
+        }
+        
+        return goal == 0;
+    }
+}
+
+----------------------------------------------------------------------------------------------------------------------
+
+/**
+ *     Another version of Greedy algorithm.       Time complexity: O(n).      Sapce complexity: O(1).
+ */
+ class Solution {
     public boolean canJump(int[] nums) {
         int maxReach = 0;
         
-        // Update the maximum distance I can reach.
         for (int i = 0; i < nums.length; i++) {
+            /**
+             * If this case satisfies in the middle, then no need to continue because definitely it can't reach the end.
+             * If this case satisfies in the end, then it can't reach the end, return false.
+             */
             if (maxReach < i) {
                 return false;
             }
+            
+            // Update this value.
             maxReach = Math.max(maxReach, i + nums[i]);
         }
         
