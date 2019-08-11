@@ -1,0 +1,93 @@
+/**    Find the inserting spot while traversing. Time complexity is O(n), and space complexity is O(n).     */
+class Solution {
+	public int[][] insert(int[][] intervals, int[] newInterval) {
+		if (intervals == null || intervals.length == 0) {
+			int[][] res = new int[1][2];
+			res[0][0] = newInterval[0];
+			res[0][1] = newInterval[1];
+			return res;
+		}
+        
+        List<int[]> mergeRes = new ArrayList<>();
+		int len = intervals.length;
+
+		// Special case: no merge and newInterval should be the first interval.
+		if (newInterval[1] < intervals[0][0]) {
+			mergeRes.add(newInterval);
+			addRest(mergeRes, intervals, 0);
+			return asArray(mergeRes);
+		}
+		
+		/** 
+		 * Check if it can:
+ 		 * 1. Merge with the i-th interval;
+		 * 2. Insert between the i-th and the (i + 1)-th interval.
+		 * If it can't do these two things, add the i-th interval.
+		 */
+		for (int i = 0; i < len; i++) {
+			if (intervals[i][1] >= newInterval[0] && newInterval[1] >= intervals[i][0]) {
+				intervals[i][0] = Math.min(intervals[i][0], newInterval[0]);
+				intervals[i][1] = Math.max(intervals[i][1], newInterval[1]);
+				addRest(mergeRes, intervals, i);
+				break;
+			} else if ((i < len - 1 && newInterval[1] < intervals[i + 1][0]) || (i == len - 1 && newInterval[0] > intervals[i][1])) {
+				mergeRes.add(intervals[i]);
+				mergeRes.add(newInterval);
+				addRest(mergeRes, intervals, i + 1);
+				break;
+			}
+			
+			mergeRes.add(intervals[i]);
+		}
+		
+		mergeRes = mergeInterval(mergeRes);
+		return asArray(mergeRes);
+	}
+
+	private int[][] asArray(List<int[]> list) {
+		int size = list.size();
+		int[][] res = new int[size][2];
+
+		for (int i = 0; i < size; i++) {
+			int[] temp = list.get(i);
+			res[i][0] = temp[0];
+			res[i][1] = temp[1];
+		}
+
+		return res;
+	}
+
+	private void addRest(List<int[]> mergeRes, int[][] intervals, int index) {
+		for (int i = index; i < intervals.length; i++) {
+			mergeRes.add(intervals[i]);
+		}
+	}
+	
+	private List<int[]> mergeInterval(List<int[]> list) {
+		List<int[]> res = new ArrayList<>();
+		int size = list.size();
+		
+		for (int i = 0; i < size; i++) {
+			int[] interval = list.get(i);
+			if ((i < size - 1 && (interval[1] < list.get(i + 1)[0] || interval[0] > list.get(i + 1)[1])) || i == size - 1) {
+				res.add(interval);
+			} else {
+				int j = i + 1;
+				while (j < size && interval[1] >= list.get(j)[0] && interval[0] <= list.get(j)[1]) {
+					interval[0] = Math.min(interval[0],  list.get(j)[0]);
+					interval[1] = Math.max(interval[1],  list.get(j)[1]);
+					j++;
+				}
+				
+				res.add(interval);
+				i = j - 1;
+			}
+		}
+		
+		return res;
+	}
+}
+
+------------------------------------------------------------------------------------------------------------------------------
+
+/**     Clearer and shorter version. 
