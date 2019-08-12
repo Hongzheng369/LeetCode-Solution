@@ -1,0 +1,72 @@
+/**
+ * Using backtracking to solve the problem.
+ */
+class Solution {
+    public void solveSudoku(char[][] board) {
+        helper(board);
+    }
+    
+    private boolean helper(char[][] board) {
+        for (int i = 0; i < 9; i++) {
+            for (int j = 0; j < 9; j++) {
+                if (board[i][j] == '.') {
+                    for (int pad = 1; pad < 10; pad++) {
+                        char c = (char)('0' + pad);
+                        if (isValid(board, i, j, c)) {
+                            board[i][j] = c;
+                            if (helper(board)) {
+                                return true;
+                            } else {
+                                board[i][j] = '.';
+                            }
+                        }
+                    }
+                
+                    // if no number is valid for this spot:
+                    return false;
+                }
+            }
+        }
+        
+        return true;
+    }
+    
+    private boolean checkRow(char[][] board, int row, char num) {
+        for (int i = 0; i < 9; i++) {
+            if (board[row][i] == num) {
+                return false;
+            }
+        }
+        
+        return true;
+    }
+    
+    private boolean checkCol(char[][] board, int col, char num) {
+        for (int i = 0; i < 9; i++) {
+            if (board[i][col] == num) {
+                return false;
+            }
+        }
+        
+        return true;
+    }
+    
+    private boolean checkBox(char[][] board, int row, int col, char num) {
+        int r = row - row % 3;
+		int c = col - col % 3;
+		
+		for (int i = r; i < r + 3; i++) {
+			for (int j = c; j < c + 3; j++) {
+				if (board[i][j] == num) {
+                    return false;
+                }
+            }
+        }
+		
+		return true;
+    }
+    
+    private boolean isValid(char[][] board, int i, int j, char num) {
+        return checkRow(board, i, num) && checkCol(board, j, num) && checkBox(board, i, j, num);
+    }
+}
