@@ -1,39 +1,49 @@
+/**     
+ * In this case, DFS is used and it has better space complexity.
+ * Time complexity is O(rows * col * 4 ^ len).
+ * Space complexity is O(rows * col + len).
+ */
+ 
 class Solution {
     public boolean exist(char[][] board, String word) {
-        if (word == null || word.length() == 0) {
-            return true;
+        if (board == null || board.length == 0 || board[0].length == 0) {
+        	return false;
         }
-        int row = board.length;
-        int col = board[0].length;
-        int len = word.length();
-        for (int i = 0; i < row; i++) {
-            for (int j = 0; j < col; j++) {
-                if (helpFindWord(board, word, i, j, 0, row, col, len)) {
-                    return true;
-                }
-            }
+        
+        int rows = board.length, cols = board[0].length;
+        for (int i = 0; i < rows; i++) {
+        	for (int j = 0; j < cols; j++) {
+        		if (helper(board, i, j, word, 0)) {
+        			return true;
+        		}
+        	}
         }
+        
         return false;
     }
-    
-    private boolean helpFindWord(char[][] board, String word, int i, int j, int pos, int row, int col, int len) {
-        if (i < 0 || i > row - 1 || j < 0 || j > col - 1) {
-            return false;
-        }
-        if (board[i][j] == word.charAt(pos)) {
-            if (pos == len - 1) {
-                return true;
-            }
-            char temp = board[i][j];
-            board[i][j] = '$';
-            if (helpFindWord(board, word, i - 1, j, pos + 1, row, col, len) || 
-                    helpFindWord(board, word, i + 1, j, pos + 1, row, col, len) ||
-                    helpFindWord(board, word, i, j - 1, pos + 1, row, col, len) ||
-                    helpFindWord(board, word, i, j + 1, pos + 1, row, col, len)) {
-                return true;
-            }
-            board[i][j] = temp;
-        }
-        return false;
-    }
+	
+	private boolean helper(char[][] board, int i, int j, String word, int pos) {
+		if (i < 0 || i > board.length - 1 || j < 0 || j > board[0].length - 1) {
+			return false;
+		}
+		
+		if (board[i][j] == word.charAt(pos)) {
+			if (pos == word.length() - 1) {
+				return true;
+			}
+			
+			char temp = board[i][j];
+			board[i][j] = '#';
+			
+			if (helper(board, i - 1, j, word, pos + 1) || 
+					helper(board, i + 1, j, word, pos + 1) || 
+					helper(board, i, j - 1, word, pos + 1) ||
+					helper(board, i, j + 1, word, pos + 1)) {
+				return true;
+			}
+			board[i][j] = temp;
+		}
+		
+		return false;
+	}
 }
