@@ -1,33 +1,76 @@
-我的代码，时间复杂度为O(n2)。先比较行和列，再比较九宫格，其中九宫格中i、j有映射：
-public static boolean RowCol(char[][] board){
-    for(int i = 0; i < 9; i++){
-        HashSet<Character> row = new HashSet<Character>();
-        HashSet<Character> col = new HashSet<Character>();
-        for(int j = 0; j < 9; j++){
-            if(board[i][j] != '.' && !row.add(board[i][j])){
-                return false;
-            }
-            if(board[j][i] != '.' && !col.add(board[j][i])){
-                return false;
-            }
-        }                
+/**
+ * Brute force, checking every character in the board.
+ * Time complexity is O(n2);
+ * Space complexity is O(1). Although it uses extra spaces, we know its worst case is still a constant.
+ */
+class Solution {
+    public boolean isValidSudoku(char[][] board) {
+        Set<Character> row = new HashSet<>();
+        Set<Character> col = new HashSet<>();
+        Set<Character> blk = new HashSet<>();
+        
+        for (int i = 0; i < 9; i++) {
+        	for (int j = 0; j < 9; j++) {
+        		if (board[i][j] != '.') {
+        			if (row.contains(board[i][j])) {
+        				return false;
+        			} else {
+        				row.add(board[i][j]);
+        			}
+        		}
+        		
+        		if (board[j][i] != '.') {
+        			if (col.contains(board[j][i])) {
+        				return false;
+        			} else {
+        				col.add(board[j][i]);
+        			}
+        		}
+        		
+        		int map_i = i / 3 * 3 + j / 3, map_j = i % 3 * 3 + j % 3;
+        		if (board[map_i][map_j] != '.') {
+        			if (blk.contains(board[map_i][map_j])) {
+        				return false;
+        			} else {
+        				blk.add(board[map_i][map_j]);
+        			}
+        		}
+        	}
+        	
+        	row.clear();
+        	col.clear();
+        	blk.clear();
+        }
+        
+        return true;
     }
-    return true;
 }
-public static boolean Box(char[][] board){
-    for(int i = 0; i < 9; i++){
-        HashSet<Character> box = new HashSet<Character>();
-        for(int j = 0; j < 9; j++){
-            int row = 3 * (i / 3);
-            int col = 3 * (i % 3);
-            char tmp = board[row + j / 3][col + j % 3];
-            if( tmp != '.' && !box.add(tmp)){
-                return false;
+
+-----------------------------------------------------------------------------------------------------
+/**
+ * Still checking every character in the board, but in a better way instead of clearing the hashset every time.
+ * Time complexity is O(n2);
+ * Space complexity is O(1) because it uses constant space in all the cases.
+ */
+ class Solution {
+    public boolean isValidSudoku(char[][] board) {
+        boolean[][] flag = new boolean[27][10];
+        
+        for (int i = 0; i < 9; i++) {
+            for (int j = 0; j < 9; j++) {
+                if (board[i][j] != '.') {
+                    int rowIndex = i, colIndex = j + 9, blockIndex = (i / 3 * 3 + j / 3) + 18, numIndex = board[i][j] - '0';
+                    if (flag[rowIndex][numIndex] || flag[colIndex][numIndex] || flag[blockIndex][numIndex]) {
+                        return false;
+                    }
+                    
+                    flag[rowIndex][numIndex] = true;
+                    flag[colIndex][numIndex] = true;
+                    flag[blockIndex][numIndex] = true;
+                }
             }
         }
+        
+        return true;
     }
-    return true;
-}
-public static boolean isValidSudoku(char[][] board){
-    return (RowCol(board) & Box(board));
 }
