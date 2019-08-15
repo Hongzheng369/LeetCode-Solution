@@ -34,3 +34,43 @@ class Solution {
         return mergeList;
     }
 }
+
+-------------------------------------------------------------------------------------------------------------------
+
+/**
+ * Question has been updated on April 15, 2019.
+ */
+ 
+class Solution {
+    public int[][] merge(int[][] intervals) {
+        if (intervals == null || intervals.length < 2) {
+            return intervals;
+        }
+        
+        Arrays.sort(intervals, new Comparator<int[]>(){
+            public int compare(int[] o1, int[] o2) {
+                return o1[0] - o2[0];
+            }
+        });
+        
+        LinkedList<int[]> mergeList = new LinkedList<>();
+        for (int[] ele : intervals) {
+            if (mergeList.isEmpty() || mergeList.getLast()[1] < ele[0]) {
+                mergeList.add(ele);
+            } else {
+                mergeList.getLast()[1] = Math.max(mergeList.getLast()[1], ele[1]);
+            }
+        }
+        
+        // Might have a better method to turn linkedlist into 2D-array.
+        int[][] ans = new int[mergeList.size()][2];
+        int index = 0;
+        while (!mergeList.isEmpty()) {
+            int[] ele = mergeList.remove();
+            ans[index][0] = ele[0];
+            ans[index++][1] = ele[1];
+        }
+        
+        return ans;
+    }
+}
