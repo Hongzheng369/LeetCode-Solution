@@ -1,0 +1,67 @@
+/**
+ * First of all, (0, 0) -> (n - 1, n - 1) -> (0, 0) is the same as (0, 0) -> (n - 1, n - 1) performed twice.
+ * 
+ * Secondly, (0, 0) -> (n - 1, n - 1) performed twice is the same as (0, 0) -> (n - 1, n - 1) performed once, 
+ * ... but two "threads" is "picking cherry" synchronuously.
+ *
+ * Third, meeting a block, going out of the bounds, and having no cherry to pick, has the same output when 
+ * ... only considering the return value, but in the solution, they need to be considered respectively 
+ * ... because some of them actually mean that there is no solution for this situation.
+ */
+class Solution {
+    public int cherryPickup(int[][] grid) {
+        int len = grid.length;
+        int[][][] dp = initiate(new int[len][len][len], len);
+        
+        return Math.max(0, helper(grid, len - 1, len - 1, len - 1, dp));
+    }
+    
+    private int[][][] initiate(int[][][] dp, int len) {
+        for (int i = 0; i < len; i++) {
+            for (int j = 0; j < len; j++) {
+                for (int k = 0; k < len; k++) {
+                    dp[i][j][k] = -2;                   // -2 => have not been solved yet
+                }
+            }
+        }
+        
+        return dp;
+    }
+    
+    private int helper(int[][] grid, int x1, int y1, int x2, int[][][] dp) {
+        int y2 = x1 + y1 - x2;
+        
+        if (x1 < 0 || y1 < 0 || x2 < 0 || y2 < 0) {
+            return -1;                                  // -1 => no solution for this sub-question 
+        } else if (grid[x1][y1] < 0 || grid[x2][y2] < 0) {
+            return -1;
+        } else if (x1 == 0 && y1 == 0) {
+            return grid[x1][y1];
+        } else if (dp[x1][y1][x2] != -2) {
+            return dp[x1][y1][x2];
+        }
+        
+        // check previous result to get the current answer
+        // ... which actually make the program start filling up "dp" with the start from grid[0][0]
+        dp[x1][y1][x2] = Math.max(Math.max(helper(grid, x1 - 1, y1, x2, dp), helper(grid, x1 - 1, y1, x2 - 1, dp)), 
+                                  Math.max(helper(grid, x1, y1 - 1, x2, dp), helper(grid, x1, y1 - 1, x2 - 1, dp)));
+        
+        if (dp[x1][y1][x2] > -1) {
+            dp[x1][y1][x2] += grid[x1][y1];
+            if (x1 != x2) {
+                dp[x1][y1][x2] += grid[x2][y2];
+            }
+        }
+        
+        return dp[x1][y1][x2];
+    }
+    
+    private void printDp(int[][][] dp) {
+        for (int[][] layer : dp) {
+            for (int[] row : layer) {
+                System.out.println(Arrays.toString(row));
+            }
+            System.out.println();
+        }
+    }
+}
