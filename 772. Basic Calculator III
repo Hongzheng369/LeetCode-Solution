@@ -1,69 +1,53 @@
 class Solution {
     public int calculate(String s) {
-        int ans = 0, prev = 0;
-        char sign = '+';
+        int len = s.length(), num = 0, res = 0, currRes = 0;
+        char op = '+';
         
-        for (int i = 0; i < s.length(); i++) {
-            char ch = s.charAt(i);
+        for (int i = 0; i < len; i++) {
+            char c = s.charAt(i);
             
-            /** Update the value */
-            if (Character.isDigit(ch)) {
-                int curr = 0;
-                while (i < s.length() && Character.isDigit(s.charAt(i))) {
-                    curr = curr * 10 + (s.charAt(i) - '0');
-                    i++;
-                }
-                prev = calValue(prev, curr, sign);
+            if (Character.isDigit(c)) {
+                num = num * 10 + (c - '0');
             } 
-            else if (ch == '(') {
-                int count = 0, j = i;
-                while (j < s.length()) {
-                    if (s.charAt(j) == '(') {
+            else if (c == '(') {
+                int j = i, count = 0;
+                
+                for (; i < len; i++) {
+                    char temp = s.charAt(i);
+                    
+                    if (temp == '(') {
                         count++;
                     } 
-                    else if (s.charAt(j) == ')') {
+                    else if (temp == ')') {
                         count--;
-                        if (count == 0) {
-                            break;
-                        }
                     }
-                    j++;
+                    
+                    if (count == 0) {
+                        break;
+                    }
                 }
-                int temp = calculate(s.substring(i + 1, j));
-                prev = calValue(prev, temp, sign);
-                i = j + 1;
+                
+                num = calculate(s.substring(j + 1, i));
             }
             
-            /** Update the sign */
-            if (i < s.length()) {
-                ch = s.charAt(i);
-                if (ch == '+' || ch == '-' || ch == '*' || ch == '/') {
-                    if (ch == '+' || ch == '-') {
-                        ans += prev;
-                        prev = 0;
-                    }
-                    sign = ch;
+            if (c == '+' || c == '-' || c == '*' || c == '/' || i == len - 1) {
+                switch (op) {
+                    case '+': currRes += num; break;
+                    case '-': currRes -= num; break;
+                    case '*': currRes *= num; break;
+                    case '/': currRes /= num; break;
                 }
+                
+                if (c == '+' || c == '-' || i == len - 1) {
+                    res += currRes;
+                    currRes = 0;
+                }
+                
+                op = c;
+                num = 0;
             }
         }
         
-        return ans + prev;
-    }
-    
-    private int calValue(int prev, int curr, char sign) {
-        if (sign == '+') {
-            prev += curr;
-        } 
-        else if (sign == '-') {
-            prev -= curr;
-        } 
-        else if (sign == '*') {
-            prev *= curr;
-        } 
-        else {
-            prev /= curr;
-        }
-        
-        return prev;
+        return res;
     }
 }
