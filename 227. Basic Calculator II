@@ -1,75 +1,85 @@
 class Solution {
     public int calculate(String s) {
-        /** Method 1: using stack. */
-//         Stack<Integer> stack = new Stack<>();
-//         int num = 0;
-//         char sign = '+';
-
-//         for (int i = 0; i < s.length(); i++) {
-//             char ch = s.charAt(i);
-
-//             if (Character.isDigit(ch)) {
-//                 num = num * 10 + (ch - '0');
-//             }
-
-//             if (!Character.isDigit(ch) && ch != ' ' || i == s.length() - 1) {
-//                 if (sign == '+') {
-//                     stack.push(num);
-//                 } else if (sign == '-') {
-//                     stack.push(-num);
-//                 } else if (sign == '*') {
-//                     stack.push(stack.pop() * num);
-//                 } else {
-//                     stack.push(stack.pop() / num);
-//                 }
-
-//                 num = 0;
-//                 sign = ch;
-//             }
-//         }
-
-//         int ans = 0;
-//         for (int i : stack) {
-//             ans += i;
-//         }
-//         return ans;
-        
-        /** Method 2: without stack. */
-        char[] chars = s.toCharArray();
-        int num = 0;
+        //return method1(s);
+        return method2(s);
+    }
+    
+    /////////////////////////////////////////////////////////////////////////////////////
+    /**
+     * Method 1: standard method for calculating an expression in string with stack.
+     */
+    private int method1(String s) {
+        Stack<Integer> stack = new Stack<>();
+        int num = 0, len = s.length();
         char sign = '+';
-        int lastNum = 0;
-        int ans = 0;
-
-        for (int i = 0; i < chars.length + 1; i++) {
-            if (i < chars.length && Character.isDigit(chars[i])) {
-                num = num * 10 + (chars[i] - '0');
-            } else {
-                if (i < chars.length && chars[i] == ' ') {
-                    continue;
-                }
-
+        
+        for (int i = 0; i < len; i++) {
+            char c = s.charAt(i);
+            
+            if (Character.isDigit(c)) {
+                num = num * 10 + (c - '0');
+            }
+            
+            if (!Character.isDigit(c) && c != ' ' || i == len - 1) {
                 if (sign == '+') {
-                    ans += num;
-                    lastNum = num;
+                    stack.push(num);
                 } else if (sign == '-') {
-                    ans -= num;
-                    lastNum = -num;
+                    stack.push(-num);
                 } else if (sign == '*') {
-                    ans = (ans - lastNum) + lastNum * num;
-                    lastNum = lastNum * num;
-                } else if (sign == '/') {
-                    ans = (ans - lastNum) + lastNum / num;
-                    lastNum = lastNum / num;
+                    stack.push(stack.pop() * num);
+                } else {
+                    stack.push(stack.pop() / num);
                 }
 
-                if (i < chars.length) {
-                    sign = chars[i];
-                }
                 num = 0;
+                sign = c;
             }
         }
         
-        return ans;
+        while (!stack.isEmpty()) {
+            num += stack.pop();
+        }
+        
+        return num;
+    }
+    
+    /////////////////////////////////////////////////////////////////////////////////////
+    /**
+     * Method 2: without stack.
+     */
+    private int method2(String s) {
+        int num = 0, len = s.length(), lastNum = 0, res = 0;
+        char sign = '+';
+        
+        for (int i = 0; i <= len; i++) {
+            if (i < len && Character.isDigit(s.charAt(i))) {
+                num = num * 10 + (s.charAt(i) - '0');
+            } else {
+                if (i < len && s.charAt(i) == ' ') {
+                    continue;
+                }
+                
+                if (sign == '+') {
+                    res += num;
+                    lastNum = num;
+                } else if (sign == '-') {
+                    res -= num;
+                    lastNum = -num;
+                } else if (sign == '*') {
+                    res = (res - lastNum) + lastNum * num;
+                    lastNum *= num;
+                } else {
+                    res = (res - lastNum) + lastNum / num;
+                    lastNum /= num;
+                }
+                
+                num = 0;
+                if (i < len) {
+                    sign = s.charAt(i);
+                }
+            }
+        }
+        
+        return res;
     }
 }
