@@ -1,0 +1,19 @@
+class Solution {
+    public int maxSubArrayLen(int[] nums, int k) {
+        int len = nums.length;
+        HashMap<Integer, Integer> sums = new HashMap<>();
+        sums.put(0, 0);
+        int sum = 0;
+        int maxLen = 0;
+        for (int i = 0; i < len; i++) {
+            sum += nums[i];
+            if (sums.containsKey(sum - k)) {
+                maxLen = Math.max(maxLen, i + 1 - sums.get(sum - k));
+            }
+            if (!sums.containsKey(sum)) {
+                sums.put(sum, i + 1);
+            }
+        }
+        return maxLen;
+    }
+}
