@@ -1,0 +1,62 @@
+class Solution {
+    public int kEmptySlots(int[] bulbs, int K) {
+        int len = bulbs.length;
+        int day = 0;
+        for (int i = 0; i < len; i++) {
+            // Turn on the light by change it to negative number
+            int indexOn = Math.abs(bulbs[i]) - 1;
+            bulbs[indexOn] *= -1;
+            day++;
+            // Set variables.
+            int rightEdgeIdx = indexOn + K + 1;
+            int leftEdgeIdx = indexOn - K - 1;
+            // Check the slot
+            if (checkLight(bulbs, indexOn, leftEdgeIdx, rightEdgeIdx, len)) {
+                return day;
+            }
+        }
+        return -1;
+    }
+    
+    private boolean checkRightEdge(int[] bulbs, int indexOn, int rightEdgeIdx, int len) {
+        // If out of bound, return true
+        if (rightEdgeIdx > len - 1) {
+            return false;
+        }
+        // If in the bound, see if it's on
+        return bulbs[rightEdgeIdx] < 0;
+    }
+    
+    private boolean checkLeftEdge(int[] bulbs, int indexOn, int leftEdgeIdx) {
+        // If out of bound, return true
+        if (leftEdgeIdx < 0) {
+            return false;
+        }
+        // If in the bound, see if it's negative
+        return bulbs[leftEdgeIdx] < 0;
+    }
+    
+    // If satisfies, return true.
+    private boolean checkLight(int[] bulbs, int indexOn, int leftEdgeIdx, int rightEdgeIdx, int len) {
+        boolean leftOn = false;
+        int right = indexOn - 1;
+        int left = Math.max(0, leftEdgeIdx + 1);
+        while (left <= right) {
+            if (bulbs[left++] < 0 || bulbs[right--] < 0) {
+                leftOn = true;
+                break;
+            }
+        }
+        if (checkLeftEdge(bulbs, indexOn, leftEdgeIdx) && !leftOn)  {
+            return true;
+        }
+        left = indexOn + 1;
+        right = Math.min(len - 1, rightEdgeIdx - 1);
+        while (left <= right) {
+            if (bulbs[left++] < 0 || bulbs[right--] < 0) {
+                return false;
+            }
+        }
+        return checkRightEdge(bulbs, indexOn, rightEdgeIdx, len);
+    }
+}
